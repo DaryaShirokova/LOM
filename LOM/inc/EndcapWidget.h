@@ -1,9 +1,13 @@
 #ifndef ENDCAPWIDGET_H
 #define ENDCAPWIDGET_H
 
-#define SECTOR_NUM 12
+#define SECTOR_NUM 6//12
 
 #include <QWidget>
+#include <QPoint>
+#include <QString>
+
+//#include <QSrting>
 
 class EndcapWidget : public QWidget
 {
@@ -12,16 +16,30 @@ class EndcapWidget : public QWidget
 
 public:
     explicit EndcapWidget(QWidget *parent = 0);
+    ~EndcapWidget() {}
+
+    void SetSectorColor(QString color) { this->sectorColor = color; }
+    void SetFilledSector(unsigned int sector) {
+        if (sector > SECTOR_NUM || sector < 1)
+            return;
+        this->filledSector = sector;
+    }
 
 protected:
     void paintEvent(QPaintEvent *event) override;
 
+private:
 
+    int filledSector;
+    QPoint GetRayCircleIntersection(int x0, int y0, int r, double alpha);
+    QString sectorColor;
+
+//QObject::connect(pushButton, SIGNAL(clicked()), LOMView, SLOT(show()));
 signals:
-    int coloredSector = -1;
+    void SectorChanged();
 
 public slots:
-    void fillSector();
+    void FillSector();
 };
 
 #endif // ENDCAPWIDGET_H

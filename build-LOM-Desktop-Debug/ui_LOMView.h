@@ -28,6 +28,7 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include "inc/EndcapWidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -35,9 +36,8 @@ class Ui_LOMView
 {
 public:
     QWidget *centralWidget;
-    QHBoxLayout *horizontalLayout;
     QSplitter *splitter;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout;
     QLabel *label;
     QFormLayout *formLayout;
@@ -51,21 +51,22 @@ public:
     QSpinBox *spinBoxBkg;
     QLabel *label_4;
     QPushButton *pushButton;
-    QWidget *widget1;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_3;
     QLabel *label_3;
     QFormLayout *formLayout_3;
-    QLabel *thresholdFELabel_2;
-    QSpinBox *spinBoxAmplFWD_2;
-    QLabel *thresholdBELabel_2;
-    QSpinBox *spinBoxAmplBWD_2;
+    QLabel *updFreqLabel;
+    QSpinBox *spinBoxUpdFreq;
+    QLabel *redrawFreqLabel;
+    QSpinBox *spinBoxRedrawFreq;
     QLabel *label_5;
     QPushButton *pushButton_4;
-    QWidget *widget2;
+    QWidget *layoutWidget2;
     QHBoxLayout *horizontalLayout_2;
     QPushButton *pushButton_2;
     QPushButton *pushButton_3;
-    QVBoxLayout *verticalLayout_2;
+    QWidget *layoutWidget3;
+    QVBoxLayout *eventInfoLayout;
     QLabel *label_2;
     QFormLayout *formLayout_2;
     QLabel *dLabel;
@@ -78,6 +79,17 @@ public:
     QLineEdit *bhabhaEventsLineEdit;
     QLabel *backgroundEventsLabel;
     QLineEdit *backgroundEventsLineEdit;
+    QLabel *label_8;
+    QLabel *label_9;
+    QWidget *layoutWidget4;
+    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout_2;
+    QLabel *label_6;
+    EndcapWidget *fwdEndcapWidget;
+    QVBoxLayout *verticalLayout_4;
+    QLabel *label_7;
+    EndcapWidget *fwdEndcapWidget_2;
+    EndcapWidget *fwdEndcapWidget_3;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -86,26 +98,24 @@ public:
     {
         if (LOMView->objectName().isEmpty())
             LOMView->setObjectName(QStringLiteral("LOMView"));
+        LOMView->resize(800, 600);
         LOMView->setMinimumSize(QSize(800, 600));
         LOMView->setAutoFillBackground(false);
         LOMView->setLocale(QLocale(QLocale::Estonian, QLocale::Estonia));
         centralWidget = new QWidget(LOMView);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        horizontalLayout = new QHBoxLayout(centralWidget);
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         splitter = new QSplitter(centralWidget);
         splitter->setObjectName(QStringLiteral("splitter"));
+        splitter->setGeometry(QRect(9, 9, 241, 353));
         splitter->setOrientation(Qt::Vertical);
-        widget = new QWidget(splitter);
-        widget->setObjectName(QStringLiteral("widget"));
-        verticalLayout = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(splitter);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QStringLiteral("label"));
         QFont font;
         font.setPointSize(14);
@@ -118,7 +128,7 @@ public:
         formLayout = new QFormLayout();
         formLayout->setSpacing(6);
         formLayout->setObjectName(QStringLiteral("formLayout"));
-        thresholdFELabel = new QLabel(widget);
+        thresholdFELabel = new QLabel(layoutWidget);
         thresholdFELabel->setObjectName(QStringLiteral("thresholdFELabel"));
         QFont font1;
         font1.setPointSize(12);
@@ -126,7 +136,7 @@ public:
 
         formLayout->setWidget(0, QFormLayout::LabelRole, thresholdFELabel);
 
-        spinBoxAmplFWD = new QSpinBox(widget);
+        spinBoxAmplFWD = new QSpinBox(layoutWidget);
         spinBoxAmplFWD->setObjectName(QStringLiteral("spinBoxAmplFWD"));
         spinBoxAmplFWD->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         spinBoxAmplFWD->setMaximum(1000);
@@ -134,13 +144,13 @@ public:
 
         formLayout->setWidget(0, QFormLayout::FieldRole, spinBoxAmplFWD);
 
-        thresholdBELabel = new QLabel(widget);
+        thresholdBELabel = new QLabel(layoutWidget);
         thresholdBELabel->setObjectName(QStringLiteral("thresholdBELabel"));
         thresholdBELabel->setFont(font1);
 
         formLayout->setWidget(1, QFormLayout::LabelRole, thresholdBELabel);
 
-        spinBoxAmplBWD = new QSpinBox(widget);
+        spinBoxAmplBWD = new QSpinBox(layoutWidget);
         spinBoxAmplBWD->setObjectName(QStringLiteral("spinBoxAmplBWD"));
         spinBoxAmplBWD->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         spinBoxAmplBWD->setMaximum(1000);
@@ -148,36 +158,36 @@ public:
 
         formLayout->setWidget(1, QFormLayout::FieldRole, spinBoxAmplBWD);
 
-        coincidenceDurationLabel = new QLabel(widget);
+        coincidenceDurationLabel = new QLabel(layoutWidget);
         coincidenceDurationLabel->setObjectName(QStringLiteral("coincidenceDurationLabel"));
         coincidenceDurationLabel->setFont(font1);
 
         formLayout->setWidget(2, QFormLayout::LabelRole, coincidenceDurationLabel);
 
-        spinBoxCoinDur = new QSpinBox(widget);
+        spinBoxCoinDur = new QSpinBox(layoutWidget);
         spinBoxCoinDur->setObjectName(QStringLiteral("spinBoxCoinDur"));
         spinBoxCoinDur->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
 
         formLayout->setWidget(2, QFormLayout::FieldRole, spinBoxCoinDur);
 
-        backgroundThresholdLabel = new QLabel(widget);
+        backgroundThresholdLabel = new QLabel(layoutWidget);
         backgroundThresholdLabel->setObjectName(QStringLiteral("backgroundThresholdLabel"));
         backgroundThresholdLabel->setFont(font1);
 
         formLayout->setWidget(3, QFormLayout::LabelRole, backgroundThresholdLabel);
 
-        spinBoxBkg = new QSpinBox(widget);
+        spinBoxBkg = new QSpinBox(layoutWidget);
         spinBoxBkg->setObjectName(QStringLiteral("spinBoxBkg"));
         spinBoxBkg->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
 
         formLayout->setWidget(3, QFormLayout::FieldRole, spinBoxBkg);
 
-        label_4 = new QLabel(widget);
+        label_4 = new QLabel(layoutWidget);
         label_4->setObjectName(QStringLiteral("label_4"));
 
         formLayout->setWidget(4, QFormLayout::LabelRole, label_4);
 
-        pushButton = new QPushButton(widget);
+        pushButton = new QPushButton(layoutWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
 
         formLayout->setWidget(4, QFormLayout::FieldRole, pushButton);
@@ -185,15 +195,15 @@ public:
 
         verticalLayout->addLayout(formLayout);
 
-        splitter->addWidget(widget);
-        widget1 = new QWidget(splitter);
-        widget1->setObjectName(QStringLiteral("widget1"));
-        verticalLayout_3 = new QVBoxLayout(widget1);
+        splitter->addWidget(layoutWidget);
+        layoutWidget1 = new QWidget(splitter);
+        layoutWidget1->setObjectName(QStringLiteral("layoutWidget1"));
+        verticalLayout_3 = new QVBoxLayout(layoutWidget1);
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(0, 0, 0, 0);
-        label_3 = new QLabel(widget1);
+        label_3 = new QLabel(layoutWidget1);
         label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setFont(font);
 
@@ -202,40 +212,40 @@ public:
         formLayout_3 = new QFormLayout();
         formLayout_3->setSpacing(6);
         formLayout_3->setObjectName(QStringLiteral("formLayout_3"));
-        thresholdFELabel_2 = new QLabel(widget1);
-        thresholdFELabel_2->setObjectName(QStringLiteral("thresholdFELabel_2"));
-        thresholdFELabel_2->setFont(font1);
+        updFreqLabel = new QLabel(layoutWidget1);
+        updFreqLabel->setObjectName(QStringLiteral("updFreqLabel"));
+        updFreqLabel->setFont(font1);
 
-        formLayout_3->setWidget(0, QFormLayout::LabelRole, thresholdFELabel_2);
+        formLayout_3->setWidget(0, QFormLayout::LabelRole, updFreqLabel);
 
-        spinBoxAmplFWD_2 = new QSpinBox(widget1);
-        spinBoxAmplFWD_2->setObjectName(QStringLiteral("spinBoxAmplFWD_2"));
-        spinBoxAmplFWD_2->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
-        spinBoxAmplFWD_2->setMaximum(1000);
-        spinBoxAmplFWD_2->setValue(100);
+        spinBoxUpdFreq = new QSpinBox(layoutWidget1);
+        spinBoxUpdFreq->setObjectName(QStringLiteral("spinBoxUpdFreq"));
+        spinBoxUpdFreq->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        spinBoxUpdFreq->setMaximum(1000);
+        spinBoxUpdFreq->setValue(100);
 
-        formLayout_3->setWidget(0, QFormLayout::FieldRole, spinBoxAmplFWD_2);
+        formLayout_3->setWidget(0, QFormLayout::FieldRole, spinBoxUpdFreq);
 
-        thresholdBELabel_2 = new QLabel(widget1);
-        thresholdBELabel_2->setObjectName(QStringLiteral("thresholdBELabel_2"));
-        thresholdBELabel_2->setFont(font1);
+        redrawFreqLabel = new QLabel(layoutWidget1);
+        redrawFreqLabel->setObjectName(QStringLiteral("redrawFreqLabel"));
+        redrawFreqLabel->setFont(font1);
 
-        formLayout_3->setWidget(1, QFormLayout::LabelRole, thresholdBELabel_2);
+        formLayout_3->setWidget(1, QFormLayout::LabelRole, redrawFreqLabel);
 
-        spinBoxAmplBWD_2 = new QSpinBox(widget1);
-        spinBoxAmplBWD_2->setObjectName(QStringLiteral("spinBoxAmplBWD_2"));
-        spinBoxAmplBWD_2->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
-        spinBoxAmplBWD_2->setMaximum(1000);
-        spinBoxAmplBWD_2->setValue(100);
+        spinBoxRedrawFreq = new QSpinBox(layoutWidget1);
+        spinBoxRedrawFreq->setObjectName(QStringLiteral("spinBoxRedrawFreq"));
+        spinBoxRedrawFreq->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        spinBoxRedrawFreq->setMaximum(1000);
+        spinBoxRedrawFreq->setValue(100);
 
-        formLayout_3->setWidget(1, QFormLayout::FieldRole, spinBoxAmplBWD_2);
+        formLayout_3->setWidget(1, QFormLayout::FieldRole, spinBoxRedrawFreq);
 
-        label_5 = new QLabel(widget1);
+        label_5 = new QLabel(layoutWidget1);
         label_5->setObjectName(QStringLiteral("label_5"));
 
         formLayout_3->setWidget(2, QFormLayout::LabelRole, label_5);
 
-        pushButton_4 = new QPushButton(widget1);
+        pushButton_4 = new QPushButton(layoutWidget1);
         pushButton_4->setObjectName(QStringLiteral("pushButton_4"));
 
         formLayout_3->setWidget(2, QFormLayout::FieldRole, pushButton_4);
@@ -243,107 +253,187 @@ public:
 
         verticalLayout_3->addLayout(formLayout_3);
 
-        splitter->addWidget(widget1);
-        widget2 = new QWidget(splitter);
-        widget2->setObjectName(QStringLiteral("widget2"));
-        horizontalLayout_2 = new QHBoxLayout(widget2);
+        splitter->addWidget(layoutWidget1);
+        layoutWidget2 = new QWidget(splitter);
+        layoutWidget2->setObjectName(QStringLiteral("layoutWidget2"));
+        horizontalLayout_2 = new QHBoxLayout(layoutWidget2);
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
-        pushButton_2 = new QPushButton(widget2);
+        pushButton_2 = new QPushButton(layoutWidget2);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
 
         horizontalLayout_2->addWidget(pushButton_2);
 
-        pushButton_3 = new QPushButton(widget2);
+        pushButton_3 = new QPushButton(layoutWidget2);
         pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
 
         horizontalLayout_2->addWidget(pushButton_3);
 
-        splitter->addWidget(widget2);
-
-        horizontalLayout->addWidget(splitter);
-
-        verticalLayout_2 = new QVBoxLayout();
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
-        label_2 = new QLabel(centralWidget);
+        splitter->addWidget(layoutWidget2);
+        layoutWidget3 = new QWidget(centralWidget);
+        layoutWidget3->setObjectName(QStringLiteral("layoutWidget3"));
+        layoutWidget3->setGeometry(QRect(560, 10, 221, 195));
+        eventInfoLayout = new QVBoxLayout(layoutWidget3);
+        eventInfoLayout->setSpacing(6);
+        eventInfoLayout->setContentsMargins(11, 11, 11, 11);
+        eventInfoLayout->setObjectName(QStringLiteral("eventInfoLayout"));
+        eventInfoLayout->setContentsMargins(0, 0, 0, 0);
+        label_2 = new QLabel(layoutWidget3);
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setFont(font);
 
-        verticalLayout_2->addWidget(label_2);
+        eventInfoLayout->addWidget(label_2);
 
         formLayout_2 = new QFormLayout();
         formLayout_2->setSpacing(6);
         formLayout_2->setObjectName(QStringLiteral("formLayout_2"));
-        dLabel = new QLabel(centralWidget);
+        dLabel = new QLabel(layoutWidget3);
         dLabel->setObjectName(QStringLiteral("dLabel"));
         dLabel->setFont(font1);
 
         formLayout_2->setWidget(0, QFormLayout::LabelRole, dLabel);
 
-        dLineEdit = new QLineEdit(centralWidget);
+        dLineEdit = new QLineEdit(layoutWidget3);
         dLineEdit->setObjectName(QStringLiteral("dLineEdit"));
         dLineEdit->setReadOnly(true);
 
         formLayout_2->setWidget(0, QFormLayout::FieldRole, dLineEdit);
 
-        deadTimeLabel = new QLabel(centralWidget);
+        deadTimeLabel = new QLabel(layoutWidget3);
         deadTimeLabel->setObjectName(QStringLiteral("deadTimeLabel"));
         deadTimeLabel->setFont(font1);
 
         formLayout_2->setWidget(1, QFormLayout::LabelRole, deadTimeLabel);
 
-        deadTimeLineEdit = new QLineEdit(centralWidget);
+        deadTimeLineEdit = new QLineEdit(layoutWidget3);
         deadTimeLineEdit->setObjectName(QStringLiteral("deadTimeLineEdit"));
         deadTimeLineEdit->setReadOnly(true);
 
         formLayout_2->setWidget(1, QFormLayout::FieldRole, deadTimeLineEdit);
 
-        vetoTimeLabel = new QLabel(centralWidget);
+        vetoTimeLabel = new QLabel(layoutWidget3);
         vetoTimeLabel->setObjectName(QStringLiteral("vetoTimeLabel"));
         vetoTimeLabel->setFont(font1);
 
         formLayout_2->setWidget(2, QFormLayout::LabelRole, vetoTimeLabel);
 
-        vetoTimeLineEdit = new QLineEdit(centralWidget);
+        vetoTimeLineEdit = new QLineEdit(layoutWidget3);
         vetoTimeLineEdit->setObjectName(QStringLiteral("vetoTimeLineEdit"));
         vetoTimeLineEdit->setReadOnly(true);
 
         formLayout_2->setWidget(2, QFormLayout::FieldRole, vetoTimeLineEdit);
 
-        bhabhaEventsLabel = new QLabel(centralWidget);
+        bhabhaEventsLabel = new QLabel(layoutWidget3);
         bhabhaEventsLabel->setObjectName(QStringLiteral("bhabhaEventsLabel"));
         bhabhaEventsLabel->setFont(font1);
 
         formLayout_2->setWidget(3, QFormLayout::LabelRole, bhabhaEventsLabel);
 
-        bhabhaEventsLineEdit = new QLineEdit(centralWidget);
+        bhabhaEventsLineEdit = new QLineEdit(layoutWidget3);
         bhabhaEventsLineEdit->setObjectName(QStringLiteral("bhabhaEventsLineEdit"));
         bhabhaEventsLineEdit->setReadOnly(true);
 
         formLayout_2->setWidget(3, QFormLayout::FieldRole, bhabhaEventsLineEdit);
 
-        backgroundEventsLabel = new QLabel(centralWidget);
+        backgroundEventsLabel = new QLabel(layoutWidget3);
         backgroundEventsLabel->setObjectName(QStringLiteral("backgroundEventsLabel"));
         backgroundEventsLabel->setFont(font1);
 
         formLayout_2->setWidget(4, QFormLayout::LabelRole, backgroundEventsLabel);
 
-        backgroundEventsLineEdit = new QLineEdit(centralWidget);
+        backgroundEventsLineEdit = new QLineEdit(layoutWidget3);
         backgroundEventsLineEdit->setObjectName(QStringLiteral("backgroundEventsLineEdit"));
         backgroundEventsLineEdit->setReadOnly(true);
 
         formLayout_2->setWidget(4, QFormLayout::FieldRole, backgroundEventsLineEdit);
 
 
-        verticalLayout_2->addLayout(formLayout_2);
+        eventInfoLayout->addLayout(formLayout_2);
+
+        label_8 = new QLabel(centralWidget);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setGeometry(QRect(280, 180, 71, 17));
+        QFont font2;
+        font2.setFamily(QStringLiteral("aakar"));
+        font2.setPointSize(12);
+        label_8->setFont(font2);
+        label_9 = new QLabel(centralWidget);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setGeometry(QRect(420, 180, 71, 17));
+        label_9->setFont(font2);
+        layoutWidget4 = new QWidget(centralWidget);
+        layoutWidget4->setObjectName(QStringLiteral("layoutWidget4"));
+        layoutWidget4->setGeometry(QRect(280, 10, 272, 162));
+        horizontalLayout = new QHBoxLayout(layoutWidget4);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_2 = new QVBoxLayout();
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        label_6 = new QLabel(layoutWidget4);
+        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setMinimumSize(QSize(0, 17));
+        QFont font3;
+        font3.setPointSize(12);
+        font3.setBold(true);
+        font3.setWeight(75);
+        label_6->setFont(font3);
+
+        verticalLayout_2->addWidget(label_6);
+
+        fwdEndcapWidget = new EndcapWidget(layoutWidget4);
+        fwdEndcapWidget->setObjectName(QStringLiteral("fwdEndcapWidget"));
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(fwdEndcapWidget->sizePolicy().hasHeightForWidth());
+        fwdEndcapWidget->setSizePolicy(sizePolicy);
+        fwdEndcapWidget->setMinimumSize(QSize(130, 130));
+
+        verticalLayout_2->addWidget(fwdEndcapWidget);
 
 
         horizontalLayout->addLayout(verticalLayout_2);
 
+        verticalLayout_4 = new QVBoxLayout();
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
+        label_7 = new QLabel(layoutWidget4);
+        label_7->setObjectName(QStringLiteral("label_7"));
+        label_7->setMinimumSize(QSize(0, 17));
+        label_7->setFont(font3);
+
+        verticalLayout_4->addWidget(label_7);
+
+        fwdEndcapWidget_2 = new EndcapWidget(layoutWidget4);
+        fwdEndcapWidget_2->setObjectName(QStringLiteral("fwdEndcapWidget_2"));
+        sizePolicy.setHeightForWidth(fwdEndcapWidget_2->sizePolicy().hasHeightForWidth());
+        fwdEndcapWidget_2->setSizePolicy(sizePolicy);
+        fwdEndcapWidget_2->setMinimumSize(QSize(130, 130));
+
+        verticalLayout_4->addWidget(fwdEndcapWidget_2);
+
+
+        horizontalLayout->addLayout(verticalLayout_4);
+
+        fwdEndcapWidget_3 = new EndcapWidget(centralWidget);
+        fwdEndcapWidget_3->setObjectName(QStringLiteral("fwdEndcapWidget_3"));
+        fwdEndcapWidget_3->setGeometry(QRect(289, 279, 301, 271));
+        sizePolicy.setHeightForWidth(fwdEndcapWidget_3->sizePolicy().hasHeightForWidth());
+        fwdEndcapWidget_3->setSizePolicy(sizePolicy);
+        fwdEndcapWidget_3->setMinimumSize(QSize(130, 130));
         LOMView->setCentralWidget(centralWidget);
+        splitter->raise();
+        layoutWidget->raise();
+        label_8->raise();
+        label_9->raise();
+        layoutWidget->raise();
+        fwdEndcapWidget->raise();
+        fwdEndcapWidget_3->raise();
         menuBar = new QMenuBar(LOMView);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 800, 27));
@@ -371,8 +461,8 @@ public:
         label_4->setText(QString());
         pushButton->setText(QApplication::translate("LOMView", "Set", 0));
         label_3->setText(QApplication::translate("LOMView", "Settings", 0));
-        thresholdFELabel_2->setText(QApplication::translate("LOMView", "Update frequence (Hz)", 0));
-        thresholdBELabel_2->setText(QApplication::translate("LOMView", "Redraw frequence (Hz)", 0));
+        updFreqLabel->setText(QApplication::translate("LOMView", "Update frequence (Hz)", 0));
+        redrawFreqLabel->setText(QApplication::translate("LOMView", "Redraw frequence (Hz)", 0));
         label_5->setText(QString());
         pushButton_4->setText(QApplication::translate("LOMView", "Set", 0));
         pushButton_2->setText(QApplication::translate("LOMView", "Start", 0));
@@ -388,6 +478,10 @@ public:
         bhabhaEventsLineEdit->setText(QApplication::translate("LOMView", "0", 0));
         backgroundEventsLabel->setText(QApplication::translate("LOMView", "Background events", 0));
         backgroundEventsLineEdit->setText(QApplication::translate("LOMView", "0", 0));
+        label_8->setText(QApplication::translate("LOMView", "Hit sector:", 0));
+        label_9->setText(QApplication::translate("LOMView", "Hit sector:", 0));
+        label_6->setText(QApplication::translate("LOMView", "FWD", 0));
+        label_7->setText(QApplication::translate("LOMView", "BWD", 0));
     } // retranslateUi
 
 };

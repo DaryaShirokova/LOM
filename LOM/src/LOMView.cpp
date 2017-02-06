@@ -6,6 +6,7 @@ LOMView::LOMView(QWidget *parent) :
     ui(new Ui::LOMView)
 {
     ui->setupUi(this);
+    //ui->fwdEndcapWidget->se
     //centralWidget()->layout()->setAlignment(Qt::AlignTop);
     //layout()->setAlignment(widget, layout)
 }

@@ -54,7 +54,9 @@ SOURCES       = ../LOM/main.cpp \
 		../LOM/src/LOMEventData.cpp \
 		../LOM/src/LOMDataProcessor.cpp \
 		../LOM/src/LOMDataUpdater.cpp \
-		../LOM/src/AbstractTransporter.cpp moc_LOMView.cpp
+		../LOM/src/AbstractTransporter.cpp \
+		../LOM/src/EndcapWidget.cpp moc_LOMView.cpp \
+		moc_EndcapWidget.cpp
 OBJECTS       = main.o \
 		LOMView.o \
 		LOMInitParameters.o \
@@ -62,7 +64,9 @@ OBJECTS       = main.o \
 		LOMDataProcessor.o \
 		LOMDataUpdater.o \
 		AbstractTransporter.o \
-		moc_LOMView.o
+		EndcapWidget.o \
+		moc_LOMView.o \
+		moc_EndcapWidget.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -124,13 +128,15 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../LOM/inc/LOMEventData.h \
 		../LOM/inc/LOMDataProcessor.h \
 		../LOM/inc/LOMDataUpdater.h \
-		../LOM/inc/AbstractTransporter.h ../LOM/main.cpp \
+		../LOM/inc/AbstractTransporter.h \
+		../LOM/inc/EndcapWidget.h ../LOM/main.cpp \
 		../LOM/src/LOMView.cpp \
 		../LOM/src/LOMInitParameters.cpp \
 		../LOM/src/LOMEventData.cpp \
 		../LOM/src/LOMDataProcessor.cpp \
 		../LOM/src/LOMDataUpdater.cpp \
-		../LOM/src/AbstractTransporter.cpp
+		../LOM/src/AbstractTransporter.cpp \
+		../LOM/src/EndcapWidget.cpp
 QMAKE_TARGET  = LOM
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = LOM
@@ -296,8 +302,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../LOM/inc/LOMView.h ../LOM/inc/LOMInitParameters.h ../LOM/inc/LOMEventData.h ../LOM/inc/LOMDataProcessor.h ../LOM/inc/LOMDataUpdater.h ../LOM/inc/AbstractTransporter.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../LOM/main.cpp ../LOM/src/LOMView.cpp ../LOM/src/LOMInitParameters.cpp ../LOM/src/LOMEventData.cpp ../LOM/src/LOMDataProcessor.cpp ../LOM/src/LOMDataUpdater.cpp ../LOM/src/AbstractTransporter.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../LOM/inc/LOMView.h ../LOM/inc/LOMInitParameters.h ../LOM/inc/LOMEventData.h ../LOM/inc/LOMDataProcessor.h ../LOM/inc/LOMDataUpdater.h ../LOM/inc/AbstractTransporter.h ../LOM/inc/EndcapWidget.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../LOM/main.cpp ../LOM/src/LOMView.cpp ../LOM/src/LOMInitParameters.cpp ../LOM/src/LOMEventData.cpp ../LOM/src/LOMDataProcessor.cpp ../LOM/src/LOMDataUpdater.cpp ../LOM/src/AbstractTransporter.cpp ../LOM/src/EndcapWidget.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../LOM/forms/LOMView.ui $(DISTDIR)/
 
 
@@ -321,11 +327,14 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_LOMView.cpp
+compiler_moc_header_make_all: moc_LOMView.cpp moc_EndcapWidget.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_LOMView.cpp
+	-$(DEL_FILE) moc_LOMView.cpp moc_EndcapWidget.cpp
 moc_LOMView.cpp: ../LOM/inc/LOMView.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/LOMView.h -o moc_LOMView.cpp
+
+moc_EndcapWidget.cpp: ../LOM/inc/EndcapWidget.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/EndcapWidget.h -o moc_EndcapWidget.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -375,8 +384,14 @@ LOMDataUpdater.o: ../LOM/src/LOMDataUpdater.cpp ../LOM/inc/LOMDataUpdater.h \
 AbstractTransporter.o: ../LOM/src/AbstractTransporter.cpp ../LOM/inc/AbstractTransporter.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AbstractTransporter.o ../LOM/src/AbstractTransporter.cpp
 
+EndcapWidget.o: ../LOM/src/EndcapWidget.cpp ../LOM/inc/EndcapWidget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EndcapWidget.o ../LOM/src/EndcapWidget.cpp
+
 moc_LOMView.o: moc_LOMView.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_LOMView.o moc_LOMView.cpp
+
+moc_EndcapWidget.o: moc_EndcapWidget.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_EndcapWidget.o moc_EndcapWidget.cpp
 
 ####### Install
 
