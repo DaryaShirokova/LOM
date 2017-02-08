@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../LOM -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+INCPATH       = -I../LOM -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = LOM1.0.0
 DISTDIR = /home/darya/Dropbox/Work/LuminosityOnlineMonitor\ (master\ thesis)/LOMProject/build-LOM-Desktop-Debug/.tmp/LOM1.0.0
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5PrintSupport -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -55,8 +55,10 @@ SOURCES       = ../LOM/main.cpp \
 		../LOM/src/LOMDataProcessor.cpp \
 		../LOM/src/LOMDataUpdater.cpp \
 		../LOM/src/AbstractTransporter.cpp \
-		../LOM/src/EndcapWidget.cpp moc_LOMView.cpp \
-		moc_EndcapWidget.cpp
+		../LOM/src/EndcapWidget.cpp \
+		../LOM/qcustomplot/qcustomplot.cpp moc_LOMView.cpp \
+		moc_EndcapWidget.cpp \
+		moc_qcustomplot.cpp
 OBJECTS       = main.o \
 		LOMView.o \
 		LOMInitParameters.o \
@@ -65,8 +67,10 @@ OBJECTS       = main.o \
 		LOMDataUpdater.o \
 		AbstractTransporter.o \
 		EndcapWidget.o \
+		qcustomplot.o \
 		moc_LOMView.o \
-		moc_EndcapWidget.o
+		moc_EndcapWidget.o \
+		moc_qcustomplot.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -129,14 +133,16 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../LOM/inc/LOMDataProcessor.h \
 		../LOM/inc/LOMDataUpdater.h \
 		../LOM/inc/AbstractTransporter.h \
-		../LOM/inc/EndcapWidget.h ../LOM/main.cpp \
+		../LOM/inc/EndcapWidget.h \
+		../LOM/qcustomplot/qcustomplot.h ../LOM/main.cpp \
 		../LOM/src/LOMView.cpp \
 		../LOM/src/LOMInitParameters.cpp \
 		../LOM/src/LOMEventData.cpp \
 		../LOM/src/LOMDataProcessor.cpp \
 		../LOM/src/LOMDataUpdater.cpp \
 		../LOM/src/AbstractTransporter.cpp \
-		../LOM/src/EndcapWidget.cpp
+		../LOM/src/EndcapWidget.cpp \
+		../LOM/qcustomplot/qcustomplot.cpp
 QMAKE_TARGET  = LOM
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = LOM
@@ -224,6 +230,7 @@ Makefile: ../LOM/LOM.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmak
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../LOM/LOM.pro \
+		/usr/lib/x86_64-linux-gnu/libQt5PrintSupport.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Widgets.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Gui.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Core.prl
@@ -285,6 +292,7 @@ Makefile: ../LOM/LOM.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmak
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf:
 ../LOM/LOM.pro:
+/usr/lib/x86_64-linux-gnu/libQt5PrintSupport.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Widgets.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Gui.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Core.prl:
@@ -302,8 +310,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../LOM/inc/LOMView.h ../LOM/inc/LOMInitParameters.h ../LOM/inc/LOMEventData.h ../LOM/inc/LOMDataProcessor.h ../LOM/inc/LOMDataUpdater.h ../LOM/inc/AbstractTransporter.h ../LOM/inc/EndcapWidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../LOM/main.cpp ../LOM/src/LOMView.cpp ../LOM/src/LOMInitParameters.cpp ../LOM/src/LOMEventData.cpp ../LOM/src/LOMDataProcessor.cpp ../LOM/src/LOMDataUpdater.cpp ../LOM/src/AbstractTransporter.cpp ../LOM/src/EndcapWidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../LOM/inc/LOMView.h ../LOM/inc/LOMInitParameters.h ../LOM/inc/LOMEventData.h ../LOM/inc/LOMDataProcessor.h ../LOM/inc/LOMDataUpdater.h ../LOM/inc/AbstractTransporter.h ../LOM/inc/EndcapWidget.h ../LOM/qcustomplot/qcustomplot.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../LOM/main.cpp ../LOM/src/LOMView.cpp ../LOM/src/LOMInitParameters.cpp ../LOM/src/LOMEventData.cpp ../LOM/src/LOMDataProcessor.cpp ../LOM/src/LOMDataUpdater.cpp ../LOM/src/AbstractTransporter.cpp ../LOM/src/EndcapWidget.cpp ../LOM/qcustomplot/qcustomplot.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../LOM/forms/LOMView.ui $(DISTDIR)/
 
 
@@ -327,14 +335,17 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_LOMView.cpp moc_EndcapWidget.cpp
+compiler_moc_header_make_all: moc_LOMView.cpp moc_EndcapWidget.cpp moc_qcustomplot.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_LOMView.cpp moc_EndcapWidget.cpp
+	-$(DEL_FILE) moc_LOMView.cpp moc_EndcapWidget.cpp moc_qcustomplot.cpp
 moc_LOMView.cpp: ../LOM/inc/LOMView.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/LOMView.h -o moc_LOMView.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/LOMView.h -o moc_LOMView.cpp
 
 moc_EndcapWidget.cpp: ../LOM/inc/EndcapWidget.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/EndcapWidget.h -o moc_EndcapWidget.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/EndcapWidget.h -o moc_EndcapWidget.cpp
+
+moc_qcustomplot.cpp: ../LOM/qcustomplot/qcustomplot.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/qcustomplot/qcustomplot.h -o moc_qcustomplot.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -358,7 +369,8 @@ main.o: ../LOM/main.cpp ../LOM/inc/LOMView.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../LOM/main.cpp
 
 LOMView.o: ../LOM/src/LOMView.cpp ../LOM/inc/LOMView.h \
-		ui_LOMView.h
+		ui_LOMView.h \
+		../LOM/inc/EndcapWidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o LOMView.o ../LOM/src/LOMView.cpp
 
 LOMInitParameters.o: ../LOM/src/LOMInitParameters.cpp ../LOM/inc/LOMInitParameters.h
@@ -387,11 +399,17 @@ AbstractTransporter.o: ../LOM/src/AbstractTransporter.cpp ../LOM/inc/AbstractTra
 EndcapWidget.o: ../LOM/src/EndcapWidget.cpp ../LOM/inc/EndcapWidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EndcapWidget.o ../LOM/src/EndcapWidget.cpp
 
+qcustomplot.o: ../LOM/qcustomplot/qcustomplot.cpp ../LOM/qcustomplot/qcustomplot.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qcustomplot.o ../LOM/qcustomplot/qcustomplot.cpp
+
 moc_LOMView.o: moc_LOMView.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_LOMView.o moc_LOMView.cpp
 
 moc_EndcapWidget.o: moc_EndcapWidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_EndcapWidget.o moc_EndcapWidget.cpp
+
+moc_qcustomplot.o: moc_qcustomplot.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_qcustomplot.o moc_qcustomplot.cpp
 
 ####### Install
 

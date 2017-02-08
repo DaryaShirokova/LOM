@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = LOM
 TEMPLATE = app
@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     src/LOMDataProcessor.cpp \
     src/LOMDataUpdater.cpp \
     src/AbstractTransporter.cpp \
-    src/EndcapWidget.cpp
+    src/EndcapWidget.cpp \
+    qcustomplot/qcustomplot.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -27,6 +28,7 @@ HEADERS  += inc/LOMView.h \
     inc/LOMDataProcessor.h \
     inc/LOMDataUpdater.h \
     inc/AbstractTransporter.h \
-    inc/EndcapWidget.h
+    inc/EndcapWidget.h \
+    qcustomplot/qcustomplot.h
 
 FORMS    += forms/LOMView.ui

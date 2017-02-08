@@ -28,6 +28,7 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include <qcustomplot/qcustomplot.h>
 #include "inc/EndcapWidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -89,7 +90,7 @@ public:
     QVBoxLayout *verticalLayout_4;
     QLabel *label_7;
     EndcapWidget *fwdEndcapWidget_2;
-    EndcapWidget *fwdEndcapWidget_3;
+    QCustomPlot *widget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -420,12 +421,9 @@ public:
 
         horizontalLayout->addLayout(verticalLayout_4);
 
-        fwdEndcapWidget_3 = new EndcapWidget(centralWidget);
-        fwdEndcapWidget_3->setObjectName(QStringLiteral("fwdEndcapWidget_3"));
-        fwdEndcapWidget_3->setGeometry(QRect(289, 279, 301, 271));
-        sizePolicy.setHeightForWidth(fwdEndcapWidget_3->sizePolicy().hasHeightForWidth());
-        fwdEndcapWidget_3->setSizePolicy(sizePolicy);
-        fwdEndcapWidget_3->setMinimumSize(QSize(130, 130));
+        widget = new QCustomPlot(centralWidget);
+        widget->setObjectName(QStringLiteral("widget"));
+        widget->setGeometry(QRect(320, 240, 341, 111));
         LOMView->setCentralWidget(centralWidget);
         splitter->raise();
         layoutWidget->raise();
@@ -433,7 +431,7 @@ public:
         label_9->raise();
         layoutWidget->raise();
         fwdEndcapWidget->raise();
-        fwdEndcapWidget_3->raise();
+        widget->raise();
         menuBar = new QMenuBar(LOMView);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 800, 27));

@@ -2,6 +2,7 @@
 #define LOMVIEW_H
 
 #include <QMainWindow>
+#include <inc/LOMDataProcessor.h>
 
 namespace Ui {
 class LOMView;
@@ -17,6 +18,10 @@ public:
 
 private:
     Ui::LOMView *ui;
+    //LOMDataProcessor model;
+
+public slots:
+    void updateAmplFWD();
 };
 
 #endif // LOMVIEW_H

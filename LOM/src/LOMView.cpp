@@ -15,3 +15,8 @@ LOMView::~LOMView()
 {
     delete ui;
 }
+
+void LOMView::updateAmplFWD()
+{
+
+}

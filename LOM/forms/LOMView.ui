@@ -537,26 +537,14 @@
      </item>
     </layout>
    </widget>
-   <widget class="EndcapWidget" name="fwdEndcapWidget_3" native="true">
+   <widget class="QCustomPlot" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>289</x>
-      <y>279</y>
-      <width>301</width>
-      <height>271</height>
+      <x>320</x>
+      <y>240</y>
+      <width>341</width>
+      <height>111</height>
      </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>130</width>
-      <height>130</height>
-     </size>
     </property>
    </widget>
    <zorder>splitter</zorder>
@@ -566,7 +554,7 @@
    <zorder>layoutWidget</zorder>
    <zorder>fwdEndcapWidget</zorder>
    <zorder></zorder>
-   <zorder>fwdEndcapWidget_3</zorder>
+   <zorder>widget</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -594,6 +582,12 @@
    <class>EndcapWidget</class>
    <extends>QWidget</extends>
    <header>inc/EndcapWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header location="global">qcustomplot/qcustomplot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
