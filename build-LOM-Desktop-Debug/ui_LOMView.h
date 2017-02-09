@@ -51,7 +51,7 @@ public:
     QLabel *backgroundThresholdLabel;
     QSpinBox *spinBoxBkg;
     QLabel *label_4;
-    QPushButton *pushButton;
+    QPushButton *pushButtonSetThresholds;
     QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_3;
     QLabel *label_3;
@@ -91,6 +91,7 @@ public:
     QLabel *label_7;
     EndcapWidget *fwdEndcapWidget_2;
     QCustomPlot *widget;
+    QLabel *label_10;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -188,10 +189,10 @@ public:
 
         formLayout->setWidget(4, QFormLayout::LabelRole, label_4);
 
-        pushButton = new QPushButton(layoutWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButtonSetThresholds = new QPushButton(layoutWidget);
+        pushButtonSetThresholds->setObjectName(QStringLiteral("pushButtonSetThresholds"));
 
-        formLayout->setWidget(4, QFormLayout::FieldRole, pushButton);
+        formLayout->setWidget(4, QFormLayout::FieldRole, pushButtonSetThresholds);
 
 
         verticalLayout->addLayout(formLayout);
@@ -424,14 +425,10 @@ public:
         widget = new QCustomPlot(centralWidget);
         widget->setObjectName(QStringLiteral("widget"));
         widget->setGeometry(QRect(320, 240, 341, 111));
+        label_10 = new QLabel(centralWidget);
+        label_10->setObjectName(QStringLiteral("label_10"));
+        label_10->setGeometry(QRect(350, 180, 54, 17));
         LOMView->setCentralWidget(centralWidget);
-        splitter->raise();
-        layoutWidget->raise();
-        label_8->raise();
-        label_9->raise();
-        layoutWidget->raise();
-        fwdEndcapWidget->raise();
-        widget->raise();
         menuBar = new QMenuBar(LOMView);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 800, 27));
@@ -444,6 +441,10 @@ public:
         LOMView->setStatusBar(statusBar);
 
         retranslateUi(LOMView);
+        QObject::connect(pushButtonSetThresholds, SIGNAL(clicked()), LOMView, SLOT(UpdateThresholds()));
+        QObject::connect(pushButton_4, SIGNAL(clicked()), LOMView, SLOT(UpdateSettings()));
+        QObject::connect(pushButton_2, SIGNAL(clicked()), LOMView, SLOT(StartUpdates()));
+        QObject::connect(pushButton_3, SIGNAL(clicked()), LOMView, SLOT(StopUpdates()));
 
         QMetaObject::connectSlotsByName(LOMView);
     } // setupUi
@@ -457,7 +458,7 @@ public:
         coincidenceDurationLabel->setText(QApplication::translate("LOMView", "Coincidence duration ", 0));
         backgroundThresholdLabel->setText(QApplication::translate("LOMView", "Background ", 0));
         label_4->setText(QString());
-        pushButton->setText(QApplication::translate("LOMView", "Set", 0));
+        pushButtonSetThresholds->setText(QApplication::translate("LOMView", "Set", 0));
         label_3->setText(QApplication::translate("LOMView", "Settings", 0));
         updFreqLabel->setText(QApplication::translate("LOMView", "Update frequence (Hz)", 0));
         redrawFreqLabel->setText(QApplication::translate("LOMView", "Redraw frequence (Hz)", 0));
@@ -480,6 +481,7 @@ public:
         label_9->setText(QApplication::translate("LOMView", "Hit sector:", 0));
         label_6->setText(QApplication::translate("LOMView", "FWD", 0));
         label_7->setText(QApplication::translate("LOMView", "BWD", 0));
+        label_10->setText(QApplication::translate("LOMView", "TextLabel", 0));
     } // retranslateUi
 
 };

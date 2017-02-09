@@ -20,10 +20,10 @@ private:
 
     unsigned int backgroundThreshold; /*!< The threshold for quality signal detection. */
 
-    unsigned int deadTime; /*!< Dead time in the calorimeter. */
+    //unsigned int deadTime; /*!< Dead time in the calorimeter. */
 
     //! Registration efficiency determined using the simulation process.
-    unsigned int registrationEfficiency;
+   // unsigned int registrationEfficiency;
 
 public:
 
@@ -48,16 +48,26 @@ public:
      * \param thresholdBE backward endcap hit threshlold.
      * \param coincidenceDurationThreshold the minimal coincidenc interval.
      * \param backgroundThreshold quality signal detection threshold.
-     * \param deadTime dead time in the calorimeter.
-     * \param registrationEfficiency registration efficiency.
      */
     LOMInitParameters(unsigned int thresholdFE, unsigned int thresholdBE,
                       unsigned int coincidenceDurationThreshold,
-                      unsigned int backgroundThreshold, unsigned int deadTime,
-                      unsigned int registrationEfficiency);
+                      unsigned int backgroundThreshold);
+                      //, unsigned int deadTime,
+                      // unsigned int registrationEfficiency);
 
     //! A default destructor.
     ~LOMInitParameters();
+
+    //! Initialisation function.
+    /*!
+    * \param thresholdFE forward endcap hit threshlold.
+    * \param thresholdBE backward endcap hit threshlold.
+    * \param coincidenceDurationThreshold the minimal coincidenc interval.
+    * \param backgroundThreshold quality signal detection threshold.
+    */
+    void Init(unsigned int thresholdFE, unsigned int thresholdBE,
+              unsigned int coincidenceDurationThreshold,
+              unsigned int backgroundThreshold);
 
     //**************************************************************************
     // Getters/Setters.
@@ -118,26 +128,26 @@ public:
     /*!
      * \param deadTime a new value of dead time.
      */
-    void SetDeadTime(unsigned int deadTime) {this->deadTime = deadTime;}
+    //void SetDeadTime(unsigned int deadTime) {this->deadTime = deadTime;}
 
     //! Getter
     /*!
      * \return current value of deadTime.
      */
-    unsigned int GetDeadTime() {return this->deadTime;}
+    //unsigned int GetDeadTime() {return this->deadTime;}
 
     //! Setter
     /*!
      * \param registrationEfficiency a new value of threshold for registration efficiency.
      */
-    void SetRegistrationEfficiency(unsigned int registrationEfficiency)
-                        {this->registrationEfficiency = registrationEfficiency;}
+    //void SetRegistrationEfficiency(unsigned int registrationEfficiency)
+    //                    {this->registrationEfficiency = registrationEfficiency;}
 
     //! Getter
     /*!
      * \return current value of registrationEfficiency.
      */
-    unsigned int GetRegistrationEfficiency() {return this->registrationEfficiency;}
+   // unsigned int GetRegistrationEfficiency() {return this->registrationEfficiency;}
 
 
 

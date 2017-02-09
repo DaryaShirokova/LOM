@@ -4,12 +4,12 @@
 #include <inc/LOMInitParameters.h>
 #include <inc/LOMEventData.h>
 #include <inc/LOMDataUpdater.h>
-#include <inc/LOMView.h>
+//#include <inc/LOMView.h>
 
 #include <string>
 #include <fstream>
 
-//! The model class of the programme.
+//! The model class of the program.
 /*!
   This class processes and keeps the data which are stored in FPGA. It contains
   two member oblects representing two types of data: initialization data which
@@ -26,7 +26,7 @@ class LOMDataProcessor
 
 private:
 
-    LOMInitParameters* initParams; /*!< LOM initialisation data.*/
+    LOMInitParameters initParams; /*!< LOM initialisation data.*/
     LOMEventData* event; /*!< Data from LOM.*/
 
     unsigned int updateFreq; /*!< The frequency of data updates.*/
@@ -77,23 +77,23 @@ public:
     //**************************************************************************
     // Subject/observer pattern.
     //**************************************************************************
-
+/*
     /*!
      * \brief AddView   attach an oberver.
      * \param view      observer.
      */
-    void AddView(LOMView* view);
+   // void AddView(LOMView* view);
 
     /*!
      * \brief DetachView remove an observer.
      * \param view       observer.
      */
-    void DetachView(LOMView* view);
-
+  //  void DetachView(LOMView* view);
+//
     /*!
      * \brief Notify    notify all observers.
      */
-    void Notify();
+   // void Notify();
 
     //**************************************************************************
     // Lifecycle of the data updates.
@@ -121,9 +121,8 @@ public:
 
     /*!
      * \brief Start
-     * \param updateFreq
      */
-    void Start(unsigned int updateFreq);
+    void Start();
 
     /*!
      * \brief Stop
@@ -137,6 +136,14 @@ public:
      */
     double CalculateLuminosity();
 
+
+    //**************************************************************************
+    // Getters/Setters.
+    //**************************************************************************
+    LOMInitParameters& GetInitParameters() {return initParams;}
+
+    unsigned int GetUpdateFreq() {return updateFreq;}
+    void SetUpdateFreq(unsigned int updateFreq) {this->updateFreq = updateFreq;}
 };
 
 #endif // LOMDATAPROCESSOR_H
