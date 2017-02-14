@@ -36,7 +36,7 @@ DISTNAME      = LOM1.0.0
 DISTDIR = /home/darya/Dropbox/Work/LuminosityOnlineMonitor\ (master\ thesis)/LOMProject/build-LOM-Desktop-Debug/.tmp/LOM1.0.0
 LINK          = g++
 LFLAGS        = -m64 -m64 -pthread
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/home/darya/root/lib/ -lCore -lCint -lRIO -lNet -lHist -lGraf -lGpad -lRint -lMatrix -lMathCore -lThread -pthread -lm -ldl -rdynamic -lGui -lGraf3d -lPostscript -lTree -lPhysics -lQt5PrintSupport -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/home/darya/root/lib/ -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc -pthread -lm -ldl -rdynamic -lQt5PrintSupport -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -444,7 +444,18 @@ LOMDataUpdater.o: ../LOM/src/LOMDataUpdater.cpp ../LOM/inc/LOMDataUpdater.h \
 		/home/darya/root/include/TClass.h \
 		/home/darya/root/include/TObjString.h \
 		/home/darya/root/include/ThreadLocalStorage.h \
-		/home/darya/root/include/TVirtualTreePlayer.h
+		/home/darya/root/include/TVirtualTreePlayer.h \
+		/home/darya/root/include/TFile.h \
+		/home/darya/root/include/TDirectoryFile.h \
+		/home/darya/root/include/TDirectory.h \
+		/home/darya/root/include/TList.h \
+		/home/darya/root/include/TDatime.h \
+		/home/darya/root/include/TUUID.h \
+		/home/darya/root/include/TMap.h \
+		/home/darya/root/include/THashTable.h \
+		/home/darya/root/include/TUrl.h \
+		/home/darya/root/include/ROOT/TRWSpinLock.hxx \
+		/home/darya/root/include/ROOT/TSpinMutex.hxx
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o LOMDataUpdater.o ../LOM/src/LOMDataUpdater.cpp
 
 AbstractTransporter.o: ../LOM/src/AbstractTransporter.cpp ../LOM/inc/AbstractTransporter.h

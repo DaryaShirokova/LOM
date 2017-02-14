@@ -4,11 +4,15 @@
 
 #include <QApplication>
 
+#include <iostream>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     LOMView w;
-    LOMDataUpdater updater;
+    std::cout << "Create updater." << std::endl;
+    LOMDataUpdater* updater = new LOMDataUpdater();
+    std::cout << "Create data processor." << std::endl;
     LOMDataProcessor* model = new LOMDataProcessor("initfile", "logfile", updater);
     w.SetModel(model);
     w.show();

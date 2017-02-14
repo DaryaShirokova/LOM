@@ -22,9 +22,11 @@ INCLUDEPATH += /home/darya/root/include/
 CONFIG += c++11
 
 LIBS += -L"/home/darya/root/lib/"
-LIBS += -lCore -lCint -lRIO -lNet -lHist -lGraf
-LIBS += -lGpad  -lRint -lMatrix  -lMathCore -lThread -pthread -lm -ldl
-LIBS += -rdynamic -lGui -lGraf3d -lPostscript -lTree -lPhysics
+LIBS += -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint
+LIBS += -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
+LIBS += -pthread -lm -ldl -rdynamic
+
+
 
 
 # Project files.

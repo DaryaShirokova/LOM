@@ -29,12 +29,12 @@ class LOMDataProcessor
 private:
 
     LOMInitParameters initParams; /*!< LOM initialisation data.*/
-    LOMEventData* event; /*!< Data from LOM.*/
+    LOMEventData event; /*!< Data from LOM.*/
 
     unsigned int updateFreq; /*!< The frequency of data updates.*/
 
     // TODO: &
-    LOMDataUpdater updater; /*!< The object which processes updates.*/
+    LOMDataUpdater* updater; /*!< The object which processes updates.*/
 
     double luminosity; /* The value of luminosity.*/
 
@@ -70,7 +70,7 @@ public:
      * \param updater       the object which processes updates.
      */
     LOMDataProcessor(std::string initfileName, std::string logfileName,
-                     LOMDataUpdater updater);
+                     LOMDataUpdater* updater);
 
     //! A destructor.
     ~LOMDataProcessor();

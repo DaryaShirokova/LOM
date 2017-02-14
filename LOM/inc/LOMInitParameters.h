@@ -35,25 +35,8 @@ public:
     /*! A void constructor to initialize the module by default parameters. */
     LOMInitParameters();
 
-    //! A constructor from file.
-    /*!
-        A constructor to initialize the program using the input file.
-        \param filename an input initialization file.
-    */
-    LOMInitParameters(std::string filename);
 
-    //! A full constructor.
-    /*!
-     * \param thresholdFE forward endcap hit threshlold.
-     * \param thresholdBE backward endcap hit threshlold.
-     * \param coincidenceDurationThreshold the minimal coincidenc interval.
-     * \param backgroundThreshold quality signal detection threshold.
-     */
-    LOMInitParameters(unsigned int thresholdFE, unsigned int thresholdBE,
-                      unsigned int coincidenceDurationThreshold,
-                      unsigned int backgroundThreshold);
-                      //, unsigned int deadTime,
-                      // unsigned int registrationEfficiency);
+
 
     //! A default destructor.
     ~LOMInitParameters();
@@ -68,6 +51,12 @@ public:
     void Init(unsigned int thresholdFE, unsigned int thresholdBE,
               unsigned int coincidenceDurationThreshold,
               unsigned int backgroundThreshold);
+
+    //! Initialisation function.
+    /*!
+    * \param filename the name of initialisation file.
+    */
+    void Init(std::string filename);
 
     //**************************************************************************
     // Getters/Setters.
