@@ -14,8 +14,8 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../LOM -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+CXXFLAGS      = -m64 -pipe -m64 -pthread -g -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+INCPATH       = -I../LOM -I. -I/home/darya/root/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -35,8 +35,8 @@ COMPRESS      = gzip -9f
 DISTNAME      = LOM1.0.0
 DISTDIR = /home/darya/Dropbox/Work/LuminosityOnlineMonitor\ (master\ thesis)/LOMProject/build-LOM-Desktop-Debug/.tmp/LOM1.0.0
 LINK          = g++
-LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5PrintSupport -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LFLAGS        = -m64 -m64 -pthread
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/home/darya/root/lib/ -lCore -lCint -lRIO -lNet -lHist -lGraf -lGpad -lRint -lMatrix -lMathCore -lThread -pthread -lm -ldl -rdynamic -lGui -lGraf3d -lPostscript -lTree -lPhysics -lQt5PrintSupport -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -116,6 +116,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf \
@@ -218,6 +219,7 @@ Makefile: ../LOM/LOM.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmak
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf \
@@ -280,6 +282,7 @@ Makefile: ../LOM/LOM.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmak
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf:
@@ -339,13 +342,13 @@ compiler_moc_header_make_all: moc_LOMView.cpp moc_EndcapWidget.cpp moc_qcustompl
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_LOMView.cpp moc_EndcapWidget.cpp moc_qcustomplot.cpp
 moc_LOMView.cpp: ../LOM/inc/LOMView.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/LOMView.h -o moc_LOMView.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/home/darya/root/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/LOMView.h -o moc_LOMView.cpp
 
 moc_EndcapWidget.cpp: ../LOM/inc/EndcapWidget.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/EndcapWidget.h -o moc_EndcapWidget.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/home/darya/root/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/inc/EndcapWidget.h -o moc_EndcapWidget.cpp
 
 moc_qcustomplot.cpp: ../LOM/qcustomplot/qcustomplot.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/qcustomplot/qcustomplot.h -o moc_qcustomplot.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I'/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/LOM' -I/home/darya/root/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtPrintSupport -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../LOM/qcustomplot/qcustomplot.h -o moc_qcustomplot.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -365,11 +368,22 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 
 ####### Compile
 
-main.o: ../LOM/main.cpp ../LOM/inc/LOMView.h
+main.o: ../LOM/main.cpp ../LOM/inc/LOMView.h \
+		../LOM/inc/LOMDataProcessor.h \
+		../LOM/inc/LOMInitParameters.h \
+		../LOM/inc/LOMEventData.h \
+		../LOM/inc/LOMDataUpdater.h \
+		../LOM/inc/AbstractTransporter.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../LOM/main.cpp
 
 LOMView.o: ../LOM/src/LOMView.cpp ../LOM/inc/LOMView.h \
+		../LOM/inc/LOMDataProcessor.h \
+		../LOM/inc/LOMInitParameters.h \
+		../LOM/inc/LOMEventData.h \
+		../LOM/inc/LOMDataUpdater.h \
+		../LOM/inc/AbstractTransporter.h \
 		ui_LOMView.h \
+		../LOM/qcustomplot/qcustomplot.h \
 		../LOM/inc/EndcapWidget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o LOMView.o ../LOM/src/LOMView.cpp
 
@@ -383,14 +397,54 @@ LOMDataProcessor.o: ../LOM/src/LOMDataProcessor.cpp ../LOM/inc/LOMDataProcessor.
 		../LOM/inc/LOMInitParameters.h \
 		../LOM/inc/LOMEventData.h \
 		../LOM/inc/LOMDataUpdater.h \
-		../LOM/inc/AbstractTransporter.h \
-		../LOM/inc/LOMView.h
+		../LOM/inc/AbstractTransporter.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o LOMDataProcessor.o ../LOM/src/LOMDataProcessor.cpp
 
 LOMDataUpdater.o: ../LOM/src/LOMDataUpdater.cpp ../LOM/inc/LOMDataUpdater.h \
 		../LOM/inc/AbstractTransporter.h \
 		../LOM/inc/LOMInitParameters.h \
-		../LOM/inc/LOMEventData.h
+		../LOM/inc/LOMEventData.h \
+		/home/darya/root/include/TTree.h \
+		/home/darya/root/include/TBranch.h \
+		/home/darya/root/include/TNamed.h \
+		/home/darya/root/include/TObject.h \
+		/home/darya/root/include/RConfigure.h \
+		/home/darya/root/include/Riosfwd.h \
+		/home/darya/root/include/Rtypes.h \
+		/home/darya/root/include/RtypesCore.h \
+		/home/darya/root/include/RConfig.h \
+		/home/darya/root/include/RVersion.h \
+		/home/darya/root/include/DllImport.h \
+		/home/darya/root/include/Rtypeinfo.h \
+		/home/darya/root/include/snprintf.h \
+		/home/darya/root/include/strlcpy.h \
+		/home/darya/root/include/TGenericClassInfo.h \
+		/home/darya/root/include/TSchemaHelper.h \
+		/home/darya/root/include/TStorage.h \
+		/home/darya/root/include/TVersionCheck.h \
+		/home/darya/root/include/TString.h \
+		/home/darya/root/include/TMathBase.h \
+		/home/darya/root/include/RStringView.h \
+		/home/darya/root/include/RWrap_libcpp_string_view.h \
+		/home/darya/root/include/libcpp_string_view.h \
+		/home/darya/root/include/TObjArray.h \
+		/home/darya/root/include/TSeqCollection.h \
+		/home/darya/root/include/TCollection.h \
+		/home/darya/root/include/TIterator.h \
+		/home/darya/root/include/TAttFill.h \
+		/home/darya/root/include/TDataType.h \
+		/home/darya/root/include/TDictionary.h \
+		/home/darya/root/include/ESTLType.h \
+		/home/darya/root/include/TAttLine.h \
+		/home/darya/root/include/TAttMarker.h \
+		/home/darya/root/include/TArrayD.h \
+		/home/darya/root/include/TArray.h \
+		/home/darya/root/include/TArrayI.h \
+		/home/darya/root/include/TBuffer.h \
+		/home/darya/root/include/TClass.h \
+		/home/darya/root/include/TObjString.h \
+		/home/darya/root/include/ThreadLocalStorage.h \
+		/home/darya/root/include/TVirtualTreePlayer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o LOMDataUpdater.o ../LOM/src/LOMDataUpdater.cpp
 
 AbstractTransporter.o: ../LOM/src/AbstractTransporter.cpp ../LOM/inc/AbstractTransporter.h

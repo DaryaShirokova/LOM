@@ -12,6 +12,23 @@ TARGET = LOM
 TEMPLATE = app
 
 
+# ROOT CERN linking.
+
+QMAKE_CXXFLAGS += -m64 -pthread
+QMAKE_LFLAGS += -m64 -pthread
+
+INCLUDEPATH += /home/darya/root/include/
+
+CONFIG += c++11
+
+LIBS += -L"/home/darya/root/lib/"
+LIBS += -lCore -lCint -lRIO -lNet -lHist -lGraf
+LIBS += -lGpad  -lRint -lMatrix  -lMathCore -lThread -pthread -lm -ldl
+LIBS += -rdynamic -lGui -lGraf3d -lPostscript -lTree -lPhysics
+
+
+# Project files.
+
 SOURCES += main.cpp\
     src/LOMView.cpp \
     src/LOMInitParameters.cpp \

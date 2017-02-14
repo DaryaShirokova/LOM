@@ -8,6 +8,8 @@
 #include <map>
 #include <string>
 
+//#include "root/TColor.h"
+
 //! A class for connetion establishment.
 /*!
   A class which knows register map of the FPGA and the data structure.

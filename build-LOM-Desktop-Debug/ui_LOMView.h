@@ -80,8 +80,6 @@ public:
     QLineEdit *bhabhaEventsLineEdit;
     QLabel *backgroundEventsLabel;
     QLineEdit *backgroundEventsLineEdit;
-    QLabel *label_8;
-    QLabel *label_9;
     QWidget *layoutWidget4;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *verticalLayout_2;
@@ -91,7 +89,14 @@ public:
     QLabel *label_7;
     EndcapWidget *fwdEndcapWidget_2;
     QCustomPlot *widget;
+    QWidget *widget1;
+    QHBoxLayout *horizontalLayout_3;
+    QLabel *label_8;
     QLabel *label_10;
+    QWidget *widget2;
+    QHBoxLayout *horizontalLayout_4;
+    QLabel *label_9;
+    QLabel *label_11;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -354,17 +359,6 @@ public:
 
         eventInfoLayout->addLayout(formLayout_2);
 
-        label_8 = new QLabel(centralWidget);
-        label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setGeometry(QRect(280, 180, 71, 17));
-        QFont font2;
-        font2.setFamily(QStringLiteral("aakar"));
-        font2.setPointSize(12);
-        label_8->setFont(font2);
-        label_9 = new QLabel(centralWidget);
-        label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setGeometry(QRect(420, 180, 71, 17));
-        label_9->setFont(font2);
         layoutWidget4 = new QWidget(centralWidget);
         layoutWidget4->setObjectName(QStringLiteral("layoutWidget4"));
         layoutWidget4->setGeometry(QRect(280, 10, 272, 162));
@@ -379,11 +373,11 @@ public:
         label_6 = new QLabel(layoutWidget4);
         label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setMinimumSize(QSize(0, 17));
-        QFont font3;
-        font3.setPointSize(12);
-        font3.setBold(true);
-        font3.setWeight(75);
-        label_6->setFont(font3);
+        QFont font2;
+        font2.setPointSize(12);
+        font2.setBold(true);
+        font2.setWeight(75);
+        label_6->setFont(font2);
 
         verticalLayout_2->addWidget(label_6);
 
@@ -407,7 +401,7 @@ public:
         label_7 = new QLabel(layoutWidget4);
         label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setMinimumSize(QSize(0, 17));
-        label_7->setFont(font3);
+        label_7->setFont(font2);
 
         verticalLayout_4->addWidget(label_7);
 
@@ -425,9 +419,49 @@ public:
         widget = new QCustomPlot(centralWidget);
         widget->setObjectName(QStringLiteral("widget"));
         widget->setGeometry(QRect(320, 240, 341, 111));
-        label_10 = new QLabel(centralWidget);
+        widget1 = new QWidget(centralWidget);
+        widget1->setObjectName(QStringLiteral("widget1"));
+        widget1->setGeometry(QRect(280, 180, 132, 24));
+        horizontalLayout_3 = new QHBoxLayout(widget1);
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
+        label_8 = new QLabel(widget1);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        QFont font3;
+        font3.setFamily(QStringLiteral("Noto Sans"));
+        font3.setPointSize(12);
+        label_8->setFont(font3);
+
+        horizontalLayout_3->addWidget(label_8);
+
+        label_10 = new QLabel(widget1);
         label_10->setObjectName(QStringLiteral("label_10"));
-        label_10->setGeometry(QRect(350, 180, 54, 17));
+        label_10->setFont(font1);
+
+        horizontalLayout_3->addWidget(label_10);
+
+        widget2 = new QWidget(centralWidget);
+        widget2->setObjectName(QStringLiteral("widget2"));
+        widget2->setGeometry(QRect(420, 180, 124, 24));
+        horizontalLayout_4 = new QHBoxLayout(widget2);
+        horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
+        horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
+        label_9 = new QLabel(widget2);
+        label_9->setObjectName(QStringLiteral("label_9"));
+        label_9->setFont(font3);
+
+        horizontalLayout_4->addWidget(label_9);
+
+        label_11 = new QLabel(widget2);
+        label_11->setObjectName(QStringLiteral("label_11"));
+        label_11->setFont(font1);
+
+        horizontalLayout_4->addWidget(label_11);
+
         LOMView->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(LOMView);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -477,11 +511,12 @@ public:
         bhabhaEventsLineEdit->setText(QApplication::translate("LOMView", "0", 0));
         backgroundEventsLabel->setText(QApplication::translate("LOMView", "Background events", 0));
         backgroundEventsLineEdit->setText(QApplication::translate("LOMView", "0", 0));
-        label_8->setText(QApplication::translate("LOMView", "Hit sector:", 0));
-        label_9->setText(QApplication::translate("LOMView", "Hit sector:", 0));
         label_6->setText(QApplication::translate("LOMView", "FWD", 0));
         label_7->setText(QApplication::translate("LOMView", "BWD", 0));
-        label_10->setText(QApplication::translate("LOMView", "TextLabel", 0));
+        label_8->setText(QApplication::translate("LOMView", "Hit sector:", 0));
+        label_10->setText(QApplication::translate("LOMView", "none", 0));
+        label_9->setText(QApplication::translate("LOMView", "Hit sector:", 0));
+        label_11->setText(QApplication::translate("LOMView", "none", 0));
     } // retranslateUi
 
 };

@@ -1,13 +1,11 @@
 #ifndef ENDCAPWIDGET_H
 #define ENDCAPWIDGET_H
 
-#define SECTOR_NUM 6//12
+#define SECTOR_NUM 16//12
 
 #include <QWidget>
 #include <QPoint>
 #include <QString>
-
-//#include <QSrting>
 
 class EndcapWidget : public QWidget
 {

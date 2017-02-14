@@ -6,6 +6,8 @@
 #include <inc/LOMDataUpdater.h>
 //#include <inc/LOMView.h>
 
+#include <QObject>
+
 #include <string>
 #include <fstream>
 
@@ -23,7 +25,7 @@
 
 class LOMDataProcessor
 {
-
+   // Q_OBJECT
 private:
 
     LOMInitParameters initParams; /*!< LOM initialisation data.*/
@@ -136,6 +138,12 @@ public:
      */
     double CalculateLuminosity();
 
+    //**************************************************************************
+    // Signals/slots.
+    //**************************************************************************
+//signals:
+
+//    void dataUpdated(LOMEventData data);
 
     //**************************************************************************
     // Getters/Setters.
