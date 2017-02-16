@@ -12,8 +12,8 @@
 class LOMInitParameters
 {
 private:
-    unsigned int thresholdFE; /*!< Forward endcap hit threshlold. */
-    unsigned int thresholdBE; /*!< Backward endcap hit threshlold. */
+    double thresholdFE; /*!< Forward endcap hit threshlold. */
+    double thresholdBE; /*!< Backward endcap hit threshlold. */
 
     //! The minimal interval when both signals (FE, BE) must exceed thresholds.
     unsigned int coincidenceDurationThreshold;
@@ -66,25 +66,25 @@ public:
     /*!
      * \param thresholdFE a new value of threshold for forward part.
      */
-    void SetThresholdFE(unsigned int thresholdFE) {this->thresholdFE = thresholdFE;}
+    void SetThresholdFE(double thresholdFE) {this->thresholdFE = thresholdFE;}
 
     //! Getter
     /*!
      * \return current value of thresholdFE.
      */
-    unsigned int GetThresholdFE() {return this->thresholdFE;}
+    double GetThresholdFE() {return this->thresholdFE;}
 
     //! Setter
     /*!
      * \param thresholdBE a new value of threshold for backward part.
      */
-    void SetThresholdBE(unsigned int thresholdBE) {this->thresholdBE = thresholdBE;}
+    void SetThresholdBE(double thresholdBE) {this->thresholdBE = thresholdBE;}
 
     //! Getter
     /*!
      * \return current value of thresholdBE.
      */
-    unsigned int GetThresholdBE() {return this->thresholdBE;}
+    double GetThresholdBE() {return this->thresholdBE;}
 
     //! Setter
     /*!

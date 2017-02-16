@@ -22,11 +22,16 @@ private:
     Ui::LOMView *ui;
     LOMDataProcessor* model;
 
+    double ymaxFWD;
+    double ymaxBWD;
+
 public slots:
     void UpdateThresholds();
     void UpdateSettings();
     void StartUpdates();
     void StopUpdates();
+    void UpdatePlots();
+    void ChangePlottersMode();
 
 };
 

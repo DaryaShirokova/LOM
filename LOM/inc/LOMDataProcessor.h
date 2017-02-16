@@ -150,6 +150,8 @@ public:
     //**************************************************************************
     LOMInitParameters& GetInitParameters() {return initParams;}
 
+    LOMEventData& GetEventData() {return event;}
+
     unsigned int GetUpdateFreq() {return updateFreq;}
     void SetUpdateFreq(unsigned int updateFreq) {this->updateFreq = updateFreq;}
 };

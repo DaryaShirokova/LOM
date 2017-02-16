@@ -14,6 +14,9 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -43,15 +46,15 @@ public:
     QLabel *label;
     QFormLayout *formLayout;
     QLabel *thresholdFELabel;
-    QSpinBox *spinBoxAmplFWD;
     QLabel *thresholdBELabel;
-    QSpinBox *spinBoxAmplBWD;
     QLabel *coincidenceDurationLabel;
     QSpinBox *spinBoxCoinDur;
     QLabel *backgroundThresholdLabel;
     QSpinBox *spinBoxBkg;
     QLabel *label_4;
     QPushButton *pushButtonSetThresholds;
+    QDoubleSpinBox *spinBoxAmplFWD;
+    QDoubleSpinBox *spinBoxAmplBWD;
     QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_3;
     QLabel *label_3;
@@ -88,15 +91,28 @@ public:
     QVBoxLayout *verticalLayout_4;
     QLabel *label_7;
     EndcapWidget *fwdEndcapWidget_2;
-    QCustomPlot *widget;
-    QWidget *widget1;
+    QCustomPlot *amplFWDWidget;
+    QWidget *layoutWidget5;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_8;
     QLabel *label_10;
-    QWidget *widget2;
+    QWidget *layoutWidget6;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_9;
     QLabel *label_11;
+    QCustomPlot *amplBWDWidget;
+    QCustomPlot *coinWidget;
+    QLabel *fwdWidgetLabel;
+    QLabel *bwdWidgetLabel;
+    QLabel *coinWidgetLabel;
+    QWidget *formLayoutWidget;
+    QFormLayout *formLayout_4;
+    QCheckBox *checkBoxHitSector;
+    QLabel *redrawFreqLabel_2;
+    QComboBox *fwdSectorCB;
+    QLabel *redrawFreqLabel_3;
+    QComboBox *bwdSectorCB;
+    QPushButton *pushButtonSetThresholds_2;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -105,7 +121,7 @@ public:
     {
         if (LOMView->objectName().isEmpty())
             LOMView->setObjectName(QStringLiteral("LOMView"));
-        LOMView->resize(800, 600);
+        LOMView->resize(1195, 841);
         LOMView->setMinimumSize(QSize(800, 600));
         LOMView->setAutoFillBackground(false);
         LOMView->setLocale(QLocale(QLocale::Estonian, QLocale::Estonia));
@@ -143,27 +159,11 @@ public:
 
         formLayout->setWidget(0, QFormLayout::LabelRole, thresholdFELabel);
 
-        spinBoxAmplFWD = new QSpinBox(layoutWidget);
-        spinBoxAmplFWD->setObjectName(QStringLiteral("spinBoxAmplFWD"));
-        spinBoxAmplFWD->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
-        spinBoxAmplFWD->setMaximum(1000);
-        spinBoxAmplFWD->setValue(100);
-
-        formLayout->setWidget(0, QFormLayout::FieldRole, spinBoxAmplFWD);
-
         thresholdBELabel = new QLabel(layoutWidget);
         thresholdBELabel->setObjectName(QStringLiteral("thresholdBELabel"));
         thresholdBELabel->setFont(font1);
 
         formLayout->setWidget(1, QFormLayout::LabelRole, thresholdBELabel);
-
-        spinBoxAmplBWD = new QSpinBox(layoutWidget);
-        spinBoxAmplBWD->setObjectName(QStringLiteral("spinBoxAmplBWD"));
-        spinBoxAmplBWD->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
-        spinBoxAmplBWD->setMaximum(1000);
-        spinBoxAmplBWD->setValue(100);
-
-        formLayout->setWidget(1, QFormLayout::FieldRole, spinBoxAmplBWD);
 
         coincidenceDurationLabel = new QLabel(layoutWidget);
         coincidenceDurationLabel->setObjectName(QStringLiteral("coincidenceDurationLabel"));
@@ -198,6 +198,22 @@ public:
         pushButtonSetThresholds->setObjectName(QStringLiteral("pushButtonSetThresholds"));
 
         formLayout->setWidget(4, QFormLayout::FieldRole, pushButtonSetThresholds);
+
+        spinBoxAmplFWD = new QDoubleSpinBox(layoutWidget);
+        spinBoxAmplFWD->setObjectName(QStringLiteral("spinBoxAmplFWD"));
+        spinBoxAmplFWD->setMaximum(10);
+        spinBoxAmplFWD->setSingleStep(0.5);
+        spinBoxAmplFWD->setValue(3);
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, spinBoxAmplFWD);
+
+        spinBoxAmplBWD = new QDoubleSpinBox(layoutWidget);
+        spinBoxAmplBWD->setObjectName(QStringLiteral("spinBoxAmplBWD"));
+        spinBoxAmplBWD->setMaximum(10);
+        spinBoxAmplBWD->setSingleStep(0.5);
+        spinBoxAmplBWD->setValue(1);
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, spinBoxAmplBWD);
 
 
         verticalLayout->addLayout(formLayout);
@@ -281,7 +297,7 @@ public:
         splitter->addWidget(layoutWidget2);
         layoutWidget3 = new QWidget(centralWidget);
         layoutWidget3->setObjectName(QStringLiteral("layoutWidget3"));
-        layoutWidget3->setGeometry(QRect(560, 10, 221, 195));
+        layoutWidget3->setGeometry(QRect(320, 460, 221, 195));
         eventInfoLayout = new QVBoxLayout(layoutWidget3);
         eventInfoLayout->setSpacing(6);
         eventInfoLayout->setContentsMargins(11, 11, 11, 11);
@@ -361,7 +377,7 @@ public:
 
         layoutWidget4 = new QWidget(centralWidget);
         layoutWidget4->setObjectName(QStringLiteral("layoutWidget4"));
-        layoutWidget4->setGeometry(QRect(280, 10, 272, 162));
+        layoutWidget4->setGeometry(QRect(40, 460, 272, 162));
         horizontalLayout = new QHBoxLayout(layoutWidget4);
         horizontalLayout->setSpacing(6);
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
@@ -416,18 +432,18 @@ public:
 
         horizontalLayout->addLayout(verticalLayout_4);
 
-        widget = new QCustomPlot(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(320, 240, 341, 111));
-        widget1 = new QWidget(centralWidget);
-        widget1->setObjectName(QStringLiteral("widget1"));
-        widget1->setGeometry(QRect(280, 180, 132, 24));
-        horizontalLayout_3 = new QHBoxLayout(widget1);
+        amplFWDWidget = new QCustomPlot(centralWidget);
+        amplFWDWidget->setObjectName(QStringLiteral("amplFWDWidget"));
+        amplFWDWidget->setGeometry(QRect(610, 70, 411, 151));
+        layoutWidget5 = new QWidget(centralWidget);
+        layoutWidget5->setObjectName(QStringLiteral("layoutWidget5"));
+        layoutWidget5->setGeometry(QRect(40, 630, 132, 24));
+        horizontalLayout_3 = new QHBoxLayout(layoutWidget5);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
-        label_8 = new QLabel(widget1);
+        label_8 = new QLabel(layoutWidget5);
         label_8->setObjectName(QStringLiteral("label_8"));
         QFont font3;
         font3.setFamily(QStringLiteral("Noto Sans"));
@@ -436,36 +452,95 @@ public:
 
         horizontalLayout_3->addWidget(label_8);
 
-        label_10 = new QLabel(widget1);
+        label_10 = new QLabel(layoutWidget5);
         label_10->setObjectName(QStringLiteral("label_10"));
         label_10->setFont(font1);
 
         horizontalLayout_3->addWidget(label_10);
 
-        widget2 = new QWidget(centralWidget);
-        widget2->setObjectName(QStringLiteral("widget2"));
-        widget2->setGeometry(QRect(420, 180, 124, 24));
-        horizontalLayout_4 = new QHBoxLayout(widget2);
+        layoutWidget6 = new QWidget(centralWidget);
+        layoutWidget6->setObjectName(QStringLiteral("layoutWidget6"));
+        layoutWidget6->setGeometry(QRect(180, 630, 124, 24));
+        horizontalLayout_4 = new QHBoxLayout(layoutWidget6);
         horizontalLayout_4->setSpacing(6);
         horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         horizontalLayout_4->setContentsMargins(0, 0, 0, 0);
-        label_9 = new QLabel(widget2);
+        label_9 = new QLabel(layoutWidget6);
         label_9->setObjectName(QStringLiteral("label_9"));
         label_9->setFont(font3);
 
         horizontalLayout_4->addWidget(label_9);
 
-        label_11 = new QLabel(widget2);
+        label_11 = new QLabel(layoutWidget6);
         label_11->setObjectName(QStringLiteral("label_11"));
         label_11->setFont(font1);
 
         horizontalLayout_4->addWidget(label_11);
 
+        amplBWDWidget = new QCustomPlot(centralWidget);
+        amplBWDWidget->setObjectName(QStringLiteral("amplBWDWidget"));
+        amplBWDWidget->setGeometry(QRect(610, 270, 411, 151));
+        coinWidget = new QCustomPlot(centralWidget);
+        coinWidget->setObjectName(QStringLiteral("coinWidget"));
+        coinWidget->setGeometry(QRect(610, 460, 411, 151));
+        fwdWidgetLabel = new QLabel(centralWidget);
+        fwdWidgetLabel->setObjectName(QStringLiteral("fwdWidgetLabel"));
+        fwdWidgetLabel->setGeometry(QRect(610, 50, 411, 17));
+        fwdWidgetLabel->setFont(font);
+        bwdWidgetLabel = new QLabel(centralWidget);
+        bwdWidgetLabel->setObjectName(QStringLiteral("bwdWidgetLabel"));
+        bwdWidgetLabel->setGeometry(QRect(610, 240, 411, 21));
+        bwdWidgetLabel->setFont(font);
+        coinWidgetLabel = new QLabel(centralWidget);
+        coinWidgetLabel->setObjectName(QStringLiteral("coinWidgetLabel"));
+        coinWidgetLabel->setGeometry(QRect(610, 430, 411, 31));
+        coinWidgetLabel->setFont(font);
+        formLayoutWidget = new QWidget(centralWidget);
+        formLayoutWidget->setObjectName(QStringLiteral("formLayoutWidget"));
+        formLayoutWidget->setGeometry(QRect(610, 620, 246, 146));
+        formLayout_4 = new QFormLayout(formLayoutWidget);
+        formLayout_4->setSpacing(6);
+        formLayout_4->setContentsMargins(11, 11, 11, 11);
+        formLayout_4->setObjectName(QStringLiteral("formLayout_4"));
+        formLayout_4->setContentsMargins(0, 0, 0, 0);
+        checkBoxHitSector = new QCheckBox(formLayoutWidget);
+        checkBoxHitSector->setObjectName(QStringLiteral("checkBoxHitSector"));
+        checkBoxHitSector->setFont(font1);
+
+        formLayout_4->setWidget(1, QFormLayout::LabelRole, checkBoxHitSector);
+
+        redrawFreqLabel_2 = new QLabel(formLayoutWidget);
+        redrawFreqLabel_2->setObjectName(QStringLiteral("redrawFreqLabel_2"));
+        redrawFreqLabel_2->setFont(font1);
+
+        formLayout_4->setWidget(2, QFormLayout::LabelRole, redrawFreqLabel_2);
+
+        fwdSectorCB = new QComboBox(formLayoutWidget);
+        fwdSectorCB->setObjectName(QStringLiteral("fwdSectorCB"));
+
+        formLayout_4->setWidget(2, QFormLayout::FieldRole, fwdSectorCB);
+
+        redrawFreqLabel_3 = new QLabel(formLayoutWidget);
+        redrawFreqLabel_3->setObjectName(QStringLiteral("redrawFreqLabel_3"));
+        redrawFreqLabel_3->setFont(font1);
+
+        formLayout_4->setWidget(3, QFormLayout::LabelRole, redrawFreqLabel_3);
+
+        bwdSectorCB = new QComboBox(formLayoutWidget);
+        bwdSectorCB->setObjectName(QStringLiteral("bwdSectorCB"));
+
+        formLayout_4->setWidget(3, QFormLayout::FieldRole, bwdSectorCB);
+
+        pushButtonSetThresholds_2 = new QPushButton(formLayoutWidget);
+        pushButtonSetThresholds_2->setObjectName(QStringLiteral("pushButtonSetThresholds_2"));
+
+        formLayout_4->setWidget(0, QFormLayout::LabelRole, pushButtonSetThresholds_2);
+
         LOMView->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(LOMView);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 800, 27));
+        menuBar->setGeometry(QRect(0, 0, 1195, 27));
         LOMView->setMenuBar(menuBar);
         mainToolBar = new QToolBar(LOMView);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -479,6 +554,7 @@ public:
         QObject::connect(pushButton_4, SIGNAL(clicked()), LOMView, SLOT(UpdateSettings()));
         QObject::connect(pushButton_2, SIGNAL(clicked()), LOMView, SLOT(StartUpdates()));
         QObject::connect(pushButton_3, SIGNAL(clicked()), LOMView, SLOT(StopUpdates()));
+        QObject::connect(checkBoxHitSector, SIGNAL(clicked()), LOMView, SLOT(ChangePlottersMode()));
 
         QMetaObject::connectSlotsByName(LOMView);
     } // setupUi
@@ -487,8 +563,8 @@ public:
     {
         LOMView->setWindowTitle(QApplication::translate("LOMView", "Luminosity Online Monitor", 0));
         label->setText(QApplication::translate("LOMView", "Thresholds", 0));
-        thresholdFELabel->setText(QApplication::translate("LOMView", "Amplitude (FWD)", 0));
-        thresholdBELabel->setText(QApplication::translate("LOMView", "Amplitude (BWD)", 0));
+        thresholdFELabel->setText(QApplication::translate("LOMView", "Amplitude (FWD), GeV", 0));
+        thresholdBELabel->setText(QApplication::translate("LOMView", "Amplitude (BWD), GeV", 0));
         coincidenceDurationLabel->setText(QApplication::translate("LOMView", "Coincidence duration ", 0));
         backgroundThresholdLabel->setText(QApplication::translate("LOMView", "Background ", 0));
         label_4->setText(QString());
@@ -517,6 +593,51 @@ public:
         label_10->setText(QApplication::translate("LOMView", "none", 0));
         label_9->setText(QApplication::translate("LOMView", "Hit sector:", 0));
         label_11->setText(QApplication::translate("LOMView", "none", 0));
+        fwdWidgetLabel->setText(QApplication::translate("LOMView", "FWD", 0));
+        bwdWidgetLabel->setText(QApplication::translate("LOMView", "BWD", 0));
+        coinWidgetLabel->setText(QApplication::translate("LOMView", "Coincidence region", 0));
+        checkBoxHitSector->setText(QApplication::translate("LOMView", "Show hit sectors", 0));
+        redrawFreqLabel_2->setText(QApplication::translate("LOMView", "FWD Sector:", 0));
+        fwdSectorCB->clear();
+        fwdSectorCB->insertItems(0, QStringList()
+         << QApplication::translate("LOMView", "1", 0)
+         << QApplication::translate("LOMView", "2", 0)
+         << QApplication::translate("LOMView", "3", 0)
+         << QApplication::translate("LOMView", "4", 0)
+         << QApplication::translate("LOMView", "5", 0)
+         << QApplication::translate("LOMView", "6", 0)
+         << QApplication::translate("LOMView", "7", 0)
+         << QApplication::translate("LOMView", "8", 0)
+         << QApplication::translate("LOMView", "9", 0)
+         << QApplication::translate("LOMView", "10", 0)
+         << QApplication::translate("LOMView", "11", 0)
+         << QApplication::translate("LOMView", "12", 0)
+         << QApplication::translate("LOMView", "13", 0)
+         << QApplication::translate("LOMView", "14", 0)
+         << QApplication::translate("LOMView", "15", 0)
+         << QApplication::translate("LOMView", "16", 0)
+        );
+        redrawFreqLabel_3->setText(QApplication::translate("LOMView", "BWD Sector:", 0));
+        bwdSectorCB->clear();
+        bwdSectorCB->insertItems(0, QStringList()
+         << QApplication::translate("LOMView", "1", 0)
+         << QApplication::translate("LOMView", "2", 0)
+         << QApplication::translate("LOMView", "3", 0)
+         << QApplication::translate("LOMView", "4", 0)
+         << QApplication::translate("LOMView", "5", 0)
+         << QApplication::translate("LOMView", "6", 0)
+         << QApplication::translate("LOMView", "7", 0)
+         << QApplication::translate("LOMView", "8", 0)
+         << QApplication::translate("LOMView", "9", 0)
+         << QApplication::translate("LOMView", "10", 0)
+         << QApplication::translate("LOMView", "11", 0)
+         << QApplication::translate("LOMView", "12", 0)
+         << QApplication::translate("LOMView", "13", 0)
+         << QApplication::translate("LOMView", "14", 0)
+         << QApplication::translate("LOMView", "15", 0)
+         << QApplication::translate("LOMView", "16", 0)
+        );
+        pushButtonSetThresholds_2->setText(QApplication::translate("LOMView", "Update", 0));
     } // retranslateUi
 
 };

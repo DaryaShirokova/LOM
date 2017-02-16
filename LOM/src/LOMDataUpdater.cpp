@@ -36,16 +36,31 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
     for (int i=0; i < tree->GetEntries(); i++) {
         bbranch->GetEvent(i);
         fbranch->GetEvent(i);
-        eventData->SetAmplitudesFE(fewf);
-        for(int j = 0; j < 16; j++)
+        eventData->GetAmplsFWD().SetAmplitudes(fewf);
+        eventData->GetAmplsBWD().SetAmplitudes(bewf);
+       /* for(int j = 0; j < 16; j++)
         {
             for(int k = 0; k < 64; k++)
             {
                 if(fewf[j][k] > 0.1)
-                    std::cout << i  << " " << k << " " << fewf[j][k] << " " << eventData->GetAmplitudeFE()[j][k] << std::endl;
+                    std::cout << i  << " " << j << " " << k << " " << fewf[j][k] << " " << eventData->GetAmplsFWD().GetAmplitudes()[j][k] << std::endl;
             }
-        }
+        }*/
+        if(i == 1)
+        break;
     }
     std::cout << "Read Event Data Func" << std::endl;
+
+    /*for(int j = 0; j < 16; j++)
+    {
+        for(int k = 0; k < 64; k++)
+        {
+
+            //if(fewf[j][k] > 0.1)
+            std::cout << eventData->GetAmplsBWD().GetAmplitudes()[j][k] << " ";
+        }
+        std::cout << std::endl;
+        std::cout << std::endl;
+    }*/
     return true;
 }

@@ -11,17 +11,79 @@
 /*!
   A class containing information which comes from LOM during the module operating.
 */
-class LOMEventData
+
+class Amplitudes
 {
-    using Array2D = std::array< std::array< double, SAMPLES_NUM >, SECTORS_NUM >;
+public:
+    using ArrayDouble = std::array<double, SAMPLES_NUM>;
+    using ArrayDouble2D = std::array<ArrayDouble, SECTORS_NUM>;
 
 private:
+    ArrayDouble2D amplitudes; /*!< The values of the signals.*/
 
-    unsigned int sectorFE; /*!< The forward sector which highest amplitude.*/
-    unsigned int sectorBE; /*!< The backward sector which highest amplitde.*/
+public:
+    //**************************************************************************
+    // Constructor/destructor.
+    //**************************************************************************
 
-    Array2D amplitudesBE; /*!< The values of the signals in BWD.*/
-    Array2D amplitudesFE; /*!< The values of the signals in FWD.*/
+    //! A default constructor.
+    Amplitudes() { }
+
+    //! A destructor.
+    ~Amplitudes() { }
+
+    //**************************************************************************
+    // Data manipulating functions.
+    //**************************************************************************
+
+    //! Get the values of amplitudes in a certain sector.
+    /*!
+     * \param sector    sector number (1 - 16).
+     * \return  the values of amplitudes.
+     */
+    ArrayDouble GetAmplitudesInSector(unsigned int sector);
+
+    //! Get maximum value of amplitudes in sector.
+    /*!
+     * \param sector    sector number (1 - 16).
+     * \return  maximum value of amplitudes.
+     */
+    double GetMaxAmplitudeInSector(unsigned int sector);
+
+    //! Get the sector with maximum aplitude value.
+    /*!
+     * \return  the sector with maximum aplitude value.
+     */
+    unsigned int GetHitSector();
+
+    //**************************************************************************
+    // Getters/Setters.
+    //**************************************************************************
+
+    //! Setter
+    /*!
+     * \param amplitudes set the value of amplitudes.
+     */
+    void SetAmplitudes(double amplitudes[SECTORS_NUM][SAMPLES_NUM]) {
+        for (int i = 0; i < SECTORS_NUM; i++)
+            for(int j = 0; j < SAMPLES_NUM; j++)
+                this->amplitudes[i][j] = amplitudes[i][j];
+    }
+
+    //! Getter
+    /*!
+     * \return array of amplitudes in all sectors.
+     */
+    ArrayDouble2D GetAmplitudes() { return amplitudes;}
+};
+
+class LOMEventData
+{
+    using ArrayInt = std::array<int, SAMPLES_NUM>;
+private:
+
+    Amplitudes amplsBWD; /*!< Amplitudes in BWD sector.*/
+    Amplitudes amplsFWD; /*!< Amplitudes in FWD sector.*/
 
     unsigned int nBhabhaTotal; /*!< The total number of detected bhabha events.*/
 public:
@@ -39,55 +101,43 @@ public:
     // Data manipulating functions.
     //**************************************************************************
 
+    //!
+    /*!
+     * \param sectorFWD the forward sector number.
+     * \param sectorBWD the backward sector number.
+     * \param thresholdFE threshold for amplitude in forward sector.
+     * \param thresholdBE threshold for amplitude in backward sector.
+     * \return  coincidence region (1 when intersects, 0 when not).
+     */
+    ArrayInt GetCoincidenceRegion(unsigned int sectorFWD, unsigned int sectorBWD,
+                                  double thresholdFE, double thresholdBE);
+
+
+    ArrayInt GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
+                                              unsigned int sectorBWD,
+                                              double thresholdFE,
+                                              double thresholdBE);
+
+    ArrayInt GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
+                                              unsigned int sectorBWD,
+                                              double thresholdFE,
+                                              double thresholdBE);
+
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************
-    //! Setter
-    /*!
-     * \param sectorFE set the value of current strike sector.
-     */
-    void SetSectorFE(unsigned int sectorFE) {this->sectorFE = sectorFE;}
 
     //! Getter
     /*!
-     * \return current value of sectorFE.
+     * \return amplitudes in forward sectors.
      */
-    unsigned int GetSectorFE() {return this->sectorFE;}
-
-    //! Setter
-    /*!
-     * \param sectorBE set the value of current strike sector.
-     */
-    void SetSectorBE(unsigned int sectorBE) {this->sectorBE = sectorBE;}
+    Amplitudes& GetAmplsBWD() {return amplsBWD;}
 
     //! Getter
     /*!
-     * \return current value of sectorBE.
+     * \return amplitudes in forward sectors.
      */
-    unsigned int GetSectorBE() {return this->sectorBE;}
-
-    //! Setter
-    /*!
-     * \param amplitudesBE set the value of amplitudes in BWD.
-     */
-    void SetAmplitudesBE(double amplitudesBE[SECTORS_NUM][SAMPLES_NUM]) {
-        for (int i = 0; i < SECTORS_NUM; i++)
-            for(int j = 0; j < SAMPLES_NUM; j++)
-                this->amplitudesBE[i][j] = amplitudesBE[i][j];
-    }
-
-    Array2D GetAmplitudeBE() { return amplitudesBE;}
-    Array2D GetAmplitudeFE() { return amplitudesFE;}
-
-    //! Setter
-    /*!
-     * \param amplitudesFE set the value of amplitudes in FWD.
-     */
-    void SetAmplitudesFE(double amplitudesFE[SECTORS_NUM][SAMPLES_NUM]) {
-        for (int i = 0; i < SECTORS_NUM; i++)
-            for(int j = 0; j < SAMPLES_NUM; j++)
-                this->amplitudesFE[i][j] = amplitudesFE[i][j];
-    }
+    Amplitudes& GetAmplsFWD() {return amplsFWD;}
 
 };
 
