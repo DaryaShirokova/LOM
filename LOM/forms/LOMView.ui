@@ -188,20 +188,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Update frequence (Hz)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="spinBoxUpdFreq">
-          <property name="locale">
-           <locale language="English" country="UnitedStates"/>
-          </property>
-          <property name="maximum">
-           <number>1000</number>
-          </property>
-          <property name="value">
-           <number>100</number>
+           <string>Update frequence (s)</string>
           </property>
          </widget>
         </item>
@@ -213,20 +200,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Redraw frequence (Hz)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="spinBoxRedrawFreq">
-          <property name="locale">
-           <locale language="English" country="UnitedStates"/>
-          </property>
-          <property name="maximum">
-           <number>1000</number>
-          </property>
-          <property name="value">
-           <number>100</number>
+           <string>Redraw frequence (s)</string>
           </property>
          </widget>
         </item>
@@ -238,9 +212,41 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QPushButton" name="pushButton_4">
+         <widget class="QPushButton" name="pushButtonSetSettings">
           <property name="text">
            <string>Set</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="spinBoxUpdFreq">
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDoubleSpinBox" name="spinBoxRedrawFreq">
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.500000000000000</double>
+          </property>
+          <property name="value">
+           <double>3.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -270,8 +276,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>240</y>
+      <x>300</x>
+      <y>90</y>
       <width>221</width>
       <height>195</height>
      </rect>
@@ -941,7 +947,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_4</sender>
+   <sender>pushButtonSetSettings</sender>
    <signal>clicked()</signal>
    <receiver>LOMView</receiver>
    <slot>UpdateSettings()</slot>
@@ -995,8 +1001,8 @@
    <slot>ChangePlottersMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>627</x>
-     <y>677</y>
+     <x>628</x>
+     <y>720</y>
     </hint>
     <hint type="destinationlabel">
      <x>432</x>

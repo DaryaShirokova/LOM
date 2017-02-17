@@ -41,8 +41,10 @@ LOMView::LOMView(QWidget *parent) :
     ui->coinWidget->replot();
 
     // Set update timer.
+    //UpdateSettings();
     plotsUpdateTimer = new QTimer(this);
     connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdatePlots()));
+    connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdateEndcapsWiggets()));
 }
 
 LOMView::~LOMView()
@@ -70,23 +72,24 @@ void LOMView::UpdateThresholds()
 
 void LOMView::UpdateSettings()
 {
-    unsigned int newValFreq = ui->spinBoxUpdFreq->value();
-    model->SetUpdateFreq(newValFreq);
+    this->redrawFreq = int(1000 * ui->spinBoxRedrawFreq->value());
+    model->SetUpdateFreq(int(1000 * ui->spinBoxUpdFreq->value()));
 }
 
 void LOMView::StartUpdates()
 {
+    UpdateSettings();
     model->Start();
     UpdatePlots();
-    // TODO
-        plotsUpdateTimer->start(5000);
-    //
+    plotsUpdateTimer->start(redrawFreq);
+    ui->pushButtonSetSettings->setEnabled(false);
 }
 
 void LOMView::StopUpdates()
 {
     model->Stop();
-        plotsUpdateTimer->stop();
+    plotsUpdateTimer->stop();
+    ui->pushButtonSetSettings->setEnabled(true);
 }
 
 void LOMView::ChangePlottersMode()
@@ -241,7 +244,7 @@ void LOMView::UpdatePlots()
     else
         ui->coinWidgetLabel->setText("Coincidence region: none ");
 
-    UpdateEndcapsWiggets();
+    //UpdateEndcapsWiggets();
 }
 
 void LOMView::UpdateEndcapsWiggets()

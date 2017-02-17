@@ -17,12 +17,13 @@ public:
     explicit LOMView(QWidget *parent = 0);
     ~LOMView();
 
-    void SetModel(LOMDataProcessor* model) {this->model = model;}
+    void SetModel(LOMDataProcessor* model) {this->model = model; UpdateThresholds();}
 
 private:
     Ui::LOMView *ui;
     LOMDataProcessor* model;
 
+    int redrawFreq;
     double ymaxFWD;
     double ymaxBWD;
     QTimer* plotsUpdateTimer;

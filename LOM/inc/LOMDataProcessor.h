@@ -157,7 +157,7 @@ public:
     LOMEventData& GetEventData() {return event;}
 
     unsigned int GetUpdateFreq() {return updateFreq;}
-    void SetUpdateFreq(long int updateFreq) {this->updateFreq = updateFreq;}
+    void SetUpdateFreq(int updateFreq) {this->updateFreq = updateFreq;}
 };
 
 #endif // LOMDATAPROCESSOR_H
