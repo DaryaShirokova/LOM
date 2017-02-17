@@ -38,8 +38,9 @@ SOURCES += main.cpp\
     src/LOMDataProcessor.cpp \
     src/LOMDataUpdater.cpp \
     src/AbstractTransporter.cpp \
-    src/EndcapWidget.cpp \
-    qcustomplot/qcustomplot.cpp
+    qcustomplot/qcustomplot.cpp \
+    src/QEndcapWidget.cpp \
+    src/QColorBar.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -47,7 +48,8 @@ HEADERS  += inc/LOMView.h \
     inc/LOMDataProcessor.h \
     inc/LOMDataUpdater.h \
     inc/AbstractTransporter.h \
-    inc/EndcapWidget.h \
-    qcustomplot/qcustomplot.h
+    qcustomplot/qcustomplot.h \
+    inc/QColorBar.h \
+    inc/QEndcapWidget.h
 
 FORMS    += forms/LOMView.ui

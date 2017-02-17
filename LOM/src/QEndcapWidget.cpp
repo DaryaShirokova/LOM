@@ -1,4 +1,4 @@
-#include "../inc/EndcapWidget.h"
+#include "../inc/QEndcapWidget.h"
 #include <QPainter>
 #include <QBrush>
 #include <algorithm>
@@ -9,13 +9,13 @@
 
 #include <iostream>
 
-EndcapWidget::EndcapWidget(QWidget *parent) : QWidget(parent)
+QEndcapWidget::QEndcapWidget(QWidget *parent) : QWidget(parent)
 {
     this->sectorColor = QString("red");
 }
 
 
-void EndcapWidget::paintEvent(QPaintEvent *event)
+void QEndcapWidget::paintEvent(QPaintEvent *event)
 {
     QWidget::paintEvent(event);
 
@@ -69,12 +69,12 @@ void EndcapWidget::paintEvent(QPaintEvent *event)
 }
 
 
-void EndcapWidget::FillSector()
+void QEndcapWidget::FillSector()
 {
 
 }
 
-QPoint EndcapWidget::GetRayCircleIntersection(int x0, int y0, int r, double alpha)
+QPoint QEndcapWidget::GetRayCircleIntersection(int x0, int y0, int r, double alpha)
 {
     int x1 = x0 + round(r*cos(alpha));
     int y1 = y0 + round(r*sin(alpha));

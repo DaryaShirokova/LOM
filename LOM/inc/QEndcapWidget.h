@@ -7,14 +7,14 @@
 #include <QPoint>
 #include <QString>
 
-class EndcapWidget : public QWidget
+class QEndcapWidget : public QWidget
 {
     Q_OBJECT
 
 
 public:
-    explicit EndcapWidget(QWidget *parent = 0);
-    ~EndcapWidget() {}
+    explicit QEndcapWidget(QWidget *parent = 0);
+    ~QEndcapWidget() {}
 
     void SetSectorColor(QString color) { this->sectorColor = color; }
     void SetFilledSector(unsigned int sector) {

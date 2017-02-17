@@ -892,6 +892,16 @@
      </item>
     </layout>
    </widget>
+   <widget class="QColorBar" name="colorBar" native="true">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>460</y>
+      <width>41</width>
+      <height>171</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -924,7 +934,13 @@
   <customwidget>
    <class>QCustomPlot</class>
    <extends>QWidget</extends>
-   <header location="global">qcustomplot/qcustomplot.h</header>
+   <header>qcustomplot/qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QColorBar</class>
+   <extends>QWidget</extends>
+   <header location="global">inc/QColorBar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
