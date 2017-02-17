@@ -101,7 +101,7 @@ public:
     // Data manipulating functions.
     //**************************************************************************
 
-    //!
+    //! Get coincidence region.
     /*!
      * \param sectorFWD the forward sector number.
      * \param sectorBWD the backward sector number.
@@ -113,15 +113,46 @@ public:
                                   double thresholdFE, double thresholdBE);
 
 
-    ArrayInt GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
+    //! Get coincidence region left boundary.
+    /*!
+     * \param sectorFWD the forward sector number.
+     * \param sectorBWD the backward sector number.
+     * \param thresholdFE threshold for amplitude in forward sector.
+     * \param thresholdBE threshold for amplitude in backward sector.
+     * \return  coincidence region right boundary (-1 if there is no
+     *          coincidence region).
+     */
+    int GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
                                               unsigned int sectorBWD,
                                               double thresholdFE,
                                               double thresholdBE);
 
-    ArrayInt GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
+    //! Get coincidence region right boundary.
+    /*!
+     * \param sectorFWD the forward sector number.
+     * \param sectorBWD the backward sector number.
+     * \param thresholdFE threshold for amplitude in forward sector.
+     * \param thresholdBE threshold for amplitude in backward sector.
+     * \return  coincidence region right boundary (-1 if there is no
+     *          coincidence region).
+     */
+    int GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
                                               unsigned int sectorBWD,
                                               double thresholdFE,
                                               double thresholdBE);
+
+    //! Check if there is a coincidence region for these two sectors.
+    /*!
+     * \param sectorFWD the forward sector number.
+     * \param sectorBWD the backward sector number.
+     * \param thresholdFE threshold for amplitude in forward sector.
+     * \param thresholdBE threshold for amplitude in backward sector.
+     * \return  true if coincidence region exists.
+     */
+    bool haveCoincidenceRegion(unsigned int sectorFWD,
+                                               unsigned int sectorBWD,
+                                               double thresholdFE,
+                                               double thresholdBE);
 
     //**************************************************************************
     // Getters/Setters.

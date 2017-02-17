@@ -14,10 +14,40 @@ LOMView::LOMView(QWidget *parent) :
     ui->setupUi(this);
     ymaxBWD = 5.0;
     ymaxFWD = 7.0;
+
+    // Give titles to axis
+
+
+    // Set axes ranges.
+
+    // Give titles to axis
+    ui->amplFWDWidget->xAxis->setLabel("Time stamps");
+    ui->amplFWDWidget->yAxis->setLabel("Amplitude, GeV");
+    ui->amplBWDWidget->xAxis->setLabel("Time stamps");
+    ui->amplBWDWidget->yAxis->setLabel("Amplitude, GeV");
+    ui->coinWidget->xAxis->setLabel("Time stamps");
+    ui->coinWidget->yAxis->setLabel("Coincidence");
+
+    // Set axes ranges.
+    ui->amplFWDWidget->xAxis->setRange(0, 63);
+    ui->amplFWDWidget->yAxis->setRange(-0.1, ymaxFWD);
+    ui->amplBWDWidget->xAxis->setRange(0, 63);
+    ui->amplBWDWidget->yAxis->setRange(-0.1, ymaxBWD);
+    ui->coinWidget->xAxis->setRange(0, 63);
+    ui->coinWidget->yAxis->setRange(-0.1, 1.2);
+
+    ui->amplFWDWidget->replot();
+    ui->amplBWDWidget->replot();
+    ui->coinWidget->replot();
+
+    // Set update timer.
+    plotsUpdateTimer = new QTimer(this);
+    connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdatePlots()));
 }
 
 LOMView::~LOMView()
 {
+    delete plotsUpdateTimer;
     delete ui;
 }
 
@@ -48,11 +78,15 @@ void LOMView::StartUpdates()
 {
     model->Start();
     UpdatePlots();
+    // TODO
+        plotsUpdateTimer->start(5000);
+    //
 }
 
 void LOMView::StopUpdates()
 {
     model->Stop();
+        plotsUpdateTimer->stop();
 }
 
 void LOMView::ChangePlottersMode()
@@ -71,6 +105,7 @@ void LOMView::ChangePlottersMode()
 
 void LOMView::UpdatePlots()
 {
+    std::cout <<"hey " << std::endl;
     unsigned int fwdSector;
     unsigned int bwdSector;
 
@@ -113,14 +148,6 @@ void LOMView::UpdatePlots()
     // Assign data.
     ui->amplFWDWidget->graph(0)->setData(x, y);
 
-    // Give titles to axis
-    ui->amplFWDWidget->xAxis->setLabel("Time stamps");
-    ui->amplFWDWidget->yAxis->setLabel("Amplitude, GeV");
-
-    // Set axes ranges.
-    ui->amplFWDWidget->xAxis->setRange(0, 63);
-    ui->amplFWDWidget->yAxis->setRange(-0.1, ymaxFWD);
-
     // Add threshold.
     double thresholdFE = model->GetInitParameters().GetThresholdFE();
     ui->amplFWDWidget->addGraph();
@@ -161,14 +188,6 @@ void LOMView::UpdatePlots()
     // Assign data.
     ui->amplBWDWidget->graph(0)->setData(x, y);
 
-    // Give titles to axis
-    ui->amplBWDWidget->xAxis->setLabel("Time stamps");
-    ui->amplBWDWidget->yAxis->setLabel("Amplitude, GeV");
-
-    // Set axes ranges.
-    ui->amplBWDWidget->xAxis->setRange(0, 63);
-    ui->amplBWDWidget->yAxis->setRange(-0.1, ymaxBWD);
-
     // Add threshold.
     double thresholdBE = model->GetInitParameters().GetThresholdBE();
     ui->amplBWDWidget->addGraph();
@@ -195,11 +214,7 @@ void LOMView::UpdatePlots()
             .GetCoincidenceRegion(fwdSector-1, bwdSector-1, thresholdFE, thresholdBE);
 
     for (int i=0; i<64; ++i)
-    {
-      y[i] =y_coin[i];
-      std::cout << y[i] << " " << y_coin[i] << " ";
-    }
-    std::cout <<endl;
+        y[i] =y_coin[i];
 
     // Set up style.
     ui->coinWidget->addGraph();
@@ -209,16 +224,27 @@ void LOMView::UpdatePlots()
     // Assign data.
     ui->coinWidget->graph(0)->setData(x, y);
 
-    // Give titles to axis
-    ui->coinWidget->xAxis->setLabel("Time stamps");
-    ui->coinWidget->yAxis->setLabel("Coincidence");
-
-    // Set axes ranges.
-    ui->coinWidget->xAxis->setRange(0, 63);
-    ui->coinWidget->yAxis->setRange(-0.1, 1.2);
-
     // Replotting.
     ui->coinWidget->replot();
 
     // Update label.
+    if(model->GetEventData().haveCoincidenceRegion(fwdSector-1, bwdSector-1, thresholdFE, thresholdBE))
+    {
+        ui->coinWidgetLabel->setText("Coincidence region: " +
+            QString::number(model->GetEventData().GetCoincidenceRegionLeftBoundary
+                            (fwdSector-1, bwdSector-1, thresholdFE, thresholdBE))
+                            + "-" +
+            QString::number(model->GetEventData().GetCoincidenceRegionRightBoundary
+                           (fwdSector-1, bwdSector-1, thresholdFE, thresholdBE)));
+
+    }
+    else
+        ui->coinWidgetLabel->setText("Coincidence region: none ");
+
+    UpdateEndcapsWiggets();
+}
+
+void LOMView::UpdateEndcapsWiggets()
+{
+
 }

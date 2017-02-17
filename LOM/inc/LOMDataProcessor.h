@@ -7,9 +7,11 @@
 //#include <inc/LOMView.h>
 
 #include <QObject>
+#include <QTimer>
 
 #include <string>
 #include <fstream>
+
 
 //! The model class of the program.
 /*!
@@ -23,15 +25,16 @@
   It also implements the Subject in Subject/Observer pattern.
 */
 
-class LOMDataProcessor
+class LOMDataProcessor : public QObject
 {
-   // Q_OBJECT
+    Q_OBJECT
 private:
 
     LOMInitParameters initParams; /*!< LOM initialisation data.*/
+
     LOMEventData event; /*!< Data from LOM.*/
 
-    unsigned int updateFreq; /*!< The frequency of data updates.*/
+    long int updateFreq; /*!< The frequency of data updates.*/
 
     // TODO: &
     LOMDataUpdater* updater; /*!< The object which processes updates.*/
@@ -41,16 +44,13 @@ private:
     std::string logfileName; /* The title of the log file.*/
     std::ofstream logfile; /* The log output stream.*/
 
+    QTimer* timer;
 private:
 
     //**************************************************************************
     // Internal functions.
     //**************************************************************************
 
-    /*!
-     * \brief Update    update event data.
-     */
-    void Update();
 
     /*!
      * \brief Log       write log.
@@ -141,19 +141,23 @@ public:
     //**************************************************************************
     // Signals/slots.
     //**************************************************************************
-//signals:
+private slots:
 
-//    void dataUpdated(LOMEventData data);
+    /*!
+     * \brief Update    update event data.
+     */
+    void Update();
 
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************
+public:
     LOMInitParameters& GetInitParameters() {return initParams;}
 
     LOMEventData& GetEventData() {return event;}
 
     unsigned int GetUpdateFreq() {return updateFreq;}
-    void SetUpdateFreq(unsigned int updateFreq) {this->updateFreq = updateFreq;}
+    void SetUpdateFreq(long int updateFreq) {this->updateFreq = updateFreq;}
 };
 
 #endif // LOMDATAPROCESSOR_H

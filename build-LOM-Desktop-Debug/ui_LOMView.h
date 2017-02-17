@@ -297,7 +297,7 @@ public:
         splitter->addWidget(layoutWidget2);
         layoutWidget3 = new QWidget(centralWidget);
         layoutWidget3->setObjectName(QStringLiteral("layoutWidget3"));
-        layoutWidget3->setGeometry(QRect(320, 460, 221, 195));
+        layoutWidget3->setGeometry(QRect(310, 240, 221, 195));
         eventInfoLayout = new QVBoxLayout(layoutWidget3);
         eventInfoLayout->setSpacing(6);
         eventInfoLayout->setContentsMargins(11, 11, 11, 11);
@@ -498,7 +498,7 @@ public:
         coinWidgetLabel->setFont(font);
         formLayoutWidget = new QWidget(centralWidget);
         formLayoutWidget->setObjectName(QStringLiteral("formLayoutWidget"));
-        formLayoutWidget->setGeometry(QRect(610, 620, 246, 146));
+        formLayoutWidget->setGeometry(QRect(610, 620, 211, 146));
         formLayout_4 = new QFormLayout(formLayoutWidget);
         formLayout_4->setSpacing(6);
         formLayout_4->setContentsMargins(11, 11, 11, 11);
@@ -566,7 +566,7 @@ public:
         thresholdFELabel->setText(QApplication::translate("LOMView", "Amplitude (FWD), GeV", 0));
         thresholdBELabel->setText(QApplication::translate("LOMView", "Amplitude (BWD), GeV", 0));
         coincidenceDurationLabel->setText(QApplication::translate("LOMView", "Coincidence duration ", 0));
-        backgroundThresholdLabel->setText(QApplication::translate("LOMView", "Background ", 0));
+        backgroundThresholdLabel->setText(QApplication::translate("LOMView", "Hit", 0));
         label_4->setText(QString());
         pushButtonSetThresholds->setText(QApplication::translate("LOMView", "Set", 0));
         label_3->setText(QApplication::translate("LOMView", "Settings", 0));

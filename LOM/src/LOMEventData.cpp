@@ -40,7 +40,8 @@ unsigned int Amplitudes::GetHitSector()
 
 LOMEventData::ArrayInt LOMEventData::GetCoincidenceRegion(unsigned int sectorFWD,
                                                           unsigned int sectorBWD,
-                                                          double thresholdFE, double thresholdBE)
+                                                          double thresholdFE,
+                                                          double thresholdBE)
 {
     ArrayInt coinRegion;
     Amplitudes::ArrayDouble fwd = amplsFWD.GetAmplitudesInSector(sectorFWD);
@@ -52,4 +53,41 @@ LOMEventData::ArrayInt LOMEventData::GetCoincidenceRegion(unsigned int sectorFWD
         else coinRegion[i] = 0;
 
     return coinRegion;
+}
+bool LOMEventData::haveCoincidenceRegion(unsigned int sectorFWD,
+                                         unsigned int sectorBWD,
+                                         double thresholdFE, double thresholdBE)
+{
+    ArrayInt arr = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
+
+    for(int val: arr)
+        if(val == 1) return true;
+    return false;
+}
+
+int LOMEventData::GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
+                                                            unsigned int sectorBWD,
+                                                            double thresholdFE,
+                                                            double thresholdBE)
+{
+
+    ArrayInt arr = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
+
+    for (int i = 0; i < SAMPLES_NUM; i++)
+        if(arr[i] == 1) return i;
+    return -1;
+
+}
+
+int LOMEventData::GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
+                                                            unsigned int sectorBWD,
+                                                            double thresholdFE,
+                                                            double thresholdBE)
+{
+    ArrayInt arr = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
+
+    for (int i = SAMPLES_NUM - 1; i >= 0; i--)
+        if(arr[i] == 1) return i;
+    return -1;
+
 }

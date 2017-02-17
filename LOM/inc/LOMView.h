@@ -2,6 +2,7 @@
 #define LOMVIEW_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 namespace Ui {
 class LOMView;
@@ -24,6 +25,7 @@ private:
 
     double ymaxFWD;
     double ymaxBWD;
+    QTimer* plotsUpdateTimer;
 
 public slots:
     void UpdateThresholds();
@@ -32,7 +34,7 @@ public slots:
     void StopUpdates();
     void UpdatePlots();
     void ChangePlottersMode();
-
+    void UpdateEndcapsWiggets();
 };
 
 #endif // LOMVIEW_H

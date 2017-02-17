@@ -107,7 +107,7 @@
            </font>
           </property>
           <property name="text">
-           <string>Background </string>
+           <string>Hit</string>
           </property>
          </widget>
         </item>
@@ -270,8 +270,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>460</y>
+      <x>310</x>
+      <y>240</y>
       <width>221</width>
       <height>195</height>
      </rect>
@@ -668,7 +668,7 @@
      <rect>
       <x>610</x>
       <y>620</y>
-      <width>246</width>
+      <width>211</width>
       <height>146</height>
      </rect>
     </property>
