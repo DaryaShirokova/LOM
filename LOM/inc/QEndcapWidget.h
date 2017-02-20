@@ -7,6 +7,8 @@
 #include <QPoint>
 #include <QString>
 
+#include <array>
+
 class QEndcapWidget : public QWidget
 {
     Q_OBJECT
@@ -16,28 +18,16 @@ public:
     explicit QEndcapWidget(QWidget *parent = 0);
     ~QEndcapWidget() {}
 
-    void SetSectorColor(QString color) { this->sectorColor = color; }
-    void SetFilledSector(unsigned int sector) {
-        if (sector > SECTOR_NUM || sector < 1)
-            return;
-        this->filledSector = sector;
-    }
+    void SetAmplitudes(std::array<double, 16> amplitudes) { this->amplitudes = amplitudes; }
 
 protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-
-    int filledSector;
+    double maxAmpl;
+    double minAmpl;
+    std::array<double, 16> amplitudes;
     QPoint GetRayCircleIntersection(int x0, int y0, int r, double alpha);
-    QString sectorColor;
-
-//QObject::connect(pushButton, SIGNAL(clicked()), LOMView, SLOT(show()));
-signals:
-    void SectorChanged();
-
-public slots:
-    void FillSector();
 };
 
 #endif // ENDCAPWIDGET_H

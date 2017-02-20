@@ -729,19 +729,19 @@
    <widget class="QColorBar" name="colorBar" native="true">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>530</y>
+      <x>270</x>
+      <y>350</y>
       <width>21</width>
       <height>151</height>
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label_8">
+   <widget class="QLabel" name="fwdHitLabel">
     <property name="geometry">
      <rect>
-      <x>41</x>
-      <y>631</y>
-      <width>77</width>
+      <x>330</x>
+      <y>530</y>
+      <width>151</width>
       <height>22</height>
      </rect>
     </property>
@@ -755,39 +755,21 @@
      <string>Hit sector:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_10">
+   <widget class="QEndcapWidget" name="fwdEndcap" native="true">
     <property name="geometry">
      <rect>
-      <x>124</x>
-      <y>631</y>
-      <width>39</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>none</string>
-    </property>
-   </widget>
-   <widget class="QEndcapWidget" name="widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>42</x>
-      <y>490</y>
-      <width>111</width>
-      <height>131</height>
+      <x>320</x>
+      <y>340</y>
+      <width>231</width>
+      <height>181</height>
      </rect>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>42</x>
-      <y>462</y>
+      <x>320</x>
+      <y>310</y>
       <width>37</width>
       <height>22</height>
      </rect>
@@ -812,8 +794,8 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>462</y>
+      <x>40</x>
+      <y>500</y>
       <width>38</width>
       <height>22</height>
      </rect>
@@ -835,12 +817,22 @@
      <string>BWD</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_9">
+   <widget class="QEndcapWidget" name="bwdEndcap" native="true">
     <property name="geometry">
      <rect>
-      <x>181</x>
-      <y>631</y>
-      <width>77</width>
+      <x>40</x>
+      <y>530</y>
+      <width>231</width>
+      <height>181</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="bwdHitLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>720</y>
+      <width>151</width>
       <height>22</height>
      </rect>
     </property>
@@ -852,24 +844,6 @@
     </property>
     <property name="text">
      <string>Hit sector:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_11">
-    <property name="geometry">
-     <rect>
-      <x>264</x>
-      <y>631</y>
-      <width>39</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>none</string>
     </property>
    </widget>
   </widget>

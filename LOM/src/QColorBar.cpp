@@ -9,9 +9,13 @@ QColorBar::QColorBar(QWidget *parent) : QWidget(parent)
 
 QColor QColorBar::GetColor(double val)
 {
-    if (val < 1/3.)
+    if(val >= 1.)
+        return QColor(255, 255, 255);
+    else if(val <= 0)
+        return QColor(0, 0, 0);
+    else if (val <= 1/3.)
         return QColor(int(std::round(255 * val * 3)), 0, 0);
-    else if (val < 2/3.)
+    else if (val <= 2/3.)
         return QColor(255, int(std::round(255 * (val - 1/3.) * 3.)), 0);
     else return QColor(255, 255, int(std::round(255 * (val - 2/3.) * 3.)));
 }

@@ -4,6 +4,11 @@
 
 LOMEventData::LOMEventData()
 {
+    /*double arr;
+    for (int i = 0; i < arr.size(); i++)
+        for(int j = 0; j < arr.size(); j++)
+            arr[i] = 0;
+    this->GetAmplsBWD().SetAmplitudes();*/
     std::cout << "Default constructor for LOMEventData has been called" << std::endl;
 }
 
@@ -20,6 +25,14 @@ Amplitudes::ArrayDouble Amplitudes::GetAmplitudesInSector(unsigned int sector)
 double Amplitudes::GetMaxAmplitudeInSector(unsigned int sector)
 {
     return *(std::max_element(amplitudes[sector].begin(), amplitudes[sector].end()));
+}
+
+std::array<double, SECTORS_NUM> Amplitudes::GetMaxAmplitudes()
+{
+    std::array<double, SECTORS_NUM> arr;
+    for (int i = 0; i < SECTORS_NUM; i++)
+        arr[i] = GetMaxAmplitudeInSector(i);
+    return arr;
 }
 
 unsigned int Amplitudes::GetHitSector()

@@ -81,6 +81,7 @@ void LOMView::StartUpdates()
     UpdateSettings();
     model->Start();
     UpdatePlots();
+    UpdateEndcapsWiggets();
     plotsUpdateTimer->start(redrawFreq);
     ui->pushButtonSetSettings->setEnabled(false);
 }
@@ -249,5 +250,23 @@ void LOMView::UpdatePlots()
 
 void LOMView::UpdateEndcapsWiggets()
 {
+    ui->fwdEndcap->SetAmplitudes(model->GetEventData().GetAmplsFWD().GetMaxAmplitudes());
+    ui->fwdEndcap->repaint();
+
+    ui->bwdEndcap->SetAmplitudes(model->GetEventData().GetAmplsBWD().GetMaxAmplitudes());
+    ui->bwdEndcap->repaint();
+
+    int hitFWD = model->GetEventData().GetAmplsFWD().GetHitSector() + 1;
+    int hitBWD = model->GetEventData().GetAmplsBWD().GetHitSector() + 1;
+
+    if(model->GetEventData().GetAmplsFWD().GetMaxAmplitudeInSector(hitFWD - 1)
+            > model->GetInitParameters().GetThresholdFE())
+        ui->fwdHitLabel->setText("Hit sector: " + QString::number(hitFWD));
+    else ui->fwdHitLabel->setText("Hit sector: none");
+
+    if(model->GetEventData().GetAmplsBWD().GetMaxAmplitudeInSector(hitBWD - 1)
+            > model->GetInitParameters().GetThresholdBE())
+        ui->bwdHitLabel->setText("Hit sector: " + QString::number(hitBWD));
+    else ui->bwdHitLabel->setText("Hit sector: none");
 
 }

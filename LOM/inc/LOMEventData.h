@@ -50,6 +50,12 @@ public:
      */
     double GetMaxAmplitudeInSector(unsigned int sector);
 
+    //! Get maximum value of amplitudes in all sectors.
+    /*!
+     * \return  maximum values of amplitudes.
+     */
+    std::array<double, SECTORS_NUM> GetMaxAmplitudes();
+
     //! Get the sector with maximum aplitude value.
     /*!
      * \return  the sector with maximum aplitude value.
