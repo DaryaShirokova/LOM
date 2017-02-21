@@ -30,6 +30,11 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
     painter.setBrush(bkgBrush);
     painter.drawRect(bkgRect);
 
+    // Color of numbers.
+    QColor numColor[SECTOR_NUM];
+    for(int i = 0; i < SECTOR_NUM; i++)
+        numColor[i] = Qt::blue;
+
     // Set up boundaries.
     int d = std::min(width(), height()) - 10;
     int d2 = d / 2;
@@ -53,6 +58,8 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
 
         double q = 1 - (amplitudes.at(sector) - MIN_AMPL) / (MAX_AMPL - MIN_AMPL);
         painter.fillPath (path, QBrush(QColorBar::GetColor(q)));
+
+        if(q < 0.5) numColor[sector] = Qt::white;
     }
 
     // Draw two ellipses (form of endcap).
@@ -77,14 +84,14 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
     painter.drawEllipse(x0 - d2/2 + penW, y0 - d2/2 + penW, d2 - 2*penW, d2 - 2*penW);
 
     // Set Labels with sectors numbers.
-    painter.setPen(QPen(Qt::blue));
     painter.setBrush(Qt::NoBrush);
     for (int i = 0; i < SECTOR_NUM; i++)
     {
+        painter.setPen(QPen(numColor[i]));
         double alpha = alpha0 + ((i+0.5) * 2 * M_PI / SECTOR_NUM);
-        QPoint p = GetRayCircleIntersection(x0, y0, d2/2 + 9, alpha);
-        p.setX(p.x() - 5);
-        p.setY(p.y() + 5);
+        QPoint p = GetRayCircleIntersection(x0, y0, d2/2 + 20, alpha);
+        p.setX(p.x() - 6);
+        p.setY(p.y() + 6);
         painter.drawText(p, QString::number(i + 1));
     }
 }

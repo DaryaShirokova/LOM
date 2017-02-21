@@ -5,7 +5,7 @@
 #include <QPoint>
 #include <QString>
 #include <QVector>
-#include "inc/constants.h"
+#include "inc/Constants.h"
 
 class QEndcapWidget : public QWidget
 {

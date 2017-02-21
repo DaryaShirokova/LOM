@@ -26,6 +26,8 @@ private:
     int redrawFreq;
     double ymaxFWD;
     double ymaxBWD;
+    int x0;
+    int x1;
     QTimer* plotsUpdateTimer;
 
 public slots:
@@ -34,6 +36,7 @@ public slots:
     void StartUpdates();
     void StopUpdates();
     void UpdateAll();
+    void ChangePlottersSettings();
     void UpdatePlots();
     void ChangePlottersMode();
     void UpdateEndcapsWiggets();

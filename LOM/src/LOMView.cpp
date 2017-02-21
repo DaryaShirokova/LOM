@@ -12,8 +12,6 @@ LOMView::LOMView(QWidget *parent) :
     ui(new Ui::LOMView)
 {
     ui->setupUi(this);
-    ymaxBWD = 5.0;
-    ymaxFWD = 7.0;
 
     ui->checkBoxHitSector->toggle();
     ui->checkBoxSaveLog->toggle();
@@ -34,12 +32,7 @@ LOMView::LOMView(QWidget *parent) :
     ui->coinWidget->yAxis->setLabel("Coincidence");
 
     // Set axes ranges.
-    ui->amplFWDWidget->xAxis->setRange(0, 63);
-    ui->amplFWDWidget->yAxis->setRange(-0.1, ymaxFWD);
-    ui->amplBWDWidget->xAxis->setRange(0, 63);
-    ui->amplBWDWidget->yAxis->setRange(-0.1, ymaxBWD);
-    ui->coinWidget->xAxis->setRange(0, 63);
-    ui->coinWidget->yAxis->setRange(-0.1, 1.2);
+    ChangePlottersSettings();
 
     ui->amplFWDWidget->replot();
     ui->amplBWDWidget->replot();
@@ -61,6 +54,20 @@ LOMView::~LOMView()
 //******************************************************************************
 // SLOTS
 //******************************************************************************
+void LOMView::ChangePlottersSettings()
+{
+    this->x0 = ui->xMinSpinBox->value();
+    this->x1 = ui->xMaxSpinBox->value();
+    this->ymaxFWD = ui->yFWDMaxSpinBox->value();
+    this->ymaxBWD = ui->yBWDMaxSpinBox->value();
+    ui->amplFWDWidget->xAxis->setRange(x0, x1);
+    ui->amplFWDWidget->yAxis->setRange(-0.1, ymaxFWD);
+    ui->amplBWDWidget->xAxis->setRange(x0, x1);
+    ui->amplBWDWidget->yAxis->setRange(-0.1, ymaxBWD);
+    ui->coinWidget->xAxis->setRange(x0, x1);
+    ui->coinWidget->yAxis->setRange(-0.1, 1.2);
+}
+
 void LOMView::UpdateAll()
 {
     UpdatePlots();

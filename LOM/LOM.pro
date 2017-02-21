@@ -51,6 +51,6 @@ HEADERS  += inc/LOMView.h \
     qcustomplot/qcustomplot.h \
     inc/QColorBar.h \
     inc/QEndcapWidget.h \
-    inc/constants.h
+    inc/Constants.h
 
 FORMS    += forms/LOMView.ui

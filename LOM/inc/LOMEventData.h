@@ -3,7 +3,7 @@
 
 #include <QVector>
 #include <iostream>
-#include "inc/constants.h"
+#include "inc/Constants.h"
 
 //! A class representing event data coming from LOM.
 /*!
