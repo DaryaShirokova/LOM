@@ -101,6 +101,8 @@ void LOMView::StartUpdates()
     UpdateEndcapsWiggets();
     plotsUpdateTimer->start(redrawFreq);
     ui->pushButtonSetSettings->setEnabled(false);
+    ui->pushButtonStart->setEnabled(false);
+    ui->pushButtonStop->setEnabled(true);
 }
 
 void LOMView::StopUpdates()
@@ -108,6 +110,8 @@ void LOMView::StopUpdates()
     model->Stop();
     plotsUpdateTimer->stop();
     ui->pushButtonSetSettings->setEnabled(true);
+    ui->pushButtonStart->setEnabled(true);
+    ui->pushButtonStop->setEnabled(false);
 }
 
 void LOMView::ChangePlottersMode()
@@ -256,32 +260,15 @@ void LOMView::UpdatePlots()
     else
         ui->coinWidgetLabel->setText("Coincidence region: none ");
 
-    //UpdateEndcapsWiggets();
 }
 
 void LOMView::UpdateEndcapsWiggets()
 {
     ui->fwdEndcap->SetAmplitudes(model->GetEventData()
                                  .GetAmplsFWD().GetMaxAmplitudes());
-    std::cout<<"DEBUG" << model->GetEventData()
-                                     .GetAmplsFWD().GetMaxAmplitudes().size() <<std::endl;
     ui->fwdEndcap->repaint();
 
     ui->bwdEndcap->SetAmplitudes(model->GetEventData()
                                  .GetAmplsBWD().GetMaxAmplitudes());
     ui->bwdEndcap->repaint();
-
- /*   int hitFWD = model->GetEventData().GetAmplsFWD().GetHitSector() + 1;
-    int hitBWD = model->GetEventData().GetAmplsBWD().GetHitSector() + 1;*/
-
-/*    if(model->GetEventData().GetAmplsFWD().GetMaxAmplitudeInSector(hitFWD - 1)
-            > model->GetInitParameters().GetThresholdFE())
-        ui->fwdHitLabel->setText("Hit sector: " + QString::number(hitFWD));
-    else ui->fwdHitLabel->setText("Hit sector: none");
-
-    if(model->GetEventData().GetAmplsBWD().GetMaxAmplitudeInSector(hitBWD - 1)
-            > model->GetInitParameters().GetThresholdBE())
-        ui->bwdHitLabel->setText("Hit sector: " + QString::number(hitBWD));
-    else ui->bwdHitLabel->setText("Hit sector: none");*/
-
 }
