@@ -33,6 +33,7 @@ public slots:
     void UpdateSettings();
     void StartUpdates();
     void StopUpdates();
+    void UpdateAll();
     void UpdatePlots();
     void ChangePlottersMode();
     void UpdateEndcapsWiggets();

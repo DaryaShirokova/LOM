@@ -4,7 +4,6 @@
 #include <inc/LOMInitParameters.h>
 #include <inc/LOMEventData.h>
 #include <inc/LOMDataUpdater.h>
-//#include <inc/LOMView.h>
 
 #include <QObject>
 #include <QTimer>
@@ -36,7 +35,6 @@ private:
 
     long int updateFreq; /*!< The frequency of data updates.*/
 
-    // TODO: &
     LOMDataUpdater* updater; /*!< The object which processes updates.*/
 
     double luminosity; /* The value of luminosity.*/

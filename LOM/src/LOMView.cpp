@@ -15,12 +15,17 @@ LOMView::LOMView(QWidget *parent) :
     ymaxBWD = 5.0;
     ymaxFWD = 7.0;
 
+    ui->checkBoxHitSector->toggle();
+    ui->checkBoxSaveLog->toggle();
+    ChangePlottersMode();
+
+    QPalette palette = ui->labelLuminosity->palette();
+    palette.setColor(ui->labelLuminosity->foregroundRole(), Qt::red);
+    ui->labelLuminosity->setPalette(palette);
+
     // Give titles to axis
-
-
-    // Set axes ranges.
-
-    // Give titles to axis
+    ui->luminosityWidget->xAxis->setLabel("t, s");
+    ui->luminosityWidget->yAxis->setLabel("L, 1/s/cm2");
     ui->amplFWDWidget->xAxis->setLabel("Time stamps");
     ui->amplFWDWidget->yAxis->setLabel("Amplitude, GeV");
     ui->amplBWDWidget->xAxis->setLabel("Time stamps");
@@ -40,11 +45,11 @@ LOMView::LOMView(QWidget *parent) :
     ui->amplBWDWidget->replot();
     ui->coinWidget->replot();
 
+
     // Set update timer.
     //UpdateSettings();
     plotsUpdateTimer = new QTimer(this);
-    connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdatePlots()));
-    connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdateEndcapsWiggets()));
+    connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdateAll()));
 }
 
 LOMView::~LOMView()
@@ -56,6 +61,11 @@ LOMView::~LOMView()
 //******************************************************************************
 // SLOTS
 //******************************************************************************
+void LOMView::UpdateAll()
+{
+    UpdatePlots();
+    UpdateEndcapsWiggets();
+}
 
 void LOMView::UpdateThresholds()
 {
@@ -254,10 +264,10 @@ void LOMView::UpdateEndcapsWiggets()
                                  .GetAmplsBWD().GetMaxAmplitudes());
     ui->bwdEndcap->repaint();
 
-    int hitFWD = model->GetEventData().GetAmplsFWD().GetHitSector() + 1;
-    int hitBWD = model->GetEventData().GetAmplsBWD().GetHitSector() + 1;
+ /*   int hitFWD = model->GetEventData().GetAmplsFWD().GetHitSector() + 1;
+    int hitBWD = model->GetEventData().GetAmplsBWD().GetHitSector() + 1;*/
 
-    if(model->GetEventData().GetAmplsFWD().GetMaxAmplitudeInSector(hitFWD - 1)
+/*    if(model->GetEventData().GetAmplsFWD().GetMaxAmplitudeInSector(hitFWD - 1)
             > model->GetInitParameters().GetThresholdFE())
         ui->fwdHitLabel->setText("Hit sector: " + QString::number(hitFWD));
     else ui->fwdHitLabel->setText("Hit sector: none");
@@ -265,6 +275,6 @@ void LOMView::UpdateEndcapsWiggets()
     if(model->GetEventData().GetAmplsBWD().GetMaxAmplitudeInSector(hitBWD - 1)
             > model->GetInitParameters().GetThresholdBE())
         ui->bwdHitLabel->setText("Hit sector: " + QString::number(hitBWD));
-    else ui->bwdHitLabel->setText("Hit sector: none");
+    else ui->bwdHitLabel->setText("Hit sector: none");*/
 
 }

@@ -1,12 +1,11 @@
 #ifndef ENDCAPWIDGET_H
 #define ENDCAPWIDGET_H
 
-#define SECTOR_NUM 16//12
-
 #include <QWidget>
 #include <QPoint>
 #include <QString>
 #include <QVector>
+#include "inc/constants.h"
 
 class QEndcapWidget : public QWidget
 {
@@ -23,8 +22,6 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    double maxAmpl;
-    double minAmpl;
     QVector<double> amplitudes;
     QPoint GetRayCircleIntersection(int x0, int y0, int r, double alpha);
 };

@@ -1,11 +1,9 @@
 #ifndef LOMEVENTDATA_H
 #define LOMEVENTDATA_H
 
-//#define SAMPLES_NUM 64
-#define SECTORS_NUM 16
-
 #include <QVector>
 #include <iostream>
+#include "inc/constants.h"
 
 //! A class representing event data coming from LOM.
 /*!

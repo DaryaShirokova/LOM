@@ -30,7 +30,7 @@ double Amplitudes::GetMaxAmplitudeInSector(unsigned int sector)
 Amplitudes::VectorDouble Amplitudes::GetMaxAmplitudes()
 {
     QVector<double> vec;
-    for (int i = 0; i < SECTORS_NUM; i++)
+    for (int i = 0; i < SECTOR_NUM; i++)
         vec.push_back(GetMaxAmplitudeInSector(i));
     return vec;
 }
@@ -39,7 +39,7 @@ unsigned int Amplitudes::GetHitSector()
 {
     unsigned int hitSector = 0;
     double maxVal = 0;
-    for(unsigned int i = 0; i < SECTORS_NUM; i++)
+    for(unsigned int i = 0; i < SECTOR_NUM; i++)
     {
         double temp = this->GetMaxAmplitudeInSector(i);
         if(temp > maxVal)

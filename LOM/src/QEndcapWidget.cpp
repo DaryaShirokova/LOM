@@ -12,8 +12,6 @@
 
 QEndcapWidget::QEndcapWidget(QWidget *parent) : QWidget(parent)
 {
-    maxAmpl = 7;
-    minAmpl = 0;
 }
 
 
@@ -53,7 +51,7 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
         path.moveTo(x0, y0);
         path.arcTo(rect0, -alpha1, 360. / SECTOR_NUM);
 
-        double q = 1 - (amplitudes.at(sector) - minAmpl) / (maxAmpl - minAmpl);
+        double q = 1 - (amplitudes.at(sector) - MIN_AMPL) / (MAX_AMPL - MIN_AMPL);
         painter.fillPath (path, QBrush(QColorBar::GetColor(q)));
     }
 
