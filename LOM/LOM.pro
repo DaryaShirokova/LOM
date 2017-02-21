@@ -50,6 +50,7 @@ HEADERS  += inc/LOMView.h \
     inc/AbstractTransporter.h \
     qcustomplot/qcustomplot.h \
     inc/QColorBar.h \
-    inc/QEndcapWidget.h
+    inc/QEndcapWidget.h \
+    inc/constants.h
 
 FORMS    += forms/LOMView.ui

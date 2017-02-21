@@ -6,8 +6,7 @@
 #include <QWidget>
 #include <QPoint>
 #include <QString>
-
-#include <array>
+#include <QVector>
 
 class QEndcapWidget : public QWidget
 {
@@ -18,7 +17,7 @@ public:
     explicit QEndcapWidget(QWidget *parent = 0);
     ~QEndcapWidget() {}
 
-    void SetAmplitudes(std::array<double, 16> amplitudes) { this->amplitudes = amplitudes; }
+    void SetAmplitudes(QVector<double> amplitudes) { this->amplitudes = amplitudes; }
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -26,7 +25,7 @@ protected:
 private:
     double maxAmpl;
     double minAmpl;
-    std::array<double, 16> amplitudes;
+    QVector<double> amplitudes;
     QPoint GetRayCircleIntersection(int x0, int y0, int r, double alpha);
 };
 

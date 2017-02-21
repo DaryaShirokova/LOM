@@ -17,7 +17,7 @@ LOMEventData::~LOMEventData()
     std::cout << "Default destructor for LOMEventData has been called" << std::endl;
 }
 
-Amplitudes::ArrayDouble Amplitudes::GetAmplitudesInSector(unsigned int sector)
+Amplitudes::VectorDouble Amplitudes::GetAmplitudesInSector(unsigned int sector)
 {
     return amplitudes[sector];
 }
@@ -27,12 +27,12 @@ double Amplitudes::GetMaxAmplitudeInSector(unsigned int sector)
     return *(std::max_element(amplitudes[sector].begin(), amplitudes[sector].end()));
 }
 
-std::array<double, SECTORS_NUM> Amplitudes::GetMaxAmplitudes()
+Amplitudes::VectorDouble Amplitudes::GetMaxAmplitudes()
 {
-    std::array<double, SECTORS_NUM> arr;
+    QVector<double> vec;
     for (int i = 0; i < SECTORS_NUM; i++)
-        arr[i] = GetMaxAmplitudeInSector(i);
-    return arr;
+        vec.push_back(GetMaxAmplitudeInSector(i));
+    return vec;
 }
 
 unsigned int Amplitudes::GetHitSector()
@@ -51,19 +51,20 @@ unsigned int Amplitudes::GetHitSector()
     return hitSector;
 }
 
-LOMEventData::ArrayInt LOMEventData::GetCoincidenceRegion(unsigned int sectorFWD,
+LOMEventData::VectorInt LOMEventData::GetCoincidenceRegion(unsigned int sectorFWD,
                                                           unsigned int sectorBWD,
                                                           double thresholdFE,
                                                           double thresholdBE)
 {
-    ArrayInt coinRegion;
-    Amplitudes::ArrayDouble fwd = amplsFWD.GetAmplitudesInSector(sectorFWD);
-    Amplitudes::ArrayDouble bwd = amplsBWD.GetAmplitudesInSector(sectorBWD);
+    VectorInt coinRegion;
+    Amplitudes::VectorDouble fwd = amplsFWD.GetAmplitudesInSector(sectorFWD);
+    Amplitudes::VectorDouble bwd = amplsBWD.GetAmplitudesInSector(sectorBWD);
 
-    for(int i = 0; i < SAMPLES_NUM; i++)
-        if (fwd[i] > thresholdFE && bwd[i] > thresholdBE)
-            coinRegion[i] = 1;
-        else coinRegion[i] = 0;
+    int n = std::min(fwd.size(), bwd.size());
+    for(int i = 0; i < n; i++)
+        if (fwd.at(i) > thresholdFE && bwd.at(i) > thresholdBE)
+            coinRegion.push_back(1);
+        else coinRegion.push_back(0);
 
     return coinRegion;
 }
@@ -71,9 +72,9 @@ bool LOMEventData::haveCoincidenceRegion(unsigned int sectorFWD,
                                          unsigned int sectorBWD,
                                          double thresholdFE, double thresholdBE)
 {
-    ArrayInt arr = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
+    VectorInt vec = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
 
-    for(int val: arr)
+    for(int val: vec)
         if(val == 1) return true;
     return false;
 }
@@ -84,10 +85,10 @@ int LOMEventData::GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
                                                             double thresholdBE)
 {
 
-    ArrayInt arr = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
+    VectorInt vec = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
 
-    for (int i = 0; i < SAMPLES_NUM; i++)
-        if(arr[i] == 1) return i;
+    for (int i = 0; i < vec.size(); i++)
+        if(vec.at(i) == 1) return i;
     return -1;
 
 }
@@ -97,10 +98,10 @@ int LOMEventData::GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
                                                             double thresholdFE,
                                                             double thresholdBE)
 {
-    ArrayInt arr = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
+    VectorInt vec = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
 
-    for (int i = SAMPLES_NUM - 1; i >= 0; i--)
-        if(arr[i] == 1) return i;
+    for (int i = vec.size() - 1; i >= 0; i--)
+        if(vec.at(i) == 1) return i;
     return -1;
 
 }

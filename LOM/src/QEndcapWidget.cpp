@@ -12,7 +12,6 @@
 
 QEndcapWidget::QEndcapWidget(QWidget *parent) : QWidget(parent)
 {
-    //this->sectorColor = QString("red");
     maxAmpl = 7;
     minAmpl = 0;
 }
@@ -44,7 +43,7 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
 
     // Set colors for different sectors.
     painter.setPen (Qt :: NoPen);
-    for(int sector = 0; sector < SECTOR_NUM; sector++)
+    for(int sector = 0; sector < amplitudes.size(); sector++)
     {
         double alpha1 = alpha0 + (sector + 1) * 360. / SECTOR_NUM;
         QPainterPath path;
@@ -54,7 +53,7 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
         path.moveTo(x0, y0);
         path.arcTo(rect0, -alpha1, 360. / SECTOR_NUM);
 
-        double q = 1 - (amplitudes[sector] - minAmpl) / (maxAmpl - minAmpl);
+        double q = 1 - (amplitudes.at(sector) - minAmpl) / (maxAmpl - minAmpl);
         painter.fillPath (path, QBrush(QColorBar::GetColor(q)));
     }
 

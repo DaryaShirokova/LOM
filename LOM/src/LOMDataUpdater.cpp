@@ -43,8 +43,22 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
     {
         bbranch->GetEvent(i);
         fbranch->GetEvent(i);
-        eventData->GetAmplsFWD().SetAmplitudes(fewf);
-        eventData->GetAmplsBWD().SetAmplitudes(bewf);
+        QVector<QVector<double>> amplitudesFE;
+        QVector<QVector<double>> amplitudesBE;
+        for(int t = 0; t < 16; t++)
+        {
+            QVector<double> sectorFE;
+            QVector<double> sectorBE;
+            for(int s = 0; s < 64; s++)
+            {
+                sectorFE.push_back(fewf[t][s]);
+                sectorBE.push_back(bewf[t][s]);
+            }
+            amplitudesFE.push_back(sectorFE);
+            amplitudesBE.push_back(sectorBE);
+        }
+        eventData->GetAmplsFWD().SetAmplitudes(amplitudesFE);
+        eventData->GetAmplsBWD().SetAmplitudes(amplitudesBE);
         if(i == stopsignal)
             break;
     }

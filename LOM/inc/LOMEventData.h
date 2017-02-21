@@ -1,10 +1,10 @@
 #ifndef LOMEVENTDATA_H
 #define LOMEVENTDATA_H
 
-#define SAMPLES_NUM 64
+//#define SAMPLES_NUM 64
 #define SECTORS_NUM 16
 
-#include <array>
+#include <QVector>
 #include <iostream>
 
 //! A class representing event data coming from LOM.
@@ -15,11 +15,11 @@
 class Amplitudes
 {
 public:
-    using ArrayDouble = std::array<double, SAMPLES_NUM>;
-    using ArrayDouble2D = std::array<ArrayDouble, SECTORS_NUM>;
+    using VectorDouble = QVector<double>;
+    using VectorDouble2D = QVector<VectorDouble>;
 
 private:
-    ArrayDouble2D amplitudes; /*!< The values of the signals.*/
+    VectorDouble2D amplitudes; /*!< The values of the signals.*/
 
 public:
     //**************************************************************************
@@ -41,7 +41,7 @@ public:
      * \param sector    sector number (1 - 16).
      * \return  the values of amplitudes.
      */
-    ArrayDouble GetAmplitudesInSector(unsigned int sector);
+    VectorDouble GetAmplitudesInSector(unsigned int sector);
 
     //! Get maximum value of amplitudes in sector.
     /*!
@@ -54,7 +54,7 @@ public:
     /*!
      * \return  maximum values of amplitudes.
      */
-    std::array<double, SECTORS_NUM> GetMaxAmplitudes();
+    VectorDouble GetMaxAmplitudes();
 
     //! Get the sector with maximum aplitude value.
     /*!
@@ -70,22 +70,26 @@ public:
     /*!
      * \param amplitudes set the value of amplitudes.
      */
-    void SetAmplitudes(double amplitudes[SECTORS_NUM][SAMPLES_NUM]) {
+    void SetAmplitudes(VectorDouble2D amplitudes) {this->amplitudes = amplitudes;}//(double amplitudes[SECTORS_NUM][SAMPLES_NUM])
+   /* {
         for (int i = 0; i < SECTORS_NUM; i++)
+        {
+            QVector<double> vec;
             for(int j = 0; j < SAMPLES_NUM; j++)
                 this->amplitudes[i][j] = amplitudes[i][j];
-    }
+        }
+    }*/
 
     //! Getter
     /*!
      * \return array of amplitudes in all sectors.
      */
-    ArrayDouble2D GetAmplitudes() { return amplitudes;}
+    VectorDouble2D GetAmplitudes() { return amplitudes;}
 };
 
 class LOMEventData
 {
-    using ArrayInt = std::array<int, SAMPLES_NUM>;
+    using VectorInt = QVector<int>;
 private:
 
     Amplitudes amplsBWD; /*!< Amplitudes in BWD sector.*/
@@ -115,7 +119,7 @@ public:
      * \param thresholdBE threshold for amplitude in backward sector.
      * \return  coincidence region (1 when intersects, 0 when not).
      */
-    ArrayInt GetCoincidenceRegion(unsigned int sectorFWD, unsigned int sectorBWD,
+    VectorInt GetCoincidenceRegion(unsigned int sectorFWD, unsigned int sectorBWD,
                                   double thresholdFE, double thresholdBE);
 
 

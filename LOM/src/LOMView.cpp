@@ -135,14 +135,11 @@ void LOMView::UpdatePlots()
     pen.setColor(QColor("blue"));
 
     // Prepare data.
-    std::array<double, 64> y_temp = model->GetEventData().GetAmplsFWD()
+    QVector<double> y = model->GetEventData().GetAmplsFWD()
                                     .GetAmplitudesInSector(fwdSector - 1);
-    QVector<double> x(64), y(64);
+    QVector<double> x(64);
     for (int i=0; i<64; ++i)
-    {
       x[i] = 1.0 * i;
-      y[i] =y_temp[i];
-    }
 
     // Set up style.
     ui->amplFWDWidget->addGraph();
@@ -179,11 +176,8 @@ void LOMView::UpdatePlots()
     pen.setColor(QColor("blue"));
 
     // Prepare data.
-    y_temp = model->GetEventData().GetAmplsBWD()
+    y = model->GetEventData().GetAmplsBWD()
                                     .GetAmplitudesInSector(bwdSector - 1);
-    for (int i=0; i<64; ++i)
-      y[i] =y_temp[i];
-
     // Set up style.
     ui->amplBWDWidget->addGraph();
     ui->amplBWDWidget->graph(0)->setPen(pen);
@@ -214,7 +208,7 @@ void LOMView::UpdatePlots()
     pen.setColor(QColor("red"));
 
     // Prepare data.
-    std::array<int, 64> y_coin = model->GetEventData()
+    QVector<int> y_coin = model->GetEventData()
             .GetCoincidenceRegion(fwdSector-1, bwdSector-1, thresholdFE, thresholdBE);
 
     for (int i=0; i<64; ++i)
@@ -250,10 +244,14 @@ void LOMView::UpdatePlots()
 
 void LOMView::UpdateEndcapsWiggets()
 {
-    ui->fwdEndcap->SetAmplitudes(model->GetEventData().GetAmplsFWD().GetMaxAmplitudes());
+    ui->fwdEndcap->SetAmplitudes(model->GetEventData()
+                                 .GetAmplsFWD().GetMaxAmplitudes());
+    std::cout<<"DEBUG" << model->GetEventData()
+                                     .GetAmplsFWD().GetMaxAmplitudes().size() <<std::endl;
     ui->fwdEndcap->repaint();
 
-    ui->bwdEndcap->SetAmplitudes(model->GetEventData().GetAmplsBWD().GetMaxAmplitudes());
+    ui->bwdEndcap->SetAmplitudes(model->GetEventData()
+                                 .GetAmplsBWD().GetMaxAmplitudes());
     ui->bwdEndcap->repaint();
 
     int hitFWD = model->GetEventData().GetAmplsFWD().GetHitSector() + 1;
