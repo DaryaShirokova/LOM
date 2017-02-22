@@ -330,7 +330,7 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="QTextBrowser" name="textBrowser">
+               <widget class="QTextBrowser" name="logBrowser">
                 <property name="minimumSize">
                  <size>
                   <width>380</width>
@@ -354,7 +354,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="fwdSectorCB_2">
+                 <widget class="QComboBox" name="logTypeChBox">
                   <item>
                    <property name="text">
                     <string>INFO</string>
@@ -373,17 +373,29 @@
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
+                 <widget class="QLabel" name="label_12">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
                   </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
+                  <property name="text">
+                   <string>Depth:</string>
                   </property>
-                 </spacer>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="logDepthspinBox">
+                  <property name="maximum">
+                   <number>1000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>30</number>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <widget class="QCheckBox" name="checkBoxSaveLog">
@@ -1079,7 +1091,7 @@
   <customwidget>
    <class>QEndcapWidget</class>
    <extends>QWidget</extends>
-   <header location="global">inc/QEndcapWidget.h</header>
+   <header>inc/QEndcapWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -1181,6 +1193,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>logTypeChBox</sender>
+   <signal>activated(QString)</signal>
+   <receiver>LOMView</receiver>
+   <slot>SetLogType(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>130</x>
+     <y>672</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>214</x>
+     <y>665</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logDepthspinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>LOMView</receiver>
+   <slot>SetLogDepth(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>258</x>
+     <y>679</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>278</x>
+     <y>693</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>UpdateThresholds()</slot>
@@ -1190,5 +1234,7 @@
   <slot>ChangePlottersMode()</slot>
   <slot>UpdateAll()</slot>
   <slot>ChangePlottersSettings()</slot>
+  <slot>SetLogType(QString)</slot>
+  <slot>SetLogDepth(int)</slot>
  </slots>
 </ui>

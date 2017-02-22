@@ -3,13 +3,15 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include "inc/LogListener.h"
+#include "inc/Logger.h"
 
 namespace Ui {
 class LOMView;
 }
 
 class LOMDataProcessor;
-class LOMView : public QMainWindow
+class LOMView : public QMainWindow, public LogListener
 {
     Q_OBJECT
 
@@ -18,6 +20,7 @@ public:
     ~LOMView();
 
     void SetModel(LOMDataProcessor* model) {this->model = model; UpdateThresholds();}
+    void handleMessage(QString message);
 
 private:
     Ui::LOMView *ui;
@@ -28,6 +31,8 @@ private:
     double ymaxBWD;
     int x0;
     int x1;
+    int logDepth;
+    Logger::LogLevel logtype;
     QTimer* plotsUpdateTimer;
 
 public slots:
@@ -40,6 +45,8 @@ public slots:
     void UpdatePlots();
     void ChangePlottersMode();
     void UpdateEndcapsWiggets();
+    void SetLogType(QString str);
+    void SetLogDepth(int depth);
 };
 
 #endif // LOMVIEW_H

@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     src/AbstractTransporter.cpp \
     qcustomplot/qcustomplot.cpp \
     src/QEndcapWidget.cpp \
-    src/QColorBar.cpp
+    src/QColorBar.cpp \
+    src/Logger.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -51,6 +52,8 @@ HEADERS  += inc/LOMView.h \
     qcustomplot/qcustomplot.h \
     inc/QColorBar.h \
     inc/QEndcapWidget.h \
-    inc/Constants.h
+    inc/Constants.h \
+    inc/Logger.h \
+    inc/LogListener.h
 
 FORMS    += forms/LOMView.ui

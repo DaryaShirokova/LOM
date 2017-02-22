@@ -1,5 +1,6 @@
 #include <inc/LOMView.h>
 #include <inc/LOMDataProcessor.h>
+#include <inc/Logger.h>
 #include "ui_LOMView.h"
 
 #include <iostream>
@@ -12,6 +13,9 @@ LOMView::LOMView(QWidget *parent) :
     ui(new Ui::LOMView)
 {
     ui->setupUi(this);
+
+    SetLogType(ui->logTypeChBox->currentText());
+    SetLogDepth(ui->logDepthspinBox->value());
 
     ui->checkBoxHitSector->toggle();
     ui->checkBoxSaveLog->toggle();
@@ -126,6 +130,16 @@ void LOMView::ChangePlottersMode()
         ui->fwdSectorCB->setEnabled(true);
         ui->bwdSectorCB->setEnabled(true);
     }
+}
+void LOMView::SetLogType(QString str)
+{
+    logtype = Logger::stringToEnum(str);
+    Logger::SetLogLevel(logtype);
+
+}
+void LOMView::SetLogDepth(int depth)
+{
+    logDepth = depth;
 }
 
 void LOMView::UpdatePlots()
@@ -271,4 +285,29 @@ void LOMView::UpdateEndcapsWiggets()
     ui->bwdEndcap->SetAmplitudes(model->GetEventData()
                                  .GetAmplsBWD().GetMaxAmplitudes());
     ui->bwdEndcap->repaint();
+}
+
+
+void LOMView::handleMessage(QString message)
+{
+    if(message.isEmpty())
+        return;
+    QString text = ui->logBrowser->toPlainText();
+    int index = 0;
+    for(int i = 0; i < logDepth - 1; i++)
+    {
+        index = text.indexOf("\n", index+1);
+        if(index == -1)
+            break;
+    }
+    std::cout << index << std::endl;
+    if (index != -1) text = text.left(index);
+
+    text = message + text;
+    text = text.replace('\n',"<br />");
+    text.replace("ERROR", "<font color='red'><b>ERROR</b></font>");
+    text.replace("INFO", "<font color='green'><b>INFO</b></font>");
+    text.replace("DEBUG", "<font color='gray'><b>DEBUG</b></font>");
+
+    ui->logBrowser->setText(text);
 }

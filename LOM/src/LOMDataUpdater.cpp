@@ -1,12 +1,9 @@
-#include "../inc/LOMDataUpdater.h"
+#include "inc/LOMDataUpdater.h"
+#include "inc/Logger.h"
 
 
 #include <TTree.h>
 #include <TFile.h>
-
-#include <iostream>
-#include <vector>
-
 
 #include <time.h>
 
@@ -23,7 +20,9 @@ LOMDataUpdater::~LOMDataUpdater()
 
 bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
 {
-    std::cout << "Start reading data " << std::endl;
+
+    Logger::Log(Logger::LogLevel::INFO, "Start reading data.");
+    Logger::Log(Logger::LogLevel::ERROR, "OH NO!");
     TFile fileIn("../data/lomtest_15deg_1k_1.root");
     TTree *tree = (TTree*)fileIn.Get("testtree");
 
