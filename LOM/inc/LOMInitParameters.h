@@ -1,8 +1,6 @@
 #ifndef LOMINITPARAMETERS_H
 #define LOMINITPARAMETERS_H
 
-#include <string>
-
 //! A class containing initial parameters of LOM.
 /*!
   A class containing thresholds, time settings and other information which can
@@ -20,11 +18,6 @@ private:
 
     unsigned int backgroundThreshold; /*!< The threshold for quality signal detection. */
 
-    //unsigned int deadTime; /*!< Dead time in the calorimeter. */
-
-    //! Registration efficiency determined using the simulation process.
-   // unsigned int registrationEfficiency;
-
 public:
 
     //**************************************************************************
@@ -34,9 +27,6 @@ public:
     //! A default constructor.
     /*! A void constructor to initialize the module by default parameters. */
     LOMInitParameters();
-
-
-
 
     //! A default destructor.
     ~LOMInitParameters();
@@ -51,12 +41,6 @@ public:
     void Init(unsigned int thresholdFE, unsigned int thresholdBE,
               unsigned int coincidenceDurationThreshold,
               unsigned int backgroundThreshold);
-
-    //! Initialisation function.
-    /*!
-    * \param filename the name of initialisation file.
-    */
-    void Init(std::string filename);
 
     //**************************************************************************
     // Getters/Setters.
@@ -112,33 +96,6 @@ public:
      * \return current value of backgroundThreshold.
      */
     unsigned int GetBackgroundThreshold() {return this->backgroundThreshold;}
-
-    //! Setter
-    /*!
-     * \param deadTime a new value of dead time.
-     */
-    //void SetDeadTime(unsigned int deadTime) {this->deadTime = deadTime;}
-
-    //! Getter
-    /*!
-     * \return current value of deadTime.
-     */
-    //unsigned int GetDeadTime() {return this->deadTime;}
-
-    //! Setter
-    /*!
-     * \param registrationEfficiency a new value of threshold for registration efficiency.
-     */
-    //void SetRegistrationEfficiency(unsigned int registrationEfficiency)
-    //                    {this->registrationEfficiency = registrationEfficiency;}
-
-    //! Getter
-    /*!
-     * \return current value of registrationEfficiency.
-     */
-   // unsigned int GetRegistrationEfficiency() {return this->registrationEfficiency;}
-
-
 
 };
 

@@ -4,17 +4,10 @@
 
 LOMEventData::LOMEventData()
 {
-    /*double arr;
-    for (int i = 0; i < arr.size(); i++)
-        for(int j = 0; j < arr.size(); j++)
-            arr[i] = 0;
-    this->GetAmplsBWD().SetAmplitudes();*/
-    std::cout << "Default constructor for LOMEventData has been called" << std::endl;
 }
 
 LOMEventData::~LOMEventData()
 {
-    std::cout << "Default destructor for LOMEventData has been called" << std::endl;
 }
 
 Amplitudes::VectorDouble Amplitudes::GetAmplitudesInSector(unsigned int sector)

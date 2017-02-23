@@ -14,9 +14,8 @@ int main(int argc, char *argv[])
     std::cout << "Create updater." << std::endl;
     LOMDataUpdater* updater = new LOMDataUpdater();
     std::cout << "Create data processor." << std::endl;
-    LOMDataProcessor* model = new LOMDataProcessor("initfile", "logfile", updater);
+    LOMDataProcessor* model = new LOMDataProcessor(updater);
     w.SetModel(model);
-    //Logger::instance();
     Logger::AddListener(&w);
     w.show();
 

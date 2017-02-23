@@ -5,12 +5,7 @@
 #include <inc/LOMEventData.h>
 #include <inc/LOMDataUpdater.h>
 
-#include <QObject>
 #include <QTimer>
-
-#include <string>
-#include <fstream>
-
 
 //! The model class of the program.
 /*!
@@ -19,9 +14,8 @@
   are used to configure the FPGA and event data which uptates every time in
   operating mode.
   The instance of the class can be in two states: opertating and stopped.
-  When operating, it initiates updates of data.When data are updated, it
+  When operating, it initiates updates of data. When data are updated, it
   calculates the  luminosity. The frequence of updates can be configured.
-  It also implements the Subject in Subject/Observer pattern.
 */
 
 class LOMDataProcessor : public QObject
@@ -39,21 +33,10 @@ private:
 
     double luminosity; /* The value of luminosity.*/
 
-    std::string logfileName; /* The title of the log file.*/
-    std::ofstream logfile; /* The log output stream.*/
+    //! Registration efficiency determined using the simulation process.
+    double registrationEfficiency;
 
-    QTimer* timer;
-private:
-
-    //**************************************************************************
-    // Internal functions.
-    //**************************************************************************
-
-
-    /*!
-     * \brief Log       write log.
-     */
-    void Log();
+    QTimer* timer; /* Timer for data updates.*/
 
 public:
 
@@ -67,57 +50,14 @@ public:
      * \param logfileName   the title of the logfile.
      * \param updater       the object which processes updates.
      */
-    LOMDataProcessor(std::string initfileName, std::string logfileName,
-                     LOMDataUpdater* updater);
+    LOMDataProcessor(LOMDataUpdater* updater);
 
     //! A destructor.
     ~LOMDataProcessor();
 
-
-    //**************************************************************************
-    // Subject/observer pattern.
-    //**************************************************************************
-/*
-    /*!
-     * \brief AddView   attach an oberver.
-     * \param view      observer.
-     */
-   // void AddView(LOMView* view);
-
-    /*!
-     * \brief DetachView remove an observer.
-     * \param view       observer.
-     */
-  //  void DetachView(LOMView* view);
-//
-    /*!
-     * \brief Notify    notify all observers.
-     */
-   // void Notify();
-
     //**************************************************************************
     // Lifecycle of the data updates.
     //**************************************************************************
-
-    /*!
-     * \brief Initialize
-     * \param initfileName
-     */
-    void Initialize(std::string initfileName);
-
-    /*!
-     * \brief Initialize
-     * \param thresholdFE
-     * \param thresholdBE
-     * \param coincidenceDurationThreshold
-     * \param backgroundThreshold
-     * \param deadTime
-     * \param registrationEfficiency
-     */
-    void Initialize(unsigned int thresholdFE, unsigned int thresholdBE,
-               unsigned int coincidenceDurationThreshold,
-               unsigned int backgroundThreshold, unsigned int deadTime,
-               unsigned int registrationEfficiency);
 
     /*!
      * \brief Start
@@ -132,7 +72,7 @@ public:
     //! Calculate the luminosy using bhabha events number and registration efficiency.
     /*!
      * \brief CalculateLuminosity
-     * \return  luminosity
+     * \return  luminosity.
      */
     double CalculateLuminosity();
 
@@ -150,11 +90,22 @@ private slots:
     // Getters/Setters.
     //**************************************************************************
 public:
+    /*!
+     * \brief GetInitParameters getter.
+     * \return  reference to init params.
+     */
     LOMInitParameters& GetInitParameters() {return initParams;}
 
+    /*!
+     * \brief GetEventData getter.
+     * \return  reference to event data.
+     */
     LOMEventData& GetEventData() {return event;}
 
-    unsigned int GetUpdateFreq() {return updateFreq;}
+    /*!
+     * \brief SetUpdateFreq setter.
+     * \param updateFreq    update frequence (sec).
+     */
     void SetUpdateFreq(int updateFreq) {this->updateFreq = updateFreq;}
 };
 

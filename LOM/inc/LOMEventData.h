@@ -2,7 +2,6 @@
 #define LOMEVENTDATA_H
 
 #include <QVector>
-#include <iostream>
 #include "inc/Constants.h"
 
 //! A class representing event data coming from LOM.
@@ -13,8 +12,8 @@
 class Amplitudes
 {
 public:
-    using VectorDouble = QVector<double>;
-    using VectorDouble2D = QVector<VectorDouble>;
+    using VectorDouble = QVector<double>; /* QVector of double.*/
+    using VectorDouble2D = QVector<VectorDouble>; /* 2D QVector of double.*/
 
 private:
     VectorDouble2D amplitudes; /*!< The values of the signals.*/
@@ -68,15 +67,7 @@ public:
     /*!
      * \param amplitudes set the value of amplitudes.
      */
-    void SetAmplitudes(VectorDouble2D amplitudes) {this->amplitudes = amplitudes;}//(double amplitudes[SECTORS_NUM][SAMPLES_NUM])
-   /* {
-        for (int i = 0; i < SECTORS_NUM; i++)
-        {
-            QVector<double> vec;
-            for(int j = 0; j < SAMPLES_NUM; j++)
-                this->amplitudes[i][j] = amplitudes[i][j];
-        }
-    }*/
+    void SetAmplitudes(VectorDouble2D amplitudes) {this->amplitudes = amplitudes;}
 
     //! Getter
     /*!
@@ -92,6 +83,9 @@ private:
 
     Amplitudes amplsBWD; /*!< Amplitudes in BWD sector.*/
     Amplitudes amplsFWD; /*!< Amplitudes in FWD sector.*/
+
+    double deadTime; /*!< Dead time in the calorimeter. */
+    double totalDeadTime; /*!< Total dead time in the calorimeter. */
 
     unsigned int nBhabhaTotal; /*!< The total number of detected bhabha events.*/
 public:

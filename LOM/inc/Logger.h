@@ -6,13 +6,31 @@
 
 #include "inc/LogListener.h"
 
-#include <iostream>
+
+//! A class for logging events.
+/*!
+  This class has only static methods and can not be instantiated.
+  The main purpose of this class is to provide interface for logging different
+  types of events (errors, debug messages, info).
+  These log messages are displayed on the main screen (last few events) and
+  saved in file.
+  Use Logger::Log method to log events.
+*/
 
 
 class Logger
 {
 public:
+
+    //! The LogLevel enum
+    //! Detalization of logging.
     enum LogLevel { ERROR, INFO, DEBUG };
+
+    //! Convert enum to string.
+    /*!
+     * \param l log level
+     * \return  converted enum.
+     */
     static QString enumToString(LogLevel l)
     {
         switch(l)
@@ -22,6 +40,12 @@ public:
         case DEBUG: return "DEBUG";
         }
     }
+
+    //! Convert string to enum.
+    /*!
+     * \param str   input string (INFO, DEBUG, ERROR).
+     * \return  log level.
+     */
     static LogLevel stringToEnum(QString str)
     {
         if(!QString::compare(str, "INFO"))
@@ -30,23 +54,50 @@ public:
             return Logger::DEBUG;
         if(!QString::compare(str, "ERROR"))
             return Logger::ERROR;
-
+        Logger::Log(Logger::ERROR, "Logger: attempting to convert inappropriate"
+                                   " string to log level");
+        return Logger::DEBUG;
     }
 
 private:
+    //! A constructor.
     Logger();
-    static QString path;
-    static bool writeToFile;
-    static LogLevel logLevel;
-    static QVector<LogListener*> listeners;
+
+    static QString path; /* The name of the log file.*/
+    static bool writeToFile; /* Switch on / off writing to file.*/
+    static LogLevel logLevel; /* The detalization of logging.*/
+    static QVector<LogListener*> listeners; /* Listeners of logger.*/
 
 public:
-    static void SetPath(QString newPath) { path = newPath; }
+    //! Setter
+    /*!
+     * \param newpath the name of the log file.
+     */
+    static void SetPath(QString newPath) {path = newPath;}
+
+    //! Setter
+    /*!
+     * \param newLogLevel new log level,
+     */
     static void SetLogLevel(LogLevel newLogLevel) {logLevel = newLogLevel;}
-    static void SetWriteToFile(bool val) { writeToFile = val; }
-    static void AddListener(LogListener* l) {listeners.push_back(l);}
 
+    //! Setter
+    /*!
+     * \param val on/off writing to file.
+     */
+    static void SetWriteToFile(bool val) {writeToFile = val;}
 
+    //! Add new listener.
+    /*!
+     * \param listener a listener.
+     */
+    static void AddListener(LogListener* listener) {listeners.push_back(listener);}
+
+    //! Logging function.
+    /*!
+     * \param messageLevel  type of message.
+     * \param message       content of message.
+     */
     static void Log(LogLevel messageLevel, QString message)
     {
         static int messageNum = 0;

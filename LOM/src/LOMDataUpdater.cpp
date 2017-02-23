@@ -10,7 +10,6 @@
 
 LOMDataUpdater::LOMDataUpdater()
 {
-    std::cout << "Default constructor for LOMDataUpdater has been called" << std::endl;
 }
 
 LOMDataUpdater::~LOMDataUpdater()
@@ -61,7 +60,6 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
         if(i == stopsignal)
             break;
     }
-    std::cout << "Read Event Data Func" << std::endl;
 
     return true;
 }

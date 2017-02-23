@@ -1,7 +1,7 @@
 #ifndef ABSTRACTTRANSPORTER_H
 #define ABSTRACTTRANSPORTER_H
 
-//! An class for data exchange.
+//! A class for data exchange.
 /*!
   An abstract class which provides an interface for establishing communication
   and data transporting.
