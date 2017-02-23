@@ -23,6 +23,8 @@ QColor QColorBar::GetColor(double val)
 void QColorBar::paintEvent(QPaintEvent *event)
 {
     QWidget::paintEvent(event);
+
+    // Setting up painter.
     QPainter painter(this);
     painter.setPen (Qt :: NoPen);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -30,6 +32,7 @@ void QColorBar::paintEvent(QPaintEvent *event)
     int xwidth = this->width();
     int ywidth = this->height();
 
+    // Drawing color bar line by line.
     for (int i = 0; i < shadesNumber; i++)
     {
         double y0 = i * ywidth / shadesNumber;
@@ -40,9 +43,5 @@ void QColorBar::paintEvent(QPaintEvent *event)
         painter.setBrush(brush);
         painter.drawRect(rect);
     }
-
-
-
-
 }
 

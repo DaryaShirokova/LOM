@@ -1,4 +1,5 @@
-#include "../inc/LOMDataProcessor.h"
+#include "inc/LOMDataProcessor.h"
+#include "inc/Logger.h"
 
 LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
 {
@@ -12,23 +13,27 @@ LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
 
 LOMDataProcessor::~LOMDataProcessor()
 {
+
 }
 
 void LOMDataProcessor::Start()
 {
     Update();
     timer->start(updateFreq);
+    Logger::Log(Logger::LogLevel::DEBUG, "Data updating process has begun.");
 }
 
 void LOMDataProcessor::Stop()
 {
     timer->stop();
+    Logger::Log(Logger::LogLevel::DEBUG, "Data updating process has been stopped.");
 }
 
 
 void LOMDataProcessor::Update()
 {
     updater->ReadEventData(&event);
+    Logger::Log(Logger::LogLevel::DEBUG, "Received data.");
 }
 
 

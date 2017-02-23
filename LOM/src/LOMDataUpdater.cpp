@@ -19,9 +19,6 @@ LOMDataUpdater::~LOMDataUpdater()
 
 bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
 {
-
-    Logger::Log(Logger::LogLevel::INFO, "Start reading data.");
-    Logger::Log(Logger::LogLevel::ERROR, "OH NO!");
     TFile fileIn("../data/lomtest_15deg_1k_1.root");
     TTree *tree = (TTree*)fileIn.Get("testtree");
 

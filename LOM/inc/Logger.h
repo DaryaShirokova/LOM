@@ -38,6 +38,9 @@ public:
         case ERROR: return "ERROR";
         case INFO:  return "INFO";
         case DEBUG: return "DEBUG";
+        default:
+            Log(LogLevel::ERROR, "Logger: trying to convert non-existing loglevel to string.");
+            return "DEBUG";
         }
     }
 
@@ -103,6 +106,7 @@ public:
         static int messageNum = 0;
         QString out;
         QString type = enumToString(messageLevel) ;
+
         switch(logLevel)
         {
         case ERROR:
@@ -122,7 +126,10 @@ public:
                                 + message + '\n';
             break;
         }
-        messageNum++;
+
+        if(!out.isEmpty())
+            messageNum++;
+
         for(LogListener* l: listeners)
             l->handleMessage(out);
     }

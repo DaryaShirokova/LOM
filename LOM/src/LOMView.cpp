@@ -1,11 +1,10 @@
-#include <inc/LOMView.h>
-#include <inc/LOMDataProcessor.h>
-#include <inc/Logger.h>
+#include "inc/LOMView.h"
+#include "inc/LOMDataProcessor.h"
+#include "inc/Logger.h"
 #include "ui_LOMView.h"
 
-#include <iostream>
 #include <QVector>
-#include <array>
+
 #include <algorithm>
 
 LOMView::LOMView(QWidget *parent) :
@@ -14,13 +13,16 @@ LOMView::LOMView(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Setuo logging.
     SetLogType(ui->logTypeChBox->currentText());
     SetLogDepth(ui->logDepthspinBox->value());
 
+    // Toggle buttons.
     ui->checkBoxHitSector->toggle();
     ui->checkBoxSaveLog->toggle();
     ChangePlottersMode();
 
+    // Set luminosity label to red.
     QPalette palette = ui->labelLuminosity->palette();
     palette.setColor(ui->labelLuminosity->foregroundRole(), Qt::red);
     ui->labelLuminosity->setPalette(palette);
@@ -38,13 +40,7 @@ LOMView::LOMView(QWidget *parent) :
     // Set axes ranges.
     ChangePlottersSettings();
 
-    ui->amplFWDWidget->replot();
-    ui->amplBWDWidget->replot();
-    ui->coinWidget->replot();
-
-
     // Set update timer.
-    //UpdateSettings();
     plotsUpdateTimer = new QTimer(this);
     connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdateAll()));
 }
@@ -55,9 +51,35 @@ LOMView::~LOMView()
     delete ui;
 }
 
+
+void LOMView::handleMessage(QString message)
+{
+    if(message.isEmpty())
+        return;
+    QString text = ui->logBrowser->toPlainText();
+    int index = 0;
+    for(int i = 0; i < logDepth - 1; i++)
+    {
+        index = text.indexOf("\n", index+1);
+        if(index == -1)
+            break;
+    }
+    if (index != -1) text = text.left(index);
+
+    text = message + text;
+    text = text.replace('\n',"<br />");
+    text.replace("ERROR", "<font color='red'><b>ERROR</b></font>");
+    text.replace("INFO", "<font color='green'><b>INFO</b></font>");
+    text.replace("DEBUG", "<font color='gray'><b>DEBUG</b></font>");
+
+    ui->logBrowser->setText(text);
+}
+
+
 //******************************************************************************
 // SLOTS
 //******************************************************************************
+
 void LOMView::ChangePlottersSettings()
 {
     this->x0 = ui->xMinSpinBox->value();
@@ -70,6 +92,9 @@ void LOMView::ChangePlottersSettings()
     ui->amplBWDWidget->yAxis->setRange(-0.1, ymaxBWD);
     ui->coinWidget->xAxis->setRange(x0, x1);
     ui->coinWidget->yAxis->setRange(-0.1, 1.2);
+    ui->amplFWDWidget->replot();
+    ui->amplBWDWidget->replot();
+    ui->coinWidget->replot();
 }
 
 void LOMView::UpdateAll()
@@ -85,10 +110,6 @@ void LOMView::UpdateThresholds()
     unsigned int newValCoin = ui->spinBoxCoinDur->value();
     unsigned int newValBkg = ui->spinBoxBkg->value();
     model->GetInitParameters().Init(newValFE, newValBE, newValCoin, newValBkg);
-
-    std::cout << "ThresholdBE: " << model->GetInitParameters().GetThresholdBE() << std::endl;
-    std::cout << "Coin: " << model->GetInitParameters().GetCoincidenceDurationThreshold() << std::endl;
-    std::cout << "Bkg: " << model->GetInitParameters().GetBackgroundThreshold() << std::endl;
 }
 
 void LOMView::UpdateSettings()
@@ -131,12 +152,14 @@ void LOMView::ChangePlottersMode()
         ui->bwdSectorCB->setEnabled(true);
     }
 }
+
 void LOMView::SetLogType(QString str)
 {
     logtype = Logger::stringToEnum(str);
     Logger::SetLogLevel(logtype);
 
 }
+
 void LOMView::SetLogDepth(int depth)
 {
     logDepth = depth;
@@ -144,7 +167,6 @@ void LOMView::SetLogDepth(int depth)
 
 void LOMView::UpdatePlots()
 {
-    std::cout <<"hey " << std::endl;
     unsigned int fwdSector;
     unsigned int bwdSector;
 
@@ -159,8 +181,6 @@ void LOMView::UpdatePlots()
         fwdSector = ui->fwdSectorCB->currentText().toInt();
         bwdSector = ui->bwdSectorCB->currentText().toInt();
     }
-
-    std::cout << "fwd sector: " << fwdSector << " bwd sector: " << bwdSector << std::endl;
 
     //**************************************************************************
     // Draw fwd plot.
@@ -285,29 +305,4 @@ void LOMView::UpdateEndcapsWiggets()
     ui->bwdEndcap->SetAmplitudes(model->GetEventData()
                                  .GetAmplsBWD().GetMaxAmplitudes());
     ui->bwdEndcap->repaint();
-}
-
-
-void LOMView::handleMessage(QString message)
-{
-    if(message.isEmpty())
-        return;
-    QString text = ui->logBrowser->toPlainText();
-    int index = 0;
-    for(int i = 0; i < logDepth - 1; i++)
-    {
-        index = text.indexOf("\n", index+1);
-        if(index == -1)
-            break;
-    }
-    std::cout << index << std::endl;
-    if (index != -1) text = text.left(index);
-
-    text = message + text;
-    text = text.replace('\n',"<br />");
-    text.replace("ERROR", "<font color='red'><b>ERROR</b></font>");
-    text.replace("INFO", "<font color='green'><b>INFO</b></font>");
-    text.replace("DEBUG", "<font color='gray'><b>DEBUG</b></font>");
-
-    ui->logBrowser->setText(text);
 }

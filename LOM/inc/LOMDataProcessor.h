@@ -1,9 +1,9 @@
 #ifndef LOMDATAPROCESSOR_H
 #define LOMDATAPROCESSOR_H
 
-#include <inc/LOMInitParameters.h>
-#include <inc/LOMEventData.h>
-#include <inc/LOMDataUpdater.h>
+#include "inc/LOMInitParameters.h"
+#include "inc/LOMEventData.h"
+#include "inc/LOMDataUpdater.h"
 
 #include <QTimer>
 

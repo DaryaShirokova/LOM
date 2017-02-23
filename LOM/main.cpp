@@ -11,9 +11,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     LOMView w;
-    std::cout << "Create updater." << std::endl;
     LOMDataUpdater* updater = new LOMDataUpdater();
-    std::cout << "Create data processor." << std::endl;
     LOMDataProcessor* model = new LOMDataProcessor(updater);
     w.SetModel(model);
     Logger::AddListener(&w);
