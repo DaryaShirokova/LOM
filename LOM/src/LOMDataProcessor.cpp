@@ -18,9 +18,9 @@ LOMDataProcessor::~LOMDataProcessor()
 
 void LOMDataProcessor::Start()
 {
+    Logger::Log(Logger::LogLevel::DEBUG, "Data updating process has begun.");
     Update();
     timer->start(updateFreq);
-    Logger::Log(Logger::LogLevel::DEBUG, "Data updating process has begun.");
 }
 
 void LOMDataProcessor::Stop()

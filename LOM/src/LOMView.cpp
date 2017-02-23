@@ -13,9 +13,10 @@ LOMView::LOMView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Setuo logging.
+    // Setup logging.
     SetLogType(ui->logTypeChBox->currentText());
     SetLogDepth(ui->logDepthspinBox->value());
+    Logger::SetPath("/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/log/myfile");
 
     // Toggle buttons.
     ui->checkBoxHitSector->toggle();
@@ -163,6 +164,11 @@ void LOMView::SetLogType(QString str)
 void LOMView::SetLogDepth(int depth)
 {
     logDepth = depth;
+}
+
+void LOMView::SetLogToFile(bool val)
+{
+    Logger::SetWriteToFile(val);
 }
 
 void LOMView::UpdatePlots()

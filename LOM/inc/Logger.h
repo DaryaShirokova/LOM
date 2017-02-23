@@ -3,9 +3,12 @@
 
 #include <QVector>
 #include <QString>
+#include <QFile>
 
 #include "inc/LogListener.h"
 
+#include <QDir>
+#include <iostream>
 
 //! A class for logging events.
 /*!
@@ -66,17 +69,40 @@ private:
     //! A constructor.
     Logger();
 
-    static QString path; /* The name of the log file.*/
+    static QString path; /* Log file name.*/
+    static QFile file; /* Log file.*/
     static bool writeToFile; /* Switch on / off writing to file.*/
     static LogLevel logLevel; /* The detalization of logging.*/
     static QVector<LogListener*> listeners; /* Listeners of logger.*/
 
+
+    /*!
+     * \brief OpenFile  auxiliary function for opening file.
+     */
+    static void OpenFile()
+    {
+        if(file.isOpen())
+            file.close();
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+        {
+            writeToFile = false;
+            Log(LogLevel::ERROR, "Logger: can not open log file: " + path);
+        }
+    }
+
 public:
-    //! Setter
+    //! Open file for log output.
     /*!
      * \param newpath the name of the log file.
      */
-    static void SetPath(QString newPath) {path = newPath;}
+    static void SetPath(QString newPath)
+    {
+        if(file.isOpen())
+            file.close();
+        path = newPath;
+        file.setFileName(path);
+    }
+
 
     //! Setter
     /*!
@@ -88,7 +114,14 @@ public:
     /*!
      * \param val on/off writing to file.
      */
-    static void SetWriteToFile(bool val) {writeToFile = val;}
+    static void SetWriteToFile(bool val)
+    {
+        if(val == true)
+            OpenFile();
+        else if(file.isOpen()) file.close();
+
+        writeToFile = val;
+    }
 
     //! Add new listener.
     /*!
@@ -128,10 +161,23 @@ public:
         }
 
         if(!out.isEmpty())
+        {
             messageNum++;
 
-        for(LogListener* l: listeners)
-            l->handleMessage(out);
+            if(writeToFile)
+            {
+                if(file.write(out.toStdString().c_str()) == -1)
+                {
+                    writeToFile = false;
+                    Log(LogLevel::ERROR, "Logger: error occured while writing to file: " + path);
+                }
+                else file.flush();
+            }
+
+            for(LogListener* l: listeners)
+                l->handleMessage(out);
+
+        }
     }
 
 

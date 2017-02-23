@@ -60,15 +60,19 @@ private:
 public slots:
     void UpdateThresholds(); /* Set the values of thresholds to model. */
     void UpdateSettings(); /* Update timing settings. */
+
     void StartUpdates(); /* Begin reading data from FPGA. */
     void StopUpdates(); /* Stop reading data from FPGA. */
+
     void UpdatePlots(); /* Update plotters. */
     void UpdateEndcapsWiggets(); /* Update endcaps widgets. */
     void UpdateAll();   /* Call several update slots (plotters, endcaps). */
     void ChangePlottersSettings(); /* Change plotters settins. */
     void ChangePlottersMode(); /* Change mode: max ampl sector to fixed sector. */
+
     void SetLogType(QString str); /* Set loggig detalization. */
     void SetLogDepth(int depth); /* Set logging depth. */
+    void SetLogToFile(bool val); /* Switch on/of logging to file. */
 };
 
 #endif // LOMVIEW_H
