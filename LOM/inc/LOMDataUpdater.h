@@ -27,7 +27,7 @@ public:
     //**************************************************************************
 
     //! A default constructor.
-    LOMDataUpdater();
+    LOMDataUpdater() {}
 
     //! A constructor.
     /*!
@@ -35,10 +35,10 @@ public:
      * \param config        configuration file.
      * \param transporter   transport protocol.
      */
-    LOMDataUpdater(std::string config, AbstractTransporter *transporter);
+    LOMDataUpdater(AbstractTransporter *transporter);
 
     //! A destructor.
-    ~LOMDataUpdater();
+    ~LOMDataUpdater() {}
 
     /*!
      * \brief WriteInitParameters

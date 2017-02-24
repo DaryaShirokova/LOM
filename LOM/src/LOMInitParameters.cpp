@@ -1,5 +1,7 @@
 #include "../inc/LOMInitParameters.h"
 
+#include <QDebug>
+
 LOMInitParameters::LOMInitParameters()
 {
 }
@@ -8,9 +10,9 @@ LOMInitParameters::~LOMInitParameters()
 {
 }
 
-void LOMInitParameters::Init(unsigned int thresholdFE, unsigned int thresholdBE,
-                             unsigned int coincidenceDurationThreshold,
-                             unsigned int backgroundThreshold)
+void LOMInitParameters::Init(double thresholdFE, double thresholdBE,
+                             int coincidenceDurationThreshold,
+                             int backgroundThreshold)
 {
     this->thresholdBE = thresholdBE;
     this->thresholdFE = thresholdFE;

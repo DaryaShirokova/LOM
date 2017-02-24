@@ -33,7 +33,7 @@ public:
      * \brief SetModel  set model and update threshold.
      * \param model     model
      */
-    void SetModel(LOMDataProcessor* model) {this->model = model; UpdateThresholds();}
+    void SetModel(LOMDataProcessor* model) {this->model = model;}
 
     /*!
      * \brief handleMessage handle logger event.
@@ -73,6 +73,9 @@ public slots:
     void SetLogType(QString str); /* Set loggig detalization. */
     void SetLogDepth(int depth); /* Set logging depth. */
     void SetLogToFile(bool val); /* Switch on/of logging to file. */
+
+    void Connected();
+    void Disconnected();
 };
 
 #endif // LOMVIEW_H

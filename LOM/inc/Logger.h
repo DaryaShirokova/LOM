@@ -8,7 +8,7 @@
 #include "inc/LogListener.h"
 
 #include <QDir>
-#include <iostream>
+#include <QDebug>
 
 //! A class for logging events.
 /*!

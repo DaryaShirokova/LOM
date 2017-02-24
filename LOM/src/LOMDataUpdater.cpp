@@ -4,17 +4,14 @@
 
 #include <TTree.h>
 #include <TFile.h>
+#include <QByteArray>
 
 #include <time.h>
+#include <QDebug>
 
-
-LOMDataUpdater::LOMDataUpdater()
+LOMDataUpdater::LOMDataUpdater(AbstractTransporter *transporter)
 {
-}
-
-LOMDataUpdater::~LOMDataUpdater()
-{
-
+    this->transporter = transporter;
 }
 
 bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
@@ -57,6 +54,16 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
         if(i == stopsignal)
             break;
     }
-
     return true;
+}
+
+bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
+{
+    QByteArray arr;
+    int aa;
+    arr.push_back('W');
+    arr.push_back('R');
+    aa = 3000;
+    arr.push_back(aa);
+    return transporter->WriteData(arr, arr.size());//(out.toUtf8().constData(), out.size());
 }

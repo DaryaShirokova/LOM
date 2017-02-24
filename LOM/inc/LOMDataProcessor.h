@@ -29,6 +29,8 @@ private:
 
     long int updateFreq; /*!< The frequency of data updates.*/
 
+    bool isRunning; /*!< The status of data updates.*/
+
     LOMDataUpdater* updater; /*!< The object which processes updates.*/
 
     double luminosity; /* The value of luminosity.*/
@@ -91,10 +93,28 @@ private slots:
     //**************************************************************************
 public:
     /*!
-     * \brief GetInitParameters getter.
-     * \return  reference to init params.
+     * \brief IsRunning check the status of updates.
+     * \return  the status of updates (true if updating).
      */
-    LOMInitParameters& GetInitParameters() {return initParams;}
+    bool IsRunning() {return isRunning;}
+
+    /*!
+     * \brief GetInitParameters getter.
+     * \return  init params.
+     */
+    LOMInitParameters GetInitParameters() {return initParams;}
+
+    //! Update init parameters.
+    /*!
+    * \param thresholdFE forward endcap hit threshlold.
+    * \param thresholdBE backward endcap hit threshlold.
+    * \param coincidenceDurationThreshold the minimal coincidenc interval.
+    * \param backgroundThreshold quality signal detection threshold.
+    * \return statusof updates.
+    */
+    bool SetInitParameters(double thresholdFE, double thresholdBE,
+                            unsigned int coincidenceDurationThreshold,
+                            unsigned int backgroundThreshold);
 
     /*!
      * \brief GetEventData getter.

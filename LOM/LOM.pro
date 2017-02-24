@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport network
 
 TARGET = LOM
 TEMPLATE = app
@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     qcustomplot/qcustomplot.cpp \
     src/QEndcapWidget.cpp \
     src/QColorBar.cpp \
-    src/Logger.cpp
+    src/Logger.cpp \
+    src/TCPTransporter.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -54,6 +55,7 @@ HEADERS  += inc/LOMView.h \
     inc/QEndcapWidget.h \
     inc/Constants.h \
     inc/Logger.h \
-    inc/LogListener.h
+    inc/LogListener.h \
+    inc/TCPTransporter.h
 
 FORMS    += forms/LOMView.ui

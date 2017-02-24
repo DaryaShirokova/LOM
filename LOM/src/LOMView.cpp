@@ -16,6 +16,8 @@ LOMView::LOMView(QWidget *parent) :
     // Setup logging.
     SetLogType(ui->logTypeChBox->currentText());
     SetLogDepth(ui->logDepthspinBox->value());
+
+    // TODO
     Logger::SetPath("/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/log/myfile");
 
     // Toggle buttons.
@@ -23,10 +25,12 @@ LOMView::LOMView(QWidget *parent) :
     ui->checkBoxSaveLog->toggle();
     ChangePlottersMode();
 
-    // Set luminosity label to red.
-    QPalette palette = ui->labelLuminosity->palette();
-    palette.setColor(ui->labelLuminosity->foregroundRole(), Qt::red);
-    ui->labelLuminosity->setPalette(palette);
+    // Set luminosity/thresholds/connection palette labels to red.
+    QPalette palette;
+    palette.setColor(QWidget::foregroundRole(), Qt::red);
+    //ui->labelLuminosity->setPalette(palette);
+    ui->thresholdStatusLabel->setPalette(palette);
+    ui->connectionStatusLabel->setPalette(palette);
 
     // Give titles to axis
     ui->luminosityWidget->xAxis->setLabel("t, s");
@@ -76,7 +80,6 @@ void LOMView::handleMessage(QString message)
     ui->logBrowser->setText(text);
 }
 
-
 //******************************************************************************
 // SLOTS
 //******************************************************************************
@@ -106,11 +109,13 @@ void LOMView::UpdateAll()
 
 void LOMView::UpdateThresholds()
 {
-    unsigned int newValFE = ui->spinBoxAmplFWD->value();
-    unsigned int newValBE = ui->spinBoxAmplBWD->value();
+    double newValFE = ui->spinBoxAmplFWD->value();
+    double newValBE = ui->spinBoxAmplBWD->value();
     unsigned int newValCoin = ui->spinBoxCoinDur->value();
     unsigned int newValBkg = ui->spinBoxBkg->value();
-    model->GetInitParameters().Init(newValFE, newValBE, newValCoin, newValBkg);
+    if(model->SetInitParameters(newValFE, newValBE, newValCoin, newValBkg))
+        ui->thresholdStatusLabel->setVisible(false);
+    else ui->thresholdStatusLabel->setVisible(true);
 }
 
 void LOMView::UpdateSettings()
@@ -287,7 +292,8 @@ void LOMView::UpdatePlots()
     ui->coinWidget->replot();
 
     // Update label.
-    if(model->GetEventData().haveCoincidenceRegion(fwdSector-1, bwdSector-1, thresholdFE, thresholdBE))
+    if(model->GetEventData().haveCoincidenceRegion(fwdSector-1, bwdSector-1,
+                                                   thresholdFE, thresholdBE))
     {
         ui->coinWidgetLabel->setText("Coincidence region: " +
             QString::number(model->GetEventData().GetCoincidenceRegionLeftBoundary
@@ -311,4 +317,31 @@ void LOMView::UpdateEndcapsWiggets()
     ui->bwdEndcap->SetAmplitudes(model->GetEventData()
                                  .GetAmplsBWD().GetMaxAmplitudes());
     ui->bwdEndcap->repaint();
+}
+
+
+void LOMView::Connected()
+{
+    QPalette palette;
+    palette.setColor(QWidget::foregroundRole(), Qt::black);
+    ui->connectionStatusLabel->setPalette(palette);
+    ui->connectionStatusLabel->setText("connected.");
+
+    ui->pushButtonSetThresholds->setEnabled(true);
+    ui->pushButtonStart->setEnabled(true);
+    ui->pushButtonStop->setEnabled(false);
+}
+
+void LOMView::Disconnected()
+{
+    QPalette palette;
+    palette.setColor(QWidget::foregroundRole(), Qt::red);
+    ui->connectionStatusLabel->setPalette(palette);
+    ui->connectionStatusLabel->setText("disconnected.");
+
+    if(model->IsRunning())
+        StopUpdates();
+    ui->pushButtonSetThresholds->setEnabled(false);
+    ui->pushButtonStart->setEnabled(false);
+    ui->pushButtonStop->setEnabled(false);
 }
