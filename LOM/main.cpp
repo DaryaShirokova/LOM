@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
 
     transporter->ConnectToHost();
 
+    if(sizeof(int) != 4)
+        Logger::Log(Logger::LogLevel::ERROR, "Main: the size of int is not 4, data transmitting may be broken.");
 
     w.show();
     return a.exec();

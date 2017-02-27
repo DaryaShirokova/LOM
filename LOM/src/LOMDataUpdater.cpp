@@ -5,6 +5,7 @@
 #include <TTree.h>
 #include <TFile.h>
 #include <QByteArray>
+#include <QDataStream>
 
 #include <time.h>
 #include <QDebug>
@@ -57,13 +58,37 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
     return true;
 }
 
+/*!
+ * \brief getByte   get Nth byte of interer value.
+ * \param num       input number.
+ * \param byteN     byte number (0-3)
+ * \return
+ */
+unsigned char getByte(int num, int byteN)
+{
+    return (num >> (byteN * 8)) & 0xFF;
+}
+
+/*!
+ * \brief pushNum  convert integer number to byte array.
+ * \param arr      byte array.
+ * \param num      number to convert.
+ */
+void pushNum(QByteArray* arr, int num)
+{
+    for(uint i = 0; i < sizeof(int); i ++)
+        arr->push_back(getByte(num, i));
+}
+
 bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
 {
     QByteArray arr;
-    int aa;
-    arr.push_back('W');
-    arr.push_back('R');
-    aa = 3000;
-    arr.push_back(aa);
-    return transporter->WriteData(arr, arr.size());//(out.toUtf8().constData(), out.size());
+    arr.push_back("W");
+    arr.push_back("R");
+    pushNum(&arr, int(initParameters->GetThresholdFE() * 1000));
+    pushNum(&arr, int(initParameters->GetThresholdBE() * 1000));
+    pushNum(&arr, int(initParameters->GetCoincidenceDurationThreshold()));
+    pushNum(&arr, int(initParameters->GetBackgroundThreshold()));
+
+    return transporter->WriteData(arr, arr.size());
 }
