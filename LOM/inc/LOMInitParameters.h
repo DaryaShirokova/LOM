@@ -16,7 +16,7 @@ private:
     //! The minimal interval when both signals (FE, BE) must exceed thresholds.
     int coincidenceDurationThreshold;
 
-    int backgroundThreshold; /*!< The threshold for quality signal detection. */
+    int hitThreshold; /*!< The threshold for quality signal detection. */
 
 public:
 
@@ -36,11 +36,11 @@ public:
     * \param thresholdFE forward endcap hit threshlold.
     * \param thresholdBE backward endcap hit threshlold.
     * \param coincidenceDurationThreshold the minimal coincidenc interval.
-    * \param backgroundThreshold quality signal detection threshold.
+    * \param hitThreshold quality signal detection threshold.
     */
     void Init(double thresholdFE, double thresholdBE,
               int coincidenceDurationThreshold,
-              int backgroundThreshold);
+              int hitThreshold);
 
     //**************************************************************************
     // Getters/Setters.
@@ -88,14 +88,14 @@ public:
     /*!
      * \param backgroundThreshold a new value of background threshold.
      */
-    void SetBackgroundThreshold(unsigned int backgroundThreshold)
-                              {this->backgroundThreshold = backgroundThreshold;}
+    void SetHitThreshold(unsigned int hitThreshold)
+                              {this->hitThreshold = hitThreshold;}
 
     //! Getter
     /*!
-     * \return current value of backgroundThreshold.
+     * \return current value of hitThreshold.
      */
-    int GetBackgroundThreshold() {return this->backgroundThreshold;}
+    int GetHitThreshold() {return this->hitThreshold;}
 
 };
 

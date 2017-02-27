@@ -12,10 +12,10 @@ LOMInitParameters::~LOMInitParameters()
 
 void LOMInitParameters::Init(double thresholdFE, double thresholdBE,
                              int coincidenceDurationThreshold,
-                             int backgroundThreshold)
+                             int hitThreshold)
 {
     this->thresholdBE = thresholdBE;
     this->thresholdFE = thresholdFE;
     this->coincidenceDurationThreshold = coincidenceDurationThreshold;
-    this->backgroundThreshold = backgroundThreshold;
+    this->hitThreshold = hitThreshold;
 }

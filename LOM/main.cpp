@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     QObject::connect(transporter, SIGNAL(SigDisconnected()), &w, SLOT(Disconnected()));
 
     LOMDataUpdater* updater = new LOMDataUpdater(transporter);
+    updater->Configure("/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/config/regmap.conf");
     LOMDataProcessor* model = new LOMDataProcessor(updater);
     w.SetModel(model);
 

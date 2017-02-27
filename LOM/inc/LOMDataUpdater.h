@@ -5,10 +5,7 @@
 #include <inc/LOMInitParameters.h>
 #include <inc/LOMEventData.h>
 
-#include <map>
-#include <string>
-
-//#include "root/TColor.h"
+#include <QMap>
 
 //! A class for connetion establishment.
 /*!
@@ -19,15 +16,15 @@ class LOMDataUpdater
 private:
 
     AbstractTransporter *transporter; /*!< Trasport protocol implementation.*/
-    std::map<std::string, int> regMap; /*!< IP address of the destination point.*/
+    QMap<QString, int> regMap; /*!< IP address of the destination point.*/
+
+    //! A default constructor.
+    LOMDataUpdater() {}
 
 public:
     //**************************************************************************
     // Constructor/destructor.
     //**************************************************************************
-
-    //! A default constructor.
-    LOMDataUpdater() {}
 
     //! A constructor.
     /*!
@@ -39,6 +36,12 @@ public:
 
     //! A destructor.
     ~LOMDataUpdater() {}
+
+    /*!
+     * \brief Configure load register settings from config file.
+     * \param config    config file path.
+     */
+    void Configure(QString config);
 
     /*!
      * \brief WriteInitParameters
