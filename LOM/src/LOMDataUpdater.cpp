@@ -32,6 +32,14 @@ void pushNum(QByteArray* arr, int num)
         arr->push_back(getByte(num, i));
 }
 
+int ReadInt(QByteArray arr, int k)
+{
+    int n = k * 4;
+    return (arr.at(n + 0) & 0xFF) |
+           (arr.at(n + 1) & 0xFF) << 8 |
+           (arr.at(n + 2) & 0xFF) << 16 |
+           (arr.at(n + 3) & 0xFF) << 24;
+}
 
 LOMDataUpdater::LOMDataUpdater(AbstractTransporter *transporter)
 {
@@ -58,6 +66,11 @@ void LOMDataUpdater::Configure(QString config)
             int addr = l.split(QRegExp("[\\s]+"))[1].toInt(&res, 16);
             if(key == "IP")
                 continue;
+            if(key == MEM_EVENT)
+            {
+                memMap.insert(key, addr);
+                continue;
+            }
             if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT)
                 regMap.insert(key, addr);
             else
@@ -75,44 +88,44 @@ void LOMDataUpdater::Configure(QString config)
 
 bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
 {
-    TFile fileIn("../data/lomtest_15deg_1k_1.root");
-    TTree *tree = (TTree*)fileIn.Get("testtree");
+    QByteArray arr;
 
-    Double_t bewf[16][64];
-    Double_t fewf[16][64];
+    arr.push_back("R");
+    arr.push_back("M");
+    pushNum(&arr, memMap.value(REG_FE));
 
-    TBranch *bbranch = tree->GetBranch("bewf[16][64]");
-    TBranch *fbranch = tree->GetBranch("fewf[16][64]");
+    transporter->WriteData(arr, arr.size());
 
-    tree->SetBranchAddress("bewf[16][64]", &bewf);
-    tree->SetBranchAddress("fewf[16][64]", &fewf);
-
-    srand (time(NULL));
-    int stopsignal = rand() % 1000;
-
-    for (int i=0; i < tree->GetEntries(); i++)
+    // TODO change to signals slots
+    if(!transporter->SetReadMode(READ_TIMEOUT))
     {
-        bbranch->GetEvent(i);
-        fbranch->GetEvent(i);
-        QVector<QVector<double>> amplitudesFE;
-        QVector<QVector<double>> amplitudesBE;
-        for(int t = 0; t < 16; t++)
-        {
-            QVector<double> sectorFE;
-            QVector<double> sectorBE;
-            for(int s = 0; s < 64; s++)
-            {
-                sectorFE.push_back(fewf[t][s]);
-                sectorBE.push_back(bewf[t][s]);
-            }
-            amplitudesFE.push_back(sectorFE);
-            amplitudesBE.push_back(sectorBE);
-        }
-        eventData->GetAmplsFWD().SetAmplitudes(amplitudesFE);
-        eventData->GetAmplsBWD().SetAmplitudes(amplitudesBE);
-        if(i == stopsignal)
-            break;
+        Logger::Log(Logger::LogLevel::ERROR, "LOMDataUpdater: can't receive data."
+                                             " Timeout error.");
+        return false;
     }
+    else arr = transporter->ReadData();
+
+    QVector<QVector<double>> amplitudesFE;
+    QVector<QVector<double>> amplitudesBE;
+
+    for(int i = 0; i < SECTOR_NUM; i++)
+    {
+        QVector<double> sectorFE;
+        for(int j = 0; j < 64; j++)
+            sectorFE.push_back(ReadInt(arr, i*64 + j)* 1. / SCALE_FACTOR);
+        amplitudesFE.push_back(sectorFE);
+    }
+
+    for(int i = 0; i < SECTOR_NUM; i++)
+    {
+        QVector<double> sectorBE;
+        for(int j = 0; j < 64; j++)
+            sectorBE.push_back(ReadInt(arr, SECTOR_NUM * 64 + i*64 + j) * 1. / SCALE_FACTOR);
+        amplitudesBE.push_back(sectorBE);
+    }
+    eventData->GetAmplsFWD().SetAmplitudes(amplitudesFE);
+    eventData->GetAmplsBWD().SetAmplitudes(amplitudesBE);
+
     return true;
 }
 

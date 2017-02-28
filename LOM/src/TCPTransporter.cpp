@@ -10,7 +10,7 @@ TCPTransporter::TCPTransporter()
     connect(socket, SIGNAL(connected()),this, SLOT(Connected()));
     connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
 
-    //connect(socket, SIGNAL(readyRead()), SLOT(readTcpData()));
+    connect(socket, SIGNAL(readyRead()), SLOT(ReceiveData()));
 }
 
 void TCPTransporter::SetHostAddress(QHostAddress ipaddr, int port)
@@ -56,13 +56,29 @@ void TCPTransporter::Disconnected()
     emit SigDisconnected();
 }
 
-
-bool TCPTransporter::ReadData(size_t dataSize, int *data)
+bool TCPTransporter::SetReadMode(int msec)
 {
-
+    socket->waitForReadyRead(msec);
 }
 
-bool TCPTransporter::WriteData(QByteArray data, qint64 size)
+void TCPTransporter::ReceiveData()
+{
+    inputBuffer = socket->readAll();
+    Logger::Log(Logger::LogLevel::DEBUG,  "Received " +
+                QString::number(inputBuffer.size()) + " byte.");
+    emit DataReady(inputBuffer);
+}
+
+QByteArray TCPTransporter::ReadData()
+{
+    //data = inputBuffer;
+    //if(size == 0 || size == data.size())
+    //    return true;
+    //else return false;
+    return inputBuffer;
+}
+
+bool TCPTransporter::WriteData(QByteArray data, qint32 size)
 {
     Logger::Log(Logger::LogLevel::DEBUG, "TCPTransporter: Start writing data.");
     if(!socket->isOpen())

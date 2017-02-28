@@ -4,7 +4,6 @@
 #include "ui_LOMView.h"
 
 #include <QVector>
-
 #include <algorithm>
 
 LOMView::LOMView(QWidget *parent) :

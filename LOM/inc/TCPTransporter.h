@@ -7,7 +7,7 @@
 
 #include "AbstractTransporter.h"
 
-class TCPTransporter : public QObject, public AbstractTransporter
+class TCPTransporter : public AbstractTransporter
 {
     Q_OBJECT
 private:
@@ -20,15 +20,19 @@ public:
     void SetHostAddress(QHostAddress ipaddr, int port);
     bool ConnectToHost();
     bool CloseConnection();
-    bool ReadData(size_t dataSize, int *data) override;
-    bool WriteData(QByteArray data, qint64 size) override;
+    bool SetReadMode(int msec) override;
+    bool WriteData(QByteArray data, qint32 size) override;
+    QByteArray ReadData() override;
     bool IsConnected();
+
 private:
     QString AddrToString();
+    QByteArray inputBuffer;
 
 public slots:
     void Connected();
     void Disconnected();
+    void ReceiveData();
 
 signals:
     void SigConnected();
