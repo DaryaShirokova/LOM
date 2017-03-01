@@ -11,9 +11,9 @@
 /*!
   A class which knows register map of the FPGA and the data structure.
 */
-class LOMDataUpdater : public QObject
+class LOMDataUpdater// : public QObject
 {
-    Q_OBJECT
+   // Q_OBJECT
 private:
     //! The LogLevel enum
     //! Detalization of logging.

@@ -6,6 +6,9 @@ LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
     this->updater = updater;
 
     isRunning = false;
+    writeTree = false;
+    treeSize = DEFAULT_TREE_SIZE;
+    dataDir = DATA_PATH;
 
     // Connect timer.
     timer = new QTimer(this);

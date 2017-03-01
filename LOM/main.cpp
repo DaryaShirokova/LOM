@@ -12,7 +12,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     LOMView w;
+
     Logger::AddListener(&w);
+    Logger::SetWriteToFile(false);
+    Logger::SetPath(LOG_PATH);
 
     TCPTransporter* transporter = new TCPTransporter();
     transporter->SetHostAddress(QHostAddress::LocalHost, 5683);
@@ -24,10 +27,13 @@ int main(int argc, char *argv[])
     LOMDataProcessor* model = new LOMDataProcessor(updater);
     w.SetModel(model);
 
+    w.Load(DEFAULT_CONF);
+
     transporter->ConnectToHost();
 
     if(sizeof(int) != 4)
-        Logger::Log(Logger::LogLevel::ERROR, "Main: the size of int is not 4, data transmitting may be broken.");
+        Logger::Log(Logger::LogLevel::ERROR, "Main: the size of int is not 4, "
+                                             "data transmitting may be broken.");
 
     w.show();
     return a.exec();

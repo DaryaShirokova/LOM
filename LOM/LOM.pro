@@ -42,7 +42,9 @@ SOURCES += main.cpp\
     src/QEndcapWidget.cpp \
     src/QColorBar.cpp \
     src/Logger.cpp \
-    src/TCPTransporter.cpp
+    src/TCPTransporter.cpp \
+    src/MenuConfig.cpp \
+    forms/QNetworkSettings.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -56,6 +58,11 @@ HEADERS  += inc/LOMView.h \
     inc/Constants.h \
     inc/Logger.h \
     inc/LogListener.h \
-    inc/TCPTransporter.h
+    inc/TCPTransporter.h \
+    inc/MenuConfig.h \
+    inc/ConfigFileHandler.h \
+    forms/QNetworkSettings.h
 
-FORMS    += forms/LOMView.ui
+FORMS    += forms/LOMView.ui \
+    forms/MenuConfig.ui \
+    forms/QNetworkSettings.ui

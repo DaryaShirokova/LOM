@@ -40,6 +40,11 @@ private:
 
     QTimer* timer; /* Timer for data updates.*/
 
+    bool writeTree;
+
+    int treeSize;
+
+    QString dataDir;
 public:
 
     //**************************************************************************
@@ -91,7 +96,15 @@ private slots:
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************
+
+
 public:
+    void SetWriteTree(bool writeTree) {this->writeTree = writeTree;}
+    bool GetWriteTree() {return writeTree;}
+    void SetDataDir(QString dataDir) {this->dataDir = dataDir;}
+    QString GetDataDir() {return dataDir;}
+    int GetTreeSize() {return treeSize;}
+    void SetTreeSize(int treeSize) {this->treeSize = treeSize;}
     /*!
      * \brief IsRunning check the status of updates.
      * \return  the status of updates (true if updating).

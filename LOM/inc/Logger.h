@@ -9,6 +9,7 @@
 
 #include <QDir>
 #include <QDebug>
+#include <QDateTime>
 
 //! A class for logging events.
 /*!
@@ -100,8 +101,19 @@ public:
         if(file.isOpen())
             file.close();
         path = newPath;
-        file.setFileName(path);
+
+        QLocale::setDefault(QLocale(QLocale::English, QLocale::Japan));
+        QDateTime date = QDateTime::currentDateTime();
+        QString name = "Log-" + QLocale().toString(date);
+        if(!path.endsWith('/'))
+            name = '/' + name;
+
+        file.setFileName(path + name);
+        if(writeToFile)
+            OpenFile();
     }
+
+    static QString GetPath() { return path;}
 
 
     //! Setter
@@ -116,11 +128,11 @@ public:
      */
     static void SetWriteToFile(bool val)
     {
+        writeToFile = val;
         if(val == true)
             OpenFile();
         else if(file.isOpen()) file.close();
 
-        writeToFile = val;
     }
 
     //! Add new listener.

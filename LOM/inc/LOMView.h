@@ -3,8 +3,11 @@
 
 #include <QMainWindow>
 #include <QTimer>
+
 #include "inc/LogListener.h"
 #include "inc/Logger.h"
+#include "inc/Constants.h"
+#include "inc/MenuConfig.h"
 
 
 namespace Ui {
@@ -12,6 +15,36 @@ class LOMView;
 }
 
 class LOMDataProcessor;
+
+
+class UIConfig
+{
+    QMap<QString, QString> params;
+public:
+    bool load()
+    {
+       // return load(CONFIG_PATH + DEFAULT_CONF);
+    }
+
+    bool load(QString file)
+    {
+
+    }
+
+    bool save(QString file)
+    {
+
+    }
+    QString GetParam(QString key)
+    {
+        return params.value(key);
+    }
+
+    void SetParam(QString key, QString value)
+    {
+        params.insert(key, value);
+    }
+};
 
 //! View class.
 /*!
@@ -41,6 +74,10 @@ public:
      */
     void handleMessage(QString message);
 
+
+    void Save(QString filename, MenuConfig *config);
+    void Load(QString filename);
+
 private:
     Ui::LOMView *ui; /* User interface.*/
     LOMDataProcessor* model; /* Model.*/
@@ -56,6 +93,8 @@ private:
     Logger::LogLevel logtype; /* Detalization of logging.*/
 
     QTimer* plotsUpdateTimer;   /* timer to update plotters */
+
+    bool advancedMode;
 
 public slots:
     void UpdateThresholds(); /* Set the values of thresholds to model. */
@@ -76,6 +115,11 @@ public slots:
 
     void Connected();
     void Disconnected();
+
+    void LoadConfigurations();
+    void EditConfigurations();
+    void OnApplyCongiguration(MenuConfig* config);
+    void OnSaveConfiguration(MenuConfig* config, QString path);
 };
 
 #endif // LOMVIEW_H

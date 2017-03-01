@@ -71,10 +71,6 @@ void TCPTransporter::ReceiveData()
 
 QByteArray TCPTransporter::ReadData()
 {
-    //data = inputBuffer;
-    //if(size == 0 || size == data.size())
-    //    return true;
-    //else return false;
     return inputBuffer;
 }
 

@@ -24,7 +24,11 @@
 //! The names of memory blocks.
 #define MEM_EVENT   "EVENT"
 
-#define READ_TIMEOUT    10000
+#define READ_TIMEOUT    3000
 
+#define DEFAULT_CONF    "config/appset.conf"
+#define DATA_PATH    "data/"
+#define LOG_PATH    "log/"
+#define DEFAULT_TREE_SIZE   10000
 #endif // CONSTANTS_H
 

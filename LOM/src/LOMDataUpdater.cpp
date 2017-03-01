@@ -59,8 +59,6 @@ void LOMDataUpdater::Configure(QString config)
         QString l = file.readLine();
         if(l.isEmpty() || l.startsWith('\n') || l.startsWith('#'))
             continue;
-        try
-        {
             bool res;
             QString key = l.split(QRegExp("[\\s]+"))[0];
             int addr = l.split(QRegExp("[\\s]+"))[1].toInt(&res, 16);
@@ -77,12 +75,11 @@ void LOMDataUpdater::Configure(QString config)
                 Logger::Log(Logger::LogLevel::ERROR,
                             "LOMDataUpdater: Attempted to add register which is"
                             " unknown to the programm:" + key);
-        }
-        catch(...)
-        {
-            Logger::Log(Logger::LogLevel::ERROR,
-                        "LOMDataUpdater: Can't parse the input file: " + config);
-        }
+
+
+           // Logger::Log(Logger::LogLevel::ERROR,
+          //              "LOMDataUpdater: Can't parse the input file: " + config);
+
     }
 }
 

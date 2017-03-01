@@ -1,23 +1,25 @@
 #include "inc/LOMView.h"
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
+#include "inc/ConfigFileHandler.h"
 #include "ui_LOMView.h"
 
 #include <QVector>
+#include <QFile>
 #include <algorithm>
 
 LOMView::LOMView(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::LOMView)
 {
+
     ui->setupUi(this);
+
+    advancedMode = false;
 
     // Setup logging.
     SetLogType(ui->logTypeChBox->currentText());
     SetLogDepth(ui->logDepthspinBox->value());
-
-    // TODO
-    Logger::SetPath("/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/log/myfile");
 
     // Toggle buttons.
     ui->checkBoxHitSector->toggle();
@@ -47,6 +49,15 @@ LOMView::LOMView(QWidget *parent) :
     // Set update timer.
     plotsUpdateTimer = new QTimer(this);
     connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdateAll()));
+
+    //
+    ui->menuFile->addAction("&Open config file", this, SLOT(LoadConfigurations()));
+    ui->menuFile->addAction("&Edit configurations", this, SLOT(EditConfigurations()));
+    ui->menuFile->addSeparator();
+    ui->menuFile->addAction("&Network settings", this, SLOT(EditConfigurations()));
+    ui->menuFile->addSeparator();
+    ui->menuFile->addAction("&Exit", this, SLOT(EditConfigurations()));
+
 }
 
 LOMView::~LOMView()
@@ -130,6 +141,7 @@ void LOMView::StartUpdates()
     UpdatePlots();
     UpdateEndcapsWiggets();
     plotsUpdateTimer->start(redrawFreq);
+    ui->pushButtonSetThresholds->setEnabled(false);
     ui->pushButtonSetSettings->setEnabled(false);
     ui->pushButtonStart->setEnabled(false);
     ui->pushButtonStop->setEnabled(true);
@@ -139,6 +151,7 @@ void LOMView::StopUpdates()
 {
     model->Stop();
     plotsUpdateTimer->stop();
+    ui->pushButtonSetThresholds->setEnabled(true);
     ui->pushButtonSetSettings->setEnabled(true);
     ui->pushButtonStart->setEnabled(true);
     ui->pushButtonStop->setEnabled(false);
@@ -343,4 +356,119 @@ void LOMView::Disconnected()
     ui->pushButtonSetThresholds->setEnabled(false);
     ui->pushButtonStart->setEnabled(false);
     ui->pushButtonStop->setEnabled(false);
+}
+void LOMView::LoadConfigurations()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Save File"),
+                               "config/appset.conf",
+                               tr("Config (*.conf)"));
+    if(!filename.isNull())
+        Load(filename);
+}
+
+void LOMView::EditConfigurations()
+{
+    MenuConfig* configWidget = new MenuConfig(this);
+    configWidget->SetDataDir(model->GetDataDir());
+    configWidget->SetLogDir(Logger::GetPath());
+    configWidget->SetAdvanced(false);
+    configWidget->SetRootFileSize(model->GetTreeSize());
+    configWidget->SetWriteFile(model->GetWriteTree());
+    connect(configWidget, SIGNAL(Apply(MenuConfig*)), this,
+            SLOT(OnApplyCongiguration(MenuConfig*)));
+    connect(configWidget, SIGNAL(Save(MenuConfig*, QString)), this,
+            SLOT(OnSaveConfiguration(MenuConfig*,QString)));
+    configWidget->show();
+}
+
+void LOMView::OnApplyCongiguration(MenuConfig *config)
+{
+    Logger::SetPath(config->GetLogDir());
+    model->SetDataDir(config->GetDataDir());
+    model->SetWriteTree(config->IfWriteFile());
+    model->SetTreeSize(config->GetRootFileSize());
+    this->advancedMode = config->IsAdvanced();
+    ui->sbBufferSize->setEnabled(advancedMode);
+}
+
+void LOMView::OnSaveConfiguration(MenuConfig *config, QString path)
+{
+    Save(path, config);
+}
+
+void LOMView::Save(QString filename, MenuConfig* config)
+{
+    QMap<QString, QString> map;
+    map.insert("UFREQ", QString::number(ui->spinBoxUpdFreq->value()));
+    map.insert("RFREQ", QString::number(ui->spinBoxRedrawFreq->value()));
+    map.insert("LOGLEVEL", ui->logTypeChBox->currentText());
+    map.insert("LOGDEPTH", QString::number(ui->logDepthspinBox->value()));
+    map.insert("WRITELOG", QString::number(ui->checkBoxSaveLog->isChecked()));
+    map.insert("X0", QString::number(ui->xMinSpinBox->value()));
+    map.insert("X1", QString::number(ui->xMaxSpinBox->value()));
+    map.insert("YFWD", QString::number(ui->yFWDMaxSpinBox->value()));
+    map.insert("YBWD", QString::number(ui->yBWDMaxSpinBox->value()));
+    map.insert("ISHIT", QString::number(ui->checkBoxHitSector->isChecked()));
+    map.insert("FWD", ui->fwdSectorCB->currentText());
+    map.insert("BWD", ui->bwdSectorCB->currentText());
+    map.insert("LOGDIR", config->GetLogDir());
+    map.insert("DATADIR", config->GetDataDir());
+    map.insert("WROOT", QString::number(config->IfWriteFile()));
+    map.insert("RFSIZE", QString::number(config->GetRootFileSize()));
+
+    ConfigFileHandler::WriteFile(filename, map);
+}
+
+void LOMView::Load(QString filename)
+{
+
+    QMap<QString, QString> map;
+    map = ConfigFileHandler::ReadFile(filename);
+    for(QString key : map.keys())
+    {
+        QString val = map.value(key);
+        if(key == "UFREQ")
+            ui->spinBoxUpdFreq->setValue(val.toDouble());
+        else if(key == "RFREQ")
+            ui->spinBoxRedrawFreq->setValue(val.toDouble());
+        else if(key == "LOGLEVEL")
+        {
+            ui->logTypeChBox->setCurrentText(val);
+            SetLogType(val);
+        }
+        else if(key == "LOGDEPTH")
+            ui->logDepthspinBox->setValue(val.toInt());
+        else if(key == "WRITELOG")
+        {
+            ui->checkBoxSaveLog->setChecked(val.toInt());
+            SetLogToFile(val.toInt());
+        }
+        else if(key == "X0")
+            ui->xMinSpinBox->setValue(val.toInt());
+        else if(key == "X1")
+            ui->xMaxSpinBox->setValue(val.toInt());
+        else if(key == "YFWD")
+            ui->yFWDMaxSpinBox->setValue(val.toDouble());
+        else if(key == "YBWD")
+            ui->yBWDMaxSpinBox->setValue(val.toDouble());
+        else if(key == "ISHIT")
+            ui->checkBoxHitSector->setChecked(val.toInt());
+        else if(key == "FWD")
+            ui->fwdSectorCB->setCurrentText(val);
+        else if(key == "BWD")
+            ui->bwdSectorCB->setCurrentText(val);
+        else if(key == "LOGDIR")
+            Logger::SetPath(val);
+        else if(key == "DATADIR")
+            model->SetDataDir(val);
+        else if(key == "WROOT")
+            model->SetWriteTree(val.toInt());
+        else if(key == "RFSIZE")
+            model->SetTreeSize(val.toInt());
+        else Logger::Log(Logger::LogLevel::ERROR, "LOMView: Unknown key found ("
+                        + key + ")");
+    }
+    Logger::Log(Logger::LogLevel::INFO, "App preferences are loaded from " + filename);
+    UpdateSettings();
+    ChangePlottersSettings();
 }

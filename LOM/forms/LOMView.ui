@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1140</width>
-    <height>720</height>
+    <height>773</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -26,7 +26,7 @@
    <locale language="Estonian" country="Estonia"/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_11">
+   <layout class="QHBoxLayout" name="horizontalLayout_12">
     <item>
      <widget class="QLabel" name="label_4">
       <property name="text">
@@ -51,13 +51,27 @@
                <widget class="QLabel" name="label">
                 <property name="font">
                  <font>
-                  <pointsize>14</pointsize>
+                  <pointsize>12</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
                 </property>
                 <property name="text">
                  <string>Thresholds</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="thresholdStatusLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>UNSET!</string>
                 </property>
                </widget>
               </item>
@@ -149,7 +163,46 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="1">
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_15">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Readout parameters</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_14">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Buffer size</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QSpinBox" name="sbBufferSize">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximum">
+                 <number>2048</number>
+                </property>
+                <property name="value">
+                 <number>64</number>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="1">
                <widget class="QPushButton" name="pushButtonSetThresholds">
                 <property name="enabled">
                  <bool>false</bool>
@@ -159,19 +212,23 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="thresholdStatusLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>UNSET!</string>
-                </property>
-               </widget>
+              <item row="7" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_11">
+                <item>
+                 <widget class="QPushButton" name="pushButton">
+                  <property name="text">
+                   <string>Load</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_2">
+                  <property name="text">
+                   <string>Save</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </item>
@@ -181,7 +238,7 @@
                <widget class="QLabel" name="label_3">
                 <property name="font">
                  <font>
-                  <pointsize>14</pointsize>
+                  <pointsize>12</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -798,7 +855,7 @@
             <item row="0" column="1">
              <widget class="QSpinBox" name="xMinSpinBox">
               <property name="maximum">
-               <number>100</number>
+               <number>2048</number>
               </property>
              </widget>
             </item>
@@ -812,7 +869,7 @@
             <item row="1" column="1">
              <widget class="QSpinBox" name="xMaxSpinBox">
               <property name="maximum">
-               <number>100</number>
+               <number>2048</number>
               </property>
               <property name="value">
                <number>63</number>
@@ -1105,18 +1162,14 @@
      <string>File</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionGetting_started"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -1128,6 +1181,41 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionOpen_configuration">
+   <property name="text">
+    <string>Open configuration</string>
+   </property>
+  </action>
+  <action name="actionEdit_configurations">
+   <property name="text">
+    <string>Edit configurations</string>
+   </property>
+  </action>
+  <action name="actionNetwork_settings">
+   <property name="text">
+    <string>Network settings</string>
+   </property>
+  </action>
+  <action name="actionNetwork_settings_2">
+   <property name="text">
+    <string>Network settings</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionGetting_started">
+   <property name="text">
+    <string>Getting started</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1159,8 +1247,8 @@
    <slot>UpdateThresholds()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>272</x>
-     <y>266</y>
+     <x>282</x>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
      <x>267</x>
@@ -1176,7 +1264,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>282</x>
-     <y>399</y>
+     <y>415</y>
     </hint>
     <hint type="destinationlabel">
      <x>249</x>
@@ -1191,8 +1279,8 @@
    <slot>ChangePlottersMode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>839</x>
-     <y>681</y>
+     <x>943</x>
+     <y>732</y>
     </hint>
     <hint type="destinationlabel">
      <x>432</x>
@@ -1208,7 +1296,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>83</x>
-     <y>400</y>
+     <y>416</y>
     </hint>
     <hint type="destinationlabel">
      <x>73</x>
@@ -1223,8 +1311,8 @@
    <slot>ChangePlottersSettings()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1114</x>
-     <y>636</y>
+     <x>1126</x>
+     <y>623</y>
     </hint>
     <hint type="destinationlabel">
      <x>1058</x>
@@ -1240,7 +1328,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>188</x>
-     <y>400</y>
+     <y>416</y>
     </hint>
     <hint type="destinationlabel">
      <x>184</x>
@@ -1256,7 +1344,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>130</x>
-     <y>672</y>
+     <y>725</y>
     </hint>
     <hint type="destinationlabel">
      <x>214</x>
@@ -1272,7 +1360,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>258</x>
-     <y>679</y>
+     <y>732</y>
     </hint>
     <hint type="destinationlabel">
      <x>278</x>
@@ -1282,17 +1370,17 @@
   </connection>
   <connection>
    <sender>checkBoxSaveLog</sender>
-   <signal>toggled(bool)</signal>
+   <signal>clicked(bool)</signal>
    <receiver>LOMView</receiver>
    <slot>SetLogToFile(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>377</x>
-     <y>674</y>
+     <x>320</x>
+     <y>722</y>
     </hint>
     <hint type="destinationlabel">
-     <x>469</x>
-     <y>681</y>
+     <x>352</x>
+     <y>740</y>
     </hint>
    </hints>
   </connection>
