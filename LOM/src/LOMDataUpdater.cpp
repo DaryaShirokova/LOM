@@ -1,6 +1,7 @@
 #include "inc/LOMDataUpdater.h"
 #include "inc/Logger.h"
 #include "inc/Constants.h"
+#include "inc/ConfigFileHandler.h"
 
 #include <QByteArray>
 #include <QFile>
@@ -31,7 +32,6 @@ void pushNum(QByteArray* arr, int num)
     for(uint i = 0; i < sizeof(int); i ++)
         arr->push_back(getByte(num, i));
 }
-
 int ReadInt(QByteArray arr, int k)
 {
     int n = k * 4;
@@ -44,43 +44,75 @@ int ReadInt(QByteArray arr, int k)
 LOMDataUpdater::LOMDataUpdater(AbstractTransporter *transporter)
 {
     this->transporter = transporter;
+    transporter->SetCheckStatus("S", "OK");
+}
+
+void ParseError(QString value)
+{
+    Logger::Log(Logger::ERROR, "LOMDataUpdater: Can't convert value " + value +
+                              "to address or port.");
 }
 
 void LOMDataUpdater::Configure(QString config)
 {
-    QFile file(config);
-    if (!file.open(QIODevice::ReadOnly))
-        Logger::Log(Logger::LogLevel::ERROR,
-                    "LOMDataUpdater: can not open regmap config file: " + config);
+    QMap<QString, QString> map = ConfigFileHandler::ReadFile(config);
 
-    // TODO: move to configure (get key get key...)
-    while (!file.atEnd())
+    for(QString key : map.keys())
     {
-        QString l = file.readLine();
-        if(l.isEmpty() || l.startsWith('\n') || l.startsWith('#'))
-            continue;
-            bool res;
-            QString key = l.split(QRegExp("[\\s]+"))[0];
-            int addr = l.split(QRegExp("[\\s]+"))[1].toInt(&res, 16);
-            if(key == "IP")
-                continue;
-            if(key == MEM_EVENT)
+        QString value = map.value(key);
+        if(key == "IP")
+        {
+            QRegExp ipreg(VALIDIP);
+            if (!ipreg.exactMatch(value))
             {
-                memMap.insert(key, addr);
-                continue;
+                Logger::Log(Logger::ERROR, "LOMDataUpdater: IP address is not valid! "
+                           + value);
+                return;
             }
-            if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT)
-                regMap.insert(key, addr);
-            else
-                Logger::Log(Logger::LogLevel::ERROR,
-                            "LOMDataUpdater: Attempted to add register which is"
-                            " unknown to the programm:" + key);
+            this->ipaddr = value;
+            continue;
+        }
+        bool res;
+        if(key == "PORT")
+        {
+            int newport = value.toInt(&res, 10);
+            if(!res)
+            {
+                ParseError(key);
+                return;
+            }
+            this->port = newport;
+            continue;
+        }
 
-
-           // Logger::Log(Logger::LogLevel::ERROR,
-          //              "LOMDataUpdater: Can't parse the input file: " + config);
-
+        int addr = value.toInt(&res, 16);
+        if(!res)
+        {
+            ParseError(key);
+            return;
+        }
+        if(key == MEM_EVENT)
+            memMap.insert(key, addr);
+        else if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT)
+            regMap.insert(key, addr);
+        else Logger::Log(Logger::ERROR,
+                        "LOMDataUpdater: Unknown register or memory address "
+                        + value);
     }
+    Logger::Log(Logger::INFO, "LOMDataUpdater: Network settings are loaded from "
+                            + config);
+
+}
+
+bool LOMDataUpdater::Connect()
+{
+    transporter->SetHostAddress(QHostAddress(ipaddr), port);
+    return transporter->ConnectToHost();
+}
+
+bool LOMDataUpdater::Disconnect()
+{
+    return transporter->CloseConnection();
 }
 
 bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
@@ -142,6 +174,28 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
     pushNum(&arr, regMap.value(REG_HIT));
     pushNum(&arr, int(initParameters->GetHitThreshold()));
 
-    return transporter->WriteData(arr, arr.size());
+    if(!transporter->WriteData(arr, arr.size()))
+        return false;
+
+    arr.clear();
+    arr.push_back("R");
+    arr.push_back("R");
+    pushNum(&arr, regMap.value(REG_FE));
+    pushNum(&arr, regMap.value(REG_BE));
+    pushNum(&arr, regMap.value(REG_COIN));
+    pushNum(&arr, regMap.value(REG_HIT));
+    if(!transporter->WriteData(arr, arr.size()))
+        return false;
+    QByteArray ans;
+    if(!transporter->SetReadMode(READ_TIMEOUT))
+    {
+        Logger::Log(Logger::LogLevel::ERROR, "LOMDataUpdater: can't receive data."
+                                             " Timeout error.");
+        return false;
+    }
+    else ans = transporter->ReadData();
+    qDebug() << ans.size();
+    qDebug() << ReadInt(ans, 0);
+    return true;
 }
 

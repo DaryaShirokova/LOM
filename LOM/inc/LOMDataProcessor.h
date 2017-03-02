@@ -140,6 +140,8 @@ public:
      * \param updateFreq    update frequence (sec).
      */
     void SetUpdateFreq(int updateFreq) {this->updateFreq = updateFreq;}
+
+    LOMDataUpdater* GetDataUpdater() {return updater;}
 };
 
 #endif // LOMDATAPROCESSOR_H

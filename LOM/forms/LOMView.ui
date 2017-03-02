@@ -1384,6 +1384,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>LoadLOMInitParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>293</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>SaveLOMInitParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>168</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>308</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>UpdateThresholds()</slot>
@@ -1396,5 +1428,7 @@
   <slot>SetLogType(QString)</slot>
   <slot>SetLogDepth(int)</slot>
   <slot>SetLogToFile(bool)</slot>
+  <slot>LoadLOMInitParams()</slot>
+  <slot>SaveLOMInitParams()</slot>
  </slots>
 </ui>

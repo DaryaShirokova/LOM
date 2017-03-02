@@ -27,8 +27,13 @@
 #define READ_TIMEOUT    3000
 
 #define DEFAULT_CONF    "config/appset.conf"
+#define DEFAULT_NETWORK "config/network.conf"
+#define DEFAULT_PARAM   "config/initparam.conf"
 #define DATA_PATH    "data/"
 #define LOG_PATH    "log/"
 #define DEFAULT_TREE_SIZE   10000
+
+#define VALIDIP "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 #endif // CONSTANTS_H
+
 

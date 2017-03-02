@@ -22,7 +22,8 @@ private:
     AbstractTransporter *transporter; /*!< Trasport protocol implementation.*/
     QMap<QString, int> regMap; /*!< The addresses of registers.*/
     QMap<QString, int> memMap; /*!< The memory map. */
-
+    QString ipaddr;
+    int port;
 
     //! A default constructor.
     LOMDataUpdater() {}
@@ -49,6 +50,8 @@ public:
      */
     void Configure(QString config);
 
+    bool Connect();
+    bool Disconnect();
     /*!
      * \brief WriteInitParameters
      * \param initParameters    initialisation parameters for FPGA.
@@ -62,6 +65,13 @@ public:
      * \return  status of data transmition (true if OK).
      */
     bool ReadEventData(LOMEventData* eventData);
+
+    QMap<QString, int> GetRegMap() {return regMap;}
+    QMap<QString, int> GetMemMap() {return memMap;}
+    QString GetIP() {return ipaddr;}
+    int GetPort() {return port; }
+
+    void Configure(QMap<QString, int> regMap, QMap<QString, int> memMap);
 
 };
 

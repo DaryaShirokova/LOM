@@ -7,6 +7,7 @@
 #include <QApplication>
 
 #include <iostream>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -17,19 +18,20 @@ int main(int argc, char *argv[])
     Logger::SetWriteToFile(false);
     Logger::SetPath(LOG_PATH);
 
+
     TCPTransporter* transporter = new TCPTransporter();
-    transporter->SetHostAddress(QHostAddress::LocalHost, 5683);
     QObject::connect(transporter, SIGNAL(SigConnected()), &w, SLOT(Connected()));
     QObject::connect(transporter, SIGNAL(SigDisconnected()), &w, SLOT(Disconnected()));
 
     LOMDataUpdater* updater = new LOMDataUpdater(transporter);
-    updater->Configure("/home/darya/Dropbox/Work/LuminosityOnlineMonitor (master thesis)/LOMProject/config/regmap.conf");
+    updater->Configure(DEFAULT_NETWORK);
     LOMDataProcessor* model = new LOMDataProcessor(updater);
     w.SetModel(model);
 
     w.Load(DEFAULT_CONF);
+    w.InitFromFile(DEFAULT_PARAM);
 
-    transporter->ConnectToHost();
+    updater->Connect();
 
     if(sizeof(int) != 4)
         Logger::Log(Logger::LogLevel::ERROR, "Main: the size of int is not 4, "

@@ -78,6 +78,7 @@ public:
     void Save(QString filename, MenuConfig *config);
     void Load(QString filename);
 
+    void InitFromFile(QString filename);
 private:
     Ui::LOMView *ui; /* User interface.*/
     LOMDataProcessor* model; /* Model.*/
@@ -95,6 +96,8 @@ private:
     QTimer* plotsUpdateTimer;   /* timer to update plotters */
 
     bool advancedMode;
+
+
 
 public slots:
     void UpdateThresholds(); /* Set the values of thresholds to model. */
@@ -116,10 +119,15 @@ public slots:
     void Connected();
     void Disconnected();
 
+    void OpenNetworkSettings();
     void LoadConfigurations();
     void EditConfigurations();
+    void Reconnect();
     void OnApplyCongiguration(MenuConfig* config);
     void OnSaveConfiguration(MenuConfig* config, QString path);
+
+    void LoadLOMInitParams();
+    void SaveLOMInitParams();
 };
 
 #endif // LOMVIEW_H

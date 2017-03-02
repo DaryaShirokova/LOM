@@ -27,8 +27,6 @@ LIBS += -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc
 LIBS += -pthread -lm -ldl -rdynamic
 
 
-
-
 # Project files.
 
 SOURCES += main.cpp\
@@ -44,7 +42,7 @@ SOURCES += main.cpp\
     src/Logger.cpp \
     src/TCPTransporter.cpp \
     src/MenuConfig.cpp \
-    forms/QNetworkSettings.cpp
+    src/QNetworkSettings.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -61,7 +59,7 @@ HEADERS  += inc/LOMView.h \
     inc/TCPTransporter.h \
     inc/MenuConfig.h \
     inc/ConfigFileHandler.h \
-    forms/QNetworkSettings.h
+    inc/QNetworkSettings.h
 
 FORMS    += forms/LOMView.ui \
     forms/MenuConfig.ui \

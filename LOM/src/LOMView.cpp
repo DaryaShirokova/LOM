@@ -2,6 +2,7 @@
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
 #include "inc/ConfigFileHandler.h"
+#include "inc/QNetworkSettings.h"
 #include "ui_LOMView.h"
 
 #include <QVector>
@@ -54,7 +55,8 @@ LOMView::LOMView(QWidget *parent) :
     ui->menuFile->addAction("&Open config file", this, SLOT(LoadConfigurations()));
     ui->menuFile->addAction("&Edit configurations", this, SLOT(EditConfigurations()));
     ui->menuFile->addSeparator();
-    ui->menuFile->addAction("&Network settings", this, SLOT(EditConfigurations()));
+    ui->menuFile->addAction("&Reconnect", this, SLOT(Reconnect()));
+    ui->menuFile->addAction("&Network settings", this, SLOT(OpenNetworkSettings()));
     ui->menuFile->addSeparator();
     ui->menuFile->addAction("&Exit", this, SLOT(EditConfigurations()));
 
@@ -371,7 +373,7 @@ void LOMView::EditConfigurations()
     MenuConfig* configWidget = new MenuConfig(this);
     configWidget->SetDataDir(model->GetDataDir());
     configWidget->SetLogDir(Logger::GetPath());
-    configWidget->SetAdvanced(false);
+    configWidget->SetAdvanced(advancedMode);
     configWidget->SetRootFileSize(model->GetTreeSize());
     configWidget->SetWriteFile(model->GetWriteTree());
     connect(configWidget, SIGNAL(Apply(MenuConfig*)), this,
@@ -379,6 +381,37 @@ void LOMView::EditConfigurations()
     connect(configWidget, SIGNAL(Save(MenuConfig*, QString)), this,
             SLOT(OnSaveConfiguration(MenuConfig*,QString)));
     configWidget->show();
+}
+
+void LOMView::Reconnect()
+{
+    model->GetDataUpdater()->Connect();
+}
+
+void LOMView::OpenNetworkSettings()
+{
+    if(!advancedMode)
+    {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Permission denied.");
+        msgBox.setIcon(QMessageBox::Critical);
+         msgBox.setText("Network settings are enable only in advanced mode. If"
+                        " you need to change network settings, please set advanced"
+                        " mode in Edit configurations menu.");
+         msgBox.setStandardButtons(QMessageBox::Ok);
+         msgBox.setDefaultButton(QMessageBox::Ok);
+         msgBox.exec();
+         return;
+    }
+    QMap<QString, int> regMap = model->GetDataUpdater()->GetRegMap();
+    QMap<QString, int> memMap = model->GetDataUpdater()->GetMemMap();
+    QNetworkSettings* networkSettings = new QNetworkSettings(this);
+    networkSettings->GenerateView(model->GetDataUpdater()->GetRegMap(),
+                                  model->GetDataUpdater()->GetMemMap(),
+                                  model->GetDataUpdater()->GetIP(),
+                                  model->GetDataUpdater()->GetPort());
+    networkSettings->show();
+
 }
 
 void LOMView::OnApplyCongiguration(MenuConfig *config)
@@ -471,4 +504,43 @@ void LOMView::Load(QString filename)
     Logger::Log(Logger::LogLevel::INFO, "App preferences are loaded from " + filename);
     UpdateSettings();
     ChangePlottersSettings();
+}
+
+void LOMView::LoadLOMInitParams()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Save File"),
+                               "config/initparams.conf",
+                               tr("Config (*.conf)"));
+    if(!filename.isNull())
+        InitFromFile(filename);
+
+}
+
+void LOMView::InitFromFile(QString filename)
+{
+    QMap<QString, QString> map = ConfigFileHandler::ReadFile(filename);
+    ui->sbBufferSize->setValue(map.value("BUF").toInt());
+    ui->spinBoxAmplFWD->setValue(map.value("FWD").toDouble());
+    ui->spinBoxAmplBWD->setValue(map.value("BWD").toDouble());
+    ui->spinBoxCoinDur->setValue(map.value("COIN").toInt());
+    ui->spinBoxBkg->setValue(map.value("HIT").toInt());
+    ui->thresholdStatusLabel->setVisible(true);
+    Logger::Log(Logger::INFO, "LOM init parameters are loaded from " + filename);
+}
+
+void LOMView::SaveLOMInitParams()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"),
+                               "config/initparams.conf",
+                               tr("Config (*.conf)"));
+    if(!filename.isNull())
+    {
+        QMap<QString, QString> map;
+        map.insert("FWD", QString::number(ui->spinBoxAmplFWD->value()));
+        map.insert("BWD", QString::number(ui->spinBoxAmplBWD->value()));
+        map.insert("COIN", QString::number(ui->spinBoxCoinDur->value()));
+        map.insert("HIT", QString::number(ui->spinBoxBkg->value()));
+        map.insert("BUF", QString::number(ui->sbBufferSize->value()));
+        ConfigFileHandler::WriteFile(filename, map);
+    }
 }

@@ -6,32 +6,50 @@
 TCPTransporter::TCPTransporter()
 {
     socket = new QTcpSocket(this);
+    connected = false;
 
     connect(socket, SIGNAL(connected()),this, SLOT(Connected()));
     connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
 
     connect(socket, SIGNAL(readyRead()), SLOT(ReceiveData()));
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), SLOT(CheckConnection()));
+}
+
+void TCPTransporter::CheckConnection()
+{
+    socket->write(checkStatusMessage);
+    socket->flush();
+    if(SetReadMode(1000))
+    {
+        QByteArray ans = ReadData();
+        if(!(ans.size() == checkStatusAnswer.size() && ans == checkStatusAnswer))
+            Disconnected();
+    }
+    else
+        Disconnected();
 }
 
 void TCPTransporter::SetHostAddress(QHostAddress ipaddr, int port)
 {
-    this->ipaddr = ipaddr;
+    this->ip = ipaddr;
     this->port = port;
 }
 
 QString TCPTransporter::AddrToString()
 {
-    return ipaddr.toString() + "; port " +  QString::number(port) + ". ";
+    return ip.toString() + "; port " +  QString::number(port) + ". ";
 }
 
 bool TCPTransporter::ConnectToHost()
 {
-    if(socket->isOpen())
+    if(connected)//!socket->state() == QTcpSocket::ConnectedState)
     {
         Logger::Log(Logger::LogLevel::INFO, "Trying to reconnect while already connected.");
         return true;
     }
-    socket->connectToHost(ipaddr, port);
+    socket->connectToHost(ip, port);
     bool conEstablished = socket->waitForConnected(10000);
     if(!conEstablished)
     {
@@ -43,14 +61,26 @@ bool TCPTransporter::ConnectToHost()
     return true;
 }
 
+bool TCPTransporter::CloseConnection()
+{
+    if(socket->isOpen())
+        socket->close();
+    return true;
+}
+
 void TCPTransporter::Connected()
 {
+    connected = true;
+    timer->start(3000);
     Logger::Log(Logger::LogLevel::INFO, "Connected to LOM:" + AddrToString());
     emit SigConnected();
 }
 
 void TCPTransporter::Disconnected()
 {
+    timer->stop();
+    connected = false;
+    socket->close();
     Logger::Log(Logger::LogLevel::ERROR, "Disconnected from LOM:" + AddrToString()
                 + socket->errorString());
     emit SigDisconnected();
