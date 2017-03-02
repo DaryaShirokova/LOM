@@ -93,11 +93,12 @@ void LOMDataUpdater::Configure(QString config)
         }
         if(key == MEM_EVENT)
             memMap.insert(key, addr);
-        else if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT)
+        else if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT
+                || key == REG_BUF)
             regMap.insert(key, addr);
         else Logger::Log(Logger::ERROR,
                         "LOMDataUpdater: Unknown register or memory address "
-                        + value);
+                        + key);
     }
     Logger::Log(Logger::INFO, "LOMDataUpdater: Network settings are loaded from "
                             + config);
@@ -162,17 +163,25 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
 bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
 {
     QByteArray arr;
-
+    QVector<int> data;
+    data.push_back(int(initParameters->GetThresholdFE() * 1000));
+    data.push_back(int(initParameters->GetThresholdBE() * 1000));
+    data.push_back(int(initParameters->GetCoincidenceDurationThreshold()));
+    data.push_back(int(initParameters->GetHitThreshold()));
+    data.push_back(int(initParameters->GetBufSize()));
     arr.push_back("W");
     arr.push_back("R");
     pushNum(&arr, regMap.value(REG_FE));
-    pushNum(&arr, int(initParameters->GetThresholdFE() * 1000));
+    pushNum(&arr, data.at(0));
     pushNum(&arr, regMap.value(REG_BE));
-    pushNum(&arr, int(initParameters->GetThresholdBE() * 1000));
+    pushNum(&arr, data.at(1));
     pushNum(&arr, regMap.value(REG_COIN));
-    pushNum(&arr, int(initParameters->GetCoincidenceDurationThreshold()));
+    pushNum(&arr, data.at(2));
     pushNum(&arr, regMap.value(REG_HIT));
-    pushNum(&arr, int(initParameters->GetHitThreshold()));
+    pushNum(&arr, data.at(3));
+    pushNum(&arr, regMap.value(REG_BUF));
+    pushNum(&arr, data.at(4));
+
 
     if(!transporter->WriteData(arr, arr.size()))
         return false;
@@ -184,18 +193,35 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
     pushNum(&arr, regMap.value(REG_BE));
     pushNum(&arr, regMap.value(REG_COIN));
     pushNum(&arr, regMap.value(REG_HIT));
+    pushNum(&arr, regMap.value(REG_BUF));
+
     if(!transporter->WriteData(arr, arr.size()))
         return false;
     QByteArray ans;
     if(!transporter->SetReadMode(READ_TIMEOUT))
     {
-        Logger::Log(Logger::LogLevel::ERROR, "LOMDataUpdater: can't receive data."
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: can't receive data."
                                              " Timeout error.");
         return false;
     }
     else ans = transporter->ReadData();
     qDebug() << ans.size();
     qDebug() << ReadInt(ans, 0);
+    if(uint(ans.size()) != uint(data.size() * sizeof(int)))
+    {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: can't read registers.");
+        return false;
+    }
+    for(int i = 0; i < data.size(); i++)
+    {
+        if(data.at(i) != ReadInt(ans, i))
+        {
+            Logger::Log(Logger::ERROR, "LOMDataUpdater: wrong parameters have been written.");
+            return false;
+        }
+
+        qDebug() << data.at(i) << ReadInt(ans, i);
+    }
     return true;
 }
 

@@ -123,9 +123,10 @@ void LOMView::UpdateThresholds()
 {
     double newValFE = ui->spinBoxAmplFWD->value();
     double newValBE = ui->spinBoxAmplBWD->value();
-    unsigned int newValCoin = ui->spinBoxCoinDur->value();
-    unsigned int newValBkg = ui->spinBoxBkg->value();
-    if(model->SetInitParameters(newValFE, newValBE, newValCoin, newValBkg))
+    int newValCoin = ui->spinBoxCoinDur->value();
+    int newValBkg = ui->spinBoxBkg->value();
+    int newBufSize = ui->sbBufferSize->value();
+    if(model->SetInitParameters(newValFE, newValBE, newValCoin, newValBkg, newBufSize))
         ui->thresholdStatusLabel->setVisible(false);
     else ui->thresholdStatusLabel->setVisible(true);
 }

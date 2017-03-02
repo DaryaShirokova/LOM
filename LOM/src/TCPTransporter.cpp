@@ -9,7 +9,7 @@ TCPTransporter::TCPTransporter()
     connected = false;
 
     connect(socket, SIGNAL(connected()),this, SLOT(Connected()));
-    connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
+    //connect(socket, SIGNAL(disconnected()),this, SLOT(Disconnected()));
 
     connect(socket, SIGNAL(readyRead()), SLOT(ReceiveData()));
 
@@ -27,8 +27,7 @@ void TCPTransporter::CheckConnection()
         if(!(ans.size() == checkStatusAnswer.size() && ans == checkStatusAnswer))
             Disconnected();
     }
-    else
-        Disconnected();
+    else Disconnected();
 }
 
 void TCPTransporter::SetHostAddress(QHostAddress ipaddr, int port)
@@ -44,7 +43,7 @@ QString TCPTransporter::AddrToString()
 
 bool TCPTransporter::ConnectToHost()
 {
-    if(connected)//!socket->state() == QTcpSocket::ConnectedState)
+    if(connected)
     {
         Logger::Log(Logger::LogLevel::INFO, "Trying to reconnect while already connected.");
         return true;

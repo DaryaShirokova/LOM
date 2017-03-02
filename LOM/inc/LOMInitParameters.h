@@ -18,6 +18,8 @@ private:
 
     int hitThreshold; /*!< The threshold for quality signal detection. */
 
+    int bufSize;
+
 public:
 
     //**************************************************************************
@@ -40,7 +42,7 @@ public:
     */
     void Init(double thresholdFE, double thresholdBE,
               int coincidenceDurationThreshold,
-              int hitThreshold);
+              int hitThreshold, int bufSize);
 
     //**************************************************************************
     // Getters/Setters.
@@ -96,6 +98,9 @@ public:
      * \return current value of hitThreshold.
      */
     int GetHitThreshold() {return this->hitThreshold;}
+
+    void SetBufSize(int bufSize) {this->bufSize = bufSize;}
+    int GetBufSize() {return this->bufSize;}
 
 };
 

@@ -126,8 +126,8 @@ public:
     * \return statusof updates.
     */
     bool SetInitParameters(double thresholdFE, double thresholdBE,
-                            unsigned int coincidenceDurationThreshold,
-                            unsigned int backgroundThreshold);
+                            int coincidenceDurationThreshold,
+                            int hitThreshold, int bufSize);
 
     /*!
      * \brief GetEventData getter.

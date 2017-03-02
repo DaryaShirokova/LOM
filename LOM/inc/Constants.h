@@ -19,6 +19,7 @@
 #define REG_BE      "BE"
 #define REG_COIN    "COIN"
 #define REG_HIT     "HIT"
+#define REG_BUF     "BUF"
 
 
 //! The names of memory blocks.
