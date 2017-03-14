@@ -70,11 +70,11 @@ private:
     //! A constructor.
     Logger();
 
-    static QString path; /* Log file name.*/
-    static QFile file; /* Log file.*/
-    static bool writeToFile; /* Switch on / off writing to file.*/
-    static LogLevel logLevel; /* The detalization of logging.*/
-    static QVector<LogListener*> listeners; /* Listeners of logger.*/
+    static QString path; /*!< Log file name.*/
+    static QFile file; /*!< Log file.*/
+    static bool writeToFile; /*!< Switch on / off writing to file.*/
+    static LogLevel logLevel; /*!< The detalization of logging.*/
+    static QVector<LogListener*> listeners; /*!< Listeners of logger.*/
 
 
     /*!

@@ -26,6 +26,7 @@
 #define MEM_EVENT   "EVENT"
 
 #define READ_TIMEOUT    3000
+#define WRITE_TIMEOUT   3000
 
 #define DEFAULT_CONF    "config/appset.conf"
 #define DEFAULT_NETWORK "config/network.conf"

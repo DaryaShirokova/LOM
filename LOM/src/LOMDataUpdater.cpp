@@ -44,7 +44,8 @@ int ReadInt(QByteArray arr, int k)
 LOMDataUpdater::LOMDataUpdater(AbstractTransporter *transporter)
 {
     this->transporter = transporter;
-    transporter->SetCheckStatus("S", "OK");
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), SLOT(CheckConnection()));
 }
 
 void ParseError(QString value)
@@ -108,12 +109,28 @@ void LOMDataUpdater::Configure(QString config)
 bool LOMDataUpdater::Connect()
 {
     transporter->SetHostAddress(QHostAddress(ipaddr), port);
-    return transporter->ConnectToHost();
+    bool connected = transporter->ConnectToHost();
+    if(connected)
+        timer->start(READ_TIMEOUT);
+
+    return connected;
 }
 
 bool LOMDataUpdater::Disconnect()
 {
     return transporter->CloseConnection();
+}
+
+QByteArray LOMDataUpdater::GetAnswer()
+{
+    QByteArray arr;
+    if(!transporter->SetReadMode(READ_TIMEOUT))
+    {
+        Logger::Log(Logger::LogLevel::ERROR, "LOMDataUpdater: can't receive data."
+                                             " Timeout error.");
+        return NULL;
+    }
+    return arr = transporter->ReadData();
 }
 
 bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
@@ -126,14 +143,9 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
 
     transporter->WriteData(arr, arr.size());
 
-    // TODO change to signals slots
-    if(!transporter->SetReadMode(READ_TIMEOUT))
-    {
-        Logger::Log(Logger::LogLevel::ERROR, "LOMDataUpdater: can't receive data."
-                                             " Timeout error.");
+    arr = GetAnswer();
+    if(arr.isNull())
         return false;
-    }
-    else arr = transporter->ReadData();
 
     QVector<QVector<double>> amplitudesFE;
     QVector<QVector<double>> amplitudesBE;
@@ -186,6 +198,16 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
     if(!transporter->WriteData(arr, arr.size()))
         return false;
 
+    QByteArray ans = GetAnswer();
+    if(ans.isNull())
+        return false;
+
+    if(ans.size() < 1 || int(ans.at(0)) != 1)
+    {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: failed to update registers.");
+        return false;
+    }
+
     arr.clear();
     arr.push_back("R");
     arr.push_back("R");
@@ -197,13 +219,10 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
 
     if(!transporter->WriteData(arr, arr.size()))
         return false;
-    QByteArray ans;
-    if(!transporter->SetReadMode(READ_TIMEOUT))
-    {
-        Logger::Log(Logger::ERROR, "LOMDataUpdater: can't receive data."
-                                             " Timeout error.");
+    ans = GetAnswer();
+    if(ans.isNull())
         return false;
-    }
+
     else ans = transporter->ReadData();
     qDebug() << ans.size();
     qDebug() << ReadInt(ans, 0);
@@ -225,3 +244,28 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
     return true;
 }
 
+void LOMDataUpdater::CheckConnection()
+{
+    QByteArray arr;
+    arr.push_back('S');
+    if(!transporter->WriteData(arr, arr.size()))
+    {
+        transporter->CloseConnection();
+        timer->stop();
+        return;
+    }
+
+    QByteArray ans = GetAnswer();
+    if(ans.isNull())
+    {
+        qDebug() << "Answer is null";
+        transporter->CloseConnection();
+        timer->stop();
+        return;
+    }
+    if(int(ans.at(0)) != 1) {
+        qDebug() << "Answer is not 1";
+        transporter->CloseConnection();
+        timer->stop();
+    }
+}

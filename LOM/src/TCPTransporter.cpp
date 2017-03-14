@@ -1,5 +1,6 @@
 #include "inc/TCPTransporter.h"
 #include "inc/Logger.h"
+#include "inc/Constants.h"
 
 #include <QDebug>
 
@@ -13,22 +14,8 @@ TCPTransporter::TCPTransporter()
 
     connect(socket, SIGNAL(readyRead()), SLOT(ReceiveData()));
 
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), SLOT(CheckConnection()));
 }
 
-void TCPTransporter::CheckConnection()
-{
-    socket->write(checkStatusMessage);
-    socket->flush();
-    if(SetReadMode(1000))
-    {
-        QByteArray ans = ReadData();
-        if(!(ans.size() == checkStatusAnswer.size() && ans == checkStatusAnswer))
-            Disconnected();
-    }
-    else Disconnected();
-}
 
 void TCPTransporter::SetHostAddress(QHostAddress ipaddr, int port)
 {
@@ -64,38 +51,31 @@ bool TCPTransporter::CloseConnection()
 {
     if(socket->isOpen())
         socket->close();
+    connected = false;
+    Logger::Log(Logger::LogLevel::ERROR, "Disconnected from LOM:" + AddrToString()
+                + socket->errorString());
+    emit SigDisconnected();
     return true;
 }
 
 void TCPTransporter::Connected()
 {
     connected = true;
-    timer->start(3000);
     Logger::Log(Logger::LogLevel::INFO, "Connected to LOM:" + AddrToString());
     emit SigConnected();
 }
 
-void TCPTransporter::Disconnected()
-{
-    timer->stop();
-    connected = false;
-    socket->close();
-    Logger::Log(Logger::LogLevel::ERROR, "Disconnected from LOM:" + AddrToString()
-                + socket->errorString());
-    emit SigDisconnected();
-}
 
 bool TCPTransporter::SetReadMode(int msec)
 {
-    socket->waitForReadyRead(msec);
+    return socket->waitForReadyRead(msec);
 }
 
 void TCPTransporter::ReceiveData()
 {
     inputBuffer = socket->readAll();
     Logger::Log(Logger::LogLevel::DEBUG,  "Received " +
-                QString::number(inputBuffer.size()) + " byte.");
-    emit DataReady(inputBuffer);
+                QString::number(inputBuffer.size()) + " bytes.");
 }
 
 QByteArray TCPTransporter::ReadData()
@@ -105,8 +85,9 @@ QByteArray TCPTransporter::ReadData()
 
 bool TCPTransporter::WriteData(QByteArray data, qint32 size)
 {
+
     Logger::Log(Logger::LogLevel::DEBUG, "TCPTransporter: Start writing data.");
-    if(!socket->isOpen())
+    if(!connected)
     {
         Logger::Log(Logger::LogLevel::ERROR, "TCPTransporter: Trying to write "
                                              "data, but the connection is closed."
@@ -120,8 +101,9 @@ bool TCPTransporter::WriteData(QByteArray data, qint32 size)
         }
     }
 
-    socket->write(data);
-    if(!socket->waitForBytesWritten(10000))
+    socket->write(data, size);
+
+    if(!socket->waitForBytesWritten(WRITE_TIMEOUT))
     {
         Logger::Log(Logger::LogLevel::ERROR, "TCPTransporter: Failed to write data. "
                     + socket->errorString());

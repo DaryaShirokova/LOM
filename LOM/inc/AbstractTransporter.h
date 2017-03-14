@@ -35,21 +35,28 @@ public:
      */
     virtual bool WriteData(QByteArray data, qint32 size) = 0;
 
+    /*!
+     * \brief SetHostAddress set the address of the host.
+     * \param ipaddr        ip address.
+     * \param port         port number.
+     */
     virtual void SetHostAddress(QHostAddress ipaddr, int port) = 0;
+
+    /*!
+     * \brief ConnectToHost connect to the host.
+     * \return status of the operation (true means success).
+     */
     virtual bool ConnectToHost() = 0;
+
+    /*!
+     * \brief CloseConnection disconnect from the host.
+     * \return status of the operation (true means success).
+     */
     virtual bool CloseConnection() = 0;
-    void SetCheckStatus(QByteArray mes, QByteArray ans) {
-        this->checkStatusMessage = mes;
-        this->checkStatusAnswer = ans;
-    }
 
 protected:
-    QHostAddress ip;
-    int port;
-    QByteArray checkStatusMessage;
-    QByteArray checkStatusAnswer;
-signals:
-    void DataReady(QByteArray data);
+    QHostAddress ip; /*!< IP address of the host.*/
+    int port;   /*!< The port number of the host.*/
 
 };
 

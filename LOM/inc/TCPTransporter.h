@@ -12,8 +12,6 @@ class TCPTransporter : public AbstractTransporter
 {
     Q_OBJECT
 private:
-    //QHostAddress ipaddr; /*!< IP address of the destination point.*/
-   // int port;       /*!< Port number of the destination point.*/
     QTcpSocket* socket; /* Socket for communication with server. */
 
 public:
@@ -30,13 +28,11 @@ private:
     bool connected;
     QString AddrToString();
     QByteArray inputBuffer;
-    QTimer* timer;
 
 public slots:
     void Connected();
-    void Disconnected();
     void ReceiveData();
-    void CheckConnection();
+
 
 signals:
     void SigConnected();

@@ -6,14 +6,15 @@
 #include <inc/LOMEventData.h>
 
 #include <QMap>
+#include <QTimer>
 
 //! A class for connetion establishment.
 /*!
   A class which knows register map of the FPGA and the data structure.
 */
-class LOMDataUpdater// : public QObject
+class LOMDataUpdater : public QObject
 {
-   // Q_OBJECT
+    Q_OBJECT
 private:
     //! The LogLevel enum
     //! Detalization of logging.
@@ -23,11 +24,13 @@ private:
     QMap<QString, int> regMap; /*!< The addresses of registers.*/
     QMap<QString, int> memMap; /*!< The memory map. */
     QString ipaddr;
+    QTimer* timer;
     int port;
 
     //! A default constructor.
     LOMDataUpdater() {}
 
+    QByteArray GetAnswer();
 public:
     //**************************************************************************
     // Constructor/destructor.
@@ -50,8 +53,18 @@ public:
      */
     void Configure(QString config);
 
+    /*!
+     * \brief Connect connect to the host.
+     * \return true if connected.
+     */
     bool Connect();
+
+    /*!
+     * \brief Disconnect disconnect from the host.
+     * \return true if disconnected.
+     */
     bool Disconnect();
+
     /*!
      * \brief WriteInitParameters
      * \param initParameters    initialisation parameters for FPGA.
@@ -73,6 +86,8 @@ public:
 
     void Configure(QMap<QString, int> regMap, QMap<QString, int> memMap);
 
+public slots:
+    void CheckConnection();
 };
 
 #endif // LOMDATAUPDATER_H
