@@ -2,7 +2,8 @@
 #define LOMDATAPROCESSOR_H
 
 #include "inc/LOMInitParameters.h"
-#include "inc/LOMEventData.h"
+#include "inc/LOMCounters.h"
+#include "inc/LOMAmplitudes.h"
 #include "inc/LOMDataUpdater.h"
 
 #include <QTimer>
@@ -25,9 +26,12 @@ private:
 
     LOMInitParameters initParams; /*!< LOM initialisation data.*/
 
-    LOMEventData event; /*!< Data from LOM.*/
+    LOMCounters counters; /*!< Counters from LOM.*/
 
-    long int updateFreq; /*!< The frequency of data updates.*/
+    LOMAmplitudes amplitudes; /*!< Amplitudes from LOM.*/
+
+    long int updateAmplsFreq; /*!< The frequency of amplitudes updates.*/
+    long int updateCountersFreq; /*!< The frequency of counters updates.*/
 
     bool isRunning; /*!< The status of data updates.*/
 
@@ -38,7 +42,8 @@ private:
     //! Registration efficiency determined using the simulation process.
     double registrationEfficiency;
 
-    QTimer* timer; /* Timer for data updates.*/
+    QTimer* timerAmpls; /* Timer for amplitudes updates.*/
+    QTimer* timerCounters; /* Timer for counters updates.*/
 
     bool writeTree;
 
@@ -91,7 +96,8 @@ private slots:
     /*!
      * \brief Update    update event data.
      */
-    void Update();
+    void UpdateAmplitudes();
+    void UpdateCounters();
 
     //**************************************************************************
     // Getters/Setters.
@@ -129,19 +135,37 @@ public:
                             int coincidenceDurationThreshold,
                             int hitThreshold, int bufSize);
 
+    //! Get init parameters which are currently set in the lom.
     /*!
-     * \brief GetEventData getter.
-     * \return  reference to event data.
-     */
-    LOMEventData& GetEventData() {return event;}
+    * \return status of the operation.
+    */
+    bool LoadInitParameters();
 
     /*!
-     * \brief SetUpdateFreq setter.
-     * \param updateFreq    update frequence (sec).
+     * \brief GetCounters getter.
+     * \return  reference to counters.
      */
-    void SetUpdateFreq(int updateFreq) {this->updateFreq = updateFreq;}
+    LOMCounters& GetCounters() {return counters;}
+
+    /*!
+     * \brief GetAmplitudes getter.
+     * \return  reference to amplitudes.
+     */
+    LOMAmplitudes& GetAmplitudes() {return amplitudes;}
+
+    /*!
+     * \brief SetUpdateAmplsFreq setter.
+     * \param freq    update amplitudes frequence (msec).
+     */
+    void SetUpdateAmplsFreq(int freq) {this->updateAmplsFreq = freq;}
+
+    void SetUpdateCountersFreq(int freq) {this->updateCountersFreq = freq;}
 
     LOMDataUpdater* GetDataUpdater() {return updater;}
+
+signals:
+    void AmplitudesUpdated();
+    void CountersUpdated();
 };
 
 #endif // LOMDATAPROCESSOR_H

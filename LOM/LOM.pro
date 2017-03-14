@@ -32,7 +32,6 @@ LIBS += -pthread -lm -ldl -rdynamic
 SOURCES += main.cpp\
     src/LOMView.cpp \
     src/LOMInitParameters.cpp \
-    src/LOMEventData.cpp \
     src/LOMDataProcessor.cpp \
     src/LOMDataUpdater.cpp \
     src/AbstractTransporter.cpp \
@@ -42,11 +41,12 @@ SOURCES += main.cpp\
     src/Logger.cpp \
     src/TCPTransporter.cpp \
     src/MenuConfig.cpp \
-    src/QNetworkSettings.cpp
+    src/QNetworkSettings.cpp \
+    src/LOMCountersData.cpp \
+    src/LOMAmplitudes.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
-    inc/LOMEventData.h \
     inc/LOMDataProcessor.h \
     inc/LOMDataUpdater.h \
     inc/AbstractTransporter.h \
@@ -59,7 +59,9 @@ HEADERS  += inc/LOMView.h \
     inc/TCPTransporter.h \
     inc/MenuConfig.h \
     inc/ConfigFileHandler.h \
-    inc/QNetworkSettings.h
+    inc/QNetworkSettings.h \
+    inc/LOMAmplitudes.h \
+    inc/LOMCounters.h
 
 FORMS    += forms/LOMView.ui \
     forms/MenuConfig.ui \

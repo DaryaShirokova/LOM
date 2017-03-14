@@ -20,3 +20,12 @@ void LOMInitParameters::Init(double thresholdFE, double thresholdBE,
     this->hitThreshold = hitThreshold;
     this->bufSize = bufSize;
 }
+
+void LOMInitParameters::Init(LOMInitParameters *newInit)
+{
+    this->thresholdBE = newInit->GetThresholdBE();
+    this->thresholdFE = newInit->GetThresholdFE();
+    this->coincidenceDurationThreshold = newInit->GetCoincidenceDurationThreshold();
+    this->hitThreshold = newInit->GetHitThreshold();
+    this->bufSize = newInit->GetBufSize();
+}

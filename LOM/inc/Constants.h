@@ -14,13 +14,20 @@
 #define MIN_AMPL    0
 
 #define SCALE_FACTOR    1000
-//! The names of registers.
-#define REG_FE      "FE"
-#define REG_BE      "BE"
-#define REG_COIN    "COIN"
-#define REG_HIT     "HIT"
-#define REG_BUF     "BUF"
+#define COUNTS_PER_MSEC 1000
 
+//! The names of registers.
+#define REG_FE          "FE"
+#define REG_BE          "BE"
+#define REG_COIN        "COIN"
+#define REG_HIT         "HIT"
+#define REG_BUF         "BUF"
+#define REG_BHABHA      "BHABHA"
+#define REG_BKG         "BKG"
+#define REG_VETO        "VETO"
+#define REG_DELTAT      "DELTAT"
+#define REG_DEADT       "DEADT"
+#define REG_TOTDEATT    "TOTDEADT"
 
 //! The names of memory blocks.
 #define MEM_EVENT   "EVENT"

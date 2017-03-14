@@ -1,9 +1,7 @@
-#ifndef LOMEVENTDATA_H
-#define LOMEVENTDATA_H
+#ifndef LOMAMPLITUDES_H
+#define LOMAMPLITUDES_H
 
 #include <QVector>
-#include "inc/Constants.h"
-
 //! A class representing event data coming from LOM.
 /*!
   A class containing information which comes from LOM during the module operating.
@@ -76,28 +74,17 @@ public:
     VectorDouble2D GetAmplitudes() { return amplitudes;}
 };
 
-class LOMEventData
+
+class LOMAmplitudes
 {
     using VectorInt = QVector<int>;
 private:
-
     Amplitudes amplsBWD; /*!< Amplitudes in BWD sector.*/
     Amplitudes amplsFWD; /*!< Amplitudes in FWD sector.*/
 
-    double deadTime; /*!< Dead time in the calorimeter. */
-    double totalDeadTime; /*!< Total dead time in the calorimeter. */
 
-    unsigned int nBhabhaTotal; /*!< The total number of detected bhabha events.*/
 public:
-    //**************************************************************************
-    // Constructor/destructor.
-    //**************************************************************************
-
-    //! A default constructor.
-    LOMEventData();
-
-    //! A destructor.
-    ~LOMEventData();
+    LOMAmplitudes();
 
     //**************************************************************************
     // Data manipulating functions.
@@ -174,4 +161,4 @@ public:
 
 };
 
-#endif // LOMEVENTDATA_H
+#endif // LOMAMPLITUDES_H

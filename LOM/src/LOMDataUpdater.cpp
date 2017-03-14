@@ -95,7 +95,9 @@ void LOMDataUpdater::Configure(QString config)
         if(key == MEM_EVENT)
             memMap.insert(key, addr);
         else if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT
-                || key == REG_BUF)
+                || key == REG_BUF || key == REG_BHABHA || key == REG_BKG
+                || key == REG_DEADT || key == REG_TOTDEATT || key == REG_DELTAT
+                || key == REG_VETO)
             regMap.insert(key, addr);
         else Logger::Log(Logger::ERROR,
                         "LOMDataUpdater: Unknown register or memory address "
@@ -133,7 +135,7 @@ QByteArray LOMDataUpdater::GetAnswer()
     return arr = transporter->ReadData();
 }
 
-bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
+bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes)
 {
     QByteArray arr;
 
@@ -147,6 +149,7 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
     if(arr.isNull())
         return false;
 
+    qDebug() << "answer size" << arr.size();
     QVector<QVector<double>> amplitudesFE;
     QVector<QVector<double>> amplitudesBE;
 
@@ -165,19 +168,69 @@ bool LOMDataUpdater::ReadEventData(LOMEventData *eventData)
             sectorBE.push_back(ReadInt(arr, SECTOR_NUM * 64 + i*64 + j) * 1. / SCALE_FACTOR);
         amplitudesBE.push_back(sectorBE);
     }
-    eventData->GetAmplsFWD().SetAmplitudes(amplitudesFE);
-    eventData->GetAmplsBWD().SetAmplitudes(amplitudesBE);
+    amplitudes->GetAmplsFWD().SetAmplitudes(amplitudesFE);
+    amplitudes->GetAmplsBWD().SetAmplitudes(amplitudesBE);
 
     return true;
 }
 
+bool LOMDataUpdater::ReadCounters(LOMCounters *counters)
+{
+    QByteArray arr;
+    arr.push_back("R");
+    arr.push_back("R");
+    pushNum(&arr, regMap.value(REG_BHABHA));
+    pushNum(&arr, regMap.value(REG_BKG));
+    pushNum(&arr, regMap.value(REG_DEADT));
+    pushNum(&arr, regMap.value(REG_TOTDEATT));
+    pushNum(&arr, regMap.value(REG_DELTAT));
+    pushNum(&arr, regMap.value(REG_VETO));
+    if(!transporter->WriteData(arr, arr.size()))
+        return false;
+    QByteArray ans = GetAnswer();
+    qDebug() << "arrSize" << ans.size();
+    if(ans.isNull() || ans.size() != arr.size() - 2)
+        return false;
+    qDebug() << ReadInt(ans, 0) << ReadInt(ans, 1) << ReadInt(ans, 2);
+    counters->SetNBhabhaTotal(ReadInt(ans, 0));
+    counters->SetNBkgTotal(ReadInt(ans, 1));
+    counters->SetDeadTime(ReadInt(ans, 2));
+    counters->SetTotalDeadTime(ReadInt(ans, 3));
+    counters->SetDeltaT(ReadInt(ans, 4));
+    counters->SetVetoTime(ReadInt(ans, 5));
+    return true;
+}
+
+bool LOMDataUpdater::ReadInitParameters(LOMInitParameters *initParameters)
+{
+    QByteArray arr;
+    arr.push_back("R");
+    arr.push_back("R");
+    pushNum(&arr, regMap.value(REG_FE));
+    pushNum(&arr, regMap.value(REG_BE));
+    pushNum(&arr, regMap.value(REG_COIN));
+    pushNum(&arr, regMap.value(REG_HIT));
+    pushNum(&arr, regMap.value(REG_BUF));
+    if(!transporter->WriteData(arr, arr.size()))
+        return false;
+
+    QByteArray ans = GetAnswer();
+    if(ans.isNull() || ans.size() != arr.size() - 2)
+        return false;
+    initParameters->SetThresholdFE(1.0 * ReadInt(ans, 0) / SCALE_FACTOR);
+    initParameters->SetThresholdBE(1.0 * ReadInt(ans, 1) / SCALE_FACTOR);
+    initParameters->SetCoincidenceDurationThreshold(ReadInt(ans, 2));
+    initParameters->SetHitThreshold(ReadInt(ans, 3));
+    initParameters->SetBufSize(ReadInt(ans, 4));
+    return true;
+}
 
 bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
 {
     QByteArray arr;
     QVector<int> data;
-    data.push_back(int(initParameters->GetThresholdFE() * 1000));
-    data.push_back(int(initParameters->GetThresholdBE() * 1000));
+    data.push_back(int(initParameters->GetThresholdFE() * SCALE_FACTOR));
+    data.push_back(int(initParameters->GetThresholdBE() * SCALE_FACTOR));
     data.push_back(int(initParameters->GetCoincidenceDurationThreshold()));
     data.push_back(int(initParameters->GetHitThreshold()));
     data.push_back(int(initParameters->GetBufSize()));

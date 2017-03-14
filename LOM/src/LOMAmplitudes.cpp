@@ -1,13 +1,9 @@
-#include "../inc/LOMEventData.h"
+#include "inc/LOMAmplitudes.h"
+#include "inc/Constants.h"
 
-#include <algorithm>
-
-LOMEventData::LOMEventData()
+LOMAmplitudes::LOMAmplitudes()
 {
-}
 
-LOMEventData::~LOMEventData()
-{
 }
 
 Amplitudes::VectorDouble Amplitudes::GetAmplitudesInSector(unsigned int sector)
@@ -44,7 +40,7 @@ unsigned int Amplitudes::GetHitSector()
     return hitSector;
 }
 
-LOMEventData::VectorInt LOMEventData::GetCoincidenceRegion(unsigned int sectorFWD,
+LOMAmplitudes::VectorInt LOMAmplitudes::GetCoincidenceRegion(unsigned int sectorFWD,
                                                           unsigned int sectorBWD,
                                                           double thresholdFE,
                                                           double thresholdBE)
@@ -61,7 +57,7 @@ LOMEventData::VectorInt LOMEventData::GetCoincidenceRegion(unsigned int sectorFW
 
     return coinRegion;
 }
-bool LOMEventData::haveCoincidenceRegion(unsigned int sectorFWD,
+bool LOMAmplitudes::haveCoincidenceRegion(unsigned int sectorFWD,
                                          unsigned int sectorBWD,
                                          double thresholdFE, double thresholdBE)
 {
@@ -72,7 +68,7 @@ bool LOMEventData::haveCoincidenceRegion(unsigned int sectorFWD,
     return false;
 }
 
-int LOMEventData::GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
+int LOMAmplitudes::GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
                                                             unsigned int sectorBWD,
                                                             double thresholdFE,
                                                             double thresholdBE)
@@ -86,7 +82,7 @@ int LOMEventData::GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
 
 }
 
-int LOMEventData::GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
+int LOMAmplitudes::GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
                                                             unsigned int sectorBWD,
                                                             double thresholdFE,
                                                             double thresholdBE)

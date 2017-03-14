@@ -10,10 +10,12 @@ LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
     treeSize = DEFAULT_TREE_SIZE;
     dataDir = DATA_PATH;
 
-    // Connect timer.
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), SLOT(Update()));
+    // Connect timers.
+    timerAmpls = new QTimer(this);
+    timerCounters = new QTimer(this);
 
+    connect(timerAmpls, SIGNAL(timeout()), SLOT(UpdateAmplitudes()));
+    connect(timerCounters, SIGNAL(timeout()), SLOT(UpdateCounters()));
 }
 
 LOMDataProcessor::~LOMDataProcessor()
@@ -25,22 +27,42 @@ void LOMDataProcessor::Start()
 {
     Logger::Log(Logger::LogLevel::INFO, "Data updating process has begun.");
     isRunning = true;
-    Update();
-    timer->start(updateFreq);
+    UpdateAmplitudes();
+    timerAmpls->start(updateAmplsFreq);
+    timerCounters->start(updateCountersFreq);
 }
 
 void LOMDataProcessor::Stop()
 {
-    timer->stop();
+    timerAmpls->stop();
+    timerCounters->stop();
     isRunning = false;
     Logger::Log(Logger::LogLevel::INFO, "Data updating process has been stopped.");
 }
 
 
-void LOMDataProcessor::Update()
+void LOMDataProcessor::UpdateAmplitudes()
 {
-    updater->ReadEventData(&event);
-    Logger::Log(Logger::LogLevel::DEBUG, "Received data.");
+    if(updater->ReadAmplitudes(&amplitudes))
+    {
+        Logger::Log(Logger::LogLevel::DEBUG, "Received amplitudes.");
+        emit AmplitudesUpdated();
+    }
+    else
+        Logger::Log(Logger::LogLevel::ERROR, "Can't update amplitudes.");
+
+}
+
+void LOMDataProcessor::UpdateCounters()
+{
+    if(updater->ReadCounters(&counters))
+    {
+        Logger::Log(Logger::LogLevel::DEBUG, "Received counters.");
+        emit CountersUpdated();
+    }
+    else
+        Logger::Log(Logger::LogLevel::ERROR, "Can't update counters.");
+
 }
 
 bool LOMDataProcessor::SetInitParameters(double thresholdFE, double thresholdBE,
@@ -64,4 +86,19 @@ bool LOMDataProcessor::SetInitParameters(double thresholdFE, double thresholdBE,
                                              "parameters.");
         return false;
     }
+}
+
+bool LOMDataProcessor::LoadInitParameters()
+{
+    LOMInitParameters tempParams;
+    if(updater->ReadInitParameters(&tempParams))
+    {
+        Logger::Log(Logger::LogLevel::INFO, "Received initialisation parameters "
+                                            " from LOM.");
+        initParams.Init(&tempParams);
+        return true;
+    }
+    Logger::Log(Logger::LogLevel::ERROR, "Failed to get initialisation "
+                                             "parameters.");
+    return false;
 }

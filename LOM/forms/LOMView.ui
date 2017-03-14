@@ -47,7 +47,7 @@
             </property>
             <item>
              <layout class="QFormLayout" name="formLayout">
-              <item row="0" column="0">
+              <item row="1" column="0">
                <widget class="QLabel" name="label">
                 <property name="font">
                  <font>
@@ -61,21 +61,7 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="thresholdStatusLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>UNSET!</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
+              <item row="2" column="0">
                <widget class="QLabel" name="thresholdFELabel">
                 <property name="font">
                  <font>
@@ -87,7 +73,7 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="2" column="1">
                <widget class="QDoubleSpinBox" name="spinBoxAmplFWD">
                 <property name="maximum">
                  <double>10.000000000000000</double>
@@ -100,7 +86,7 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
+              <item row="3" column="0">
                <widget class="QLabel" name="thresholdBELabel">
                 <property name="font">
                  <font>
@@ -112,7 +98,7 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
+              <item row="3" column="1">
                <widget class="QDoubleSpinBox" name="spinBoxAmplBWD">
                 <property name="maximum">
                  <double>10.000000000000000</double>
@@ -125,7 +111,7 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="0">
+              <item row="4" column="0">
                <widget class="QLabel" name="coincidenceDurationLabel">
                 <property name="font">
                  <font>
@@ -137,14 +123,14 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
+              <item row="4" column="1">
                <widget class="QSpinBox" name="spinBoxCoinDur">
                 <property name="locale">
                  <locale language="English" country="UnitedStates"/>
                 </property>
                </widget>
               </item>
-              <item row="4" column="0">
+              <item row="5" column="0">
                <widget class="QLabel" name="backgroundThresholdLabel">
                 <property name="font">
                  <font>
@@ -156,14 +142,14 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="1">
+              <item row="5" column="1">
                <widget class="QSpinBox" name="spinBoxBkg">
                 <property name="locale">
                  <locale language="English" country="UnitedStates"/>
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
+              <item row="6" column="0">
                <widget class="QLabel" name="label_15">
                 <property name="font">
                  <font>
@@ -177,7 +163,7 @@
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
+              <item row="7" column="0">
                <widget class="QLabel" name="label_14">
                 <property name="font">
                  <font>
@@ -189,7 +175,7 @@
                 </property>
                </widget>
               </item>
-              <item row="6" column="1">
+              <item row="7" column="1">
                <widget class="QSpinBox" name="sbBufferSize">
                 <property name="enabled">
                  <bool>false</bool>
@@ -202,17 +188,7 @@
                 </property>
                </widget>
               </item>
-              <item row="7" column="1">
-               <widget class="QPushButton" name="pushButtonSetThresholds">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Set</string>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="0">
+              <item row="8" column="0">
                <layout class="QHBoxLayout" name="horizontalLayout_11">
                 <item>
                  <widget class="QPushButton" name="pushButton">
@@ -230,6 +206,37 @@
                 </item>
                </layout>
               </item>
+              <item row="8" column="1">
+               <widget class="QPushButton" name="pushButtonSetThresholds">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Set</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="thresholdStatusLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>UNSET!</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="pushButtonGetThresholds">
+                <property name="text">
+                 <string>Get</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
             <item>
@@ -244,7 +251,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Settings</string>
+                 <string>Update frequencies (s)</string>
                 </property>
                </widget>
               </item>
@@ -256,12 +263,12 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Update frequence (s)</string>
+                 <string>Counters</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="spinBoxUpdFreq">
+               <widget class="QDoubleSpinBox" name="sbUpdCountersFreq">
                 <property name="minimum">
                  <double>0.100000000000000</double>
                 </property>
@@ -276,20 +283,8 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="redrawFreqLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Redraw frequence (s)</string>
-                </property>
-               </widget>
-              </item>
               <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="spinBoxRedrawFreq">
+               <widget class="QDoubleSpinBox" name="sbUpdateAmplsFreq">
                 <property name="minimum">
                  <double>0.100000000000000</double>
                 </property>
@@ -301,16 +296,6 @@
                 </property>
                 <property name="value">
                  <double>3.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QPushButton" name="pushButtonSetSettings">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="text">
-                 <string>Set</string>
                 </property>
                </widget>
               </item>
@@ -337,6 +322,28 @@
                  </widget>
                 </item>
                </layout>
+              </item>
+              <item row="3" column="1">
+               <widget class="QPushButton" name="pushButtonSetSettings">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="text">
+                 <string>Set</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="updAmplsLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Amplitudes</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -546,7 +553,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Event info</string>
+               <string>Counters</string>
               </property>
              </widget>
             </item>
@@ -563,7 +570,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="dLineEdit">
+             <widget class="QLineEdit" name="leDT">
               <property name="text">
                <string>1 s</string>
               </property>
@@ -585,7 +592,7 @@
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLineEdit" name="deadTimeLineEdit">
+             <widget class="QLineEdit" name="leDeadTime">
               <property name="text">
                <string>1 us</string>
               </property>
@@ -607,7 +614,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QLineEdit" name="dLineEdit_2">
+             <widget class="QLineEdit" name="leTotalDeadTime">
               <property name="text">
                <string>1 s</string>
               </property>
@@ -629,7 +636,7 @@
              </widget>
             </item>
             <item row="4" column="1">
-             <widget class="QLineEdit" name="vetoTimeLineEdit">
+             <widget class="QLineEdit" name="leVetoTime">
               <property name="text">
                <string>2 us</string>
               </property>
@@ -651,7 +658,7 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLineEdit" name="bhabhaEventsLineEdit">
+             <widget class="QLineEdit" name="leBhabhaEvents">
               <property name="text">
                <string>0</string>
               </property>
@@ -661,7 +668,7 @@
              </widget>
             </item>
             <item row="6" column="1">
-             <widget class="QLineEdit" name="backgroundEventsLineEdit">
+             <widget class="QLineEdit" name="leBackgroundEvents">
               <property name="text">
                <string>0</string>
               </property>
@@ -1247,8 +1254,8 @@
    <slot>UpdateThresholds()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>282</x>
-     <y>278</y>
+     <x>304</x>
+     <y>334</y>
     </hint>
     <hint type="destinationlabel">
      <x>267</x>
@@ -1263,8 +1270,8 @@
    <slot>UpdateSettings()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>282</x>
-     <y>415</y>
+     <x>304</x>
+     <y>465</y>
     </hint>
     <hint type="destinationlabel">
      <x>249</x>
@@ -1295,8 +1302,8 @@
    <slot>StartUpdates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>416</y>
+     <x>111</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
      <x>73</x>
@@ -1327,8 +1334,8 @@
    <slot>StopUpdates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>188</x>
-     <y>416</y>
+     <x>203</x>
+     <y>466</y>
     </hint>
     <hint type="destinationlabel">
      <x>184</x>
@@ -1391,8 +1398,8 @@
    <slot>LoadLOMInitParams()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>98</x>
-     <y>293</y>
+     <x>112</x>
+     <y>335</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>
@@ -1407,12 +1414,28 @@
    <slot>SaveLOMInitParams()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>168</x>
-     <y>295</y>
+     <x>203</x>
+     <y>335</y>
     </hint>
     <hint type="destinationlabel">
      <x>170</x>
      <y>308</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonGetThresholds</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>GetLOMInitParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>264</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>152</x>
+     <y>60</y>
     </hint>
    </hints>
   </connection>
@@ -1430,5 +1453,6 @@
   <slot>SetLogToFile(bool)</slot>
   <slot>LoadLOMInitParams()</slot>
   <slot>SaveLOMInitParams()</slot>
+  <slot>GetLOMInitParams()</slot>
  </slots>
 </ui>

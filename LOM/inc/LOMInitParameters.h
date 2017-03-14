@@ -44,6 +44,8 @@ public:
               int coincidenceDurationThreshold,
               int hitThreshold, int bufSize);
 
+    void Init(LOMInitParameters* newInit);
+
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************

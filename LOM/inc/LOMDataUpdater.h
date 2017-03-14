@@ -1,9 +1,10 @@
 #ifndef LOMDATAUPDATER_H
 #define LOMDATAUPDATER_H
 
-#include <inc/AbstractTransporter.h>
-#include <inc/LOMInitParameters.h>
-#include <inc/LOMEventData.h>
+#include "inc/AbstractTransporter.h"
+#include "inc/LOMAmplitudes.h"
+#include "inc/LOMInitParameters.h"
+#include "inc/LOMCounters.h"
 
 #include <QMap>
 #include <QTimer>
@@ -72,12 +73,21 @@ public:
      */
     bool WriteInitParameters(LOMInitParameters *initParameters);
 
+    bool ReadInitParameters(LOMInitParameters *initParameters);
+
     /*!
-     * \brief ReadEventData
-     * \param eventData informatiom about Bhabha event.
+     * \brief ReadAmplitudes
+     * \param [out] amplitudes amplitudes in the calorimeter sectors.
      * \return  status of data transmition (true if OK).
      */
-    bool ReadEventData(LOMEventData* eventData);
+    bool ReadAmplitudes(LOMAmplitudes* amplitudes);
+
+    /*!
+     * \brief ReadCounters
+     * \param [out] counters from LOM registers.
+     * \return  status of data transmition (true if OK).
+     */
+    bool ReadCounters(LOMCounters *counters);
 
     QMap<QString, int> GetRegMap() {return regMap;}
     QMap<QString, int> GetMemMap() {return memMap;}

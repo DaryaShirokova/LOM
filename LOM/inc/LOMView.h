@@ -2,7 +2,7 @@
 #define LOMVIEW_H
 
 #include <QMainWindow>
-#include <QTimer>
+#include <QTime>
 
 #include "inc/LogListener.h"
 #include "inc/Logger.h"
@@ -66,7 +66,7 @@ public:
      * \brief SetModel  set model and update threshold.
      * \param model     model
      */
-    void SetModel(LOMDataProcessor* model) {this->model = model;}
+    void SetModel(LOMDataProcessor* model);
 
     /*!
      * \brief handleMessage handle logger event.
@@ -83,8 +83,6 @@ private:
     Ui::LOMView *ui; /* User interface.*/
     LOMDataProcessor* model; /* Model.*/
 
-    int redrawFreq; /* Frequency of picture updating.*/
-
     double ymaxFWD; /* Max value of fwd ampl (for plotter).*/
     double ymaxBWD; /* Max value of bwd ampl (for plotter).*/
     int x0; /* Left value of x axis (for plotter).*/
@@ -93,15 +91,15 @@ private:
     int logDepth; /* Number of messages to show in log text browser.*/
     Logger::LogLevel logtype; /* Detalization of logging.*/
 
-    QTimer* plotsUpdateTimer;   /* timer to update plotters */
-
     bool advancedMode;
-
+    long lastCountersUpdate;
+    QTime time;
 
 
 public slots:
     void UpdateThresholds(); /* Set the values of thresholds to model. */
     void UpdateSettings(); /* Update timing settings. */
+    void UpdateCounters();
 
     void StartUpdates(); /* Begin reading data from FPGA. */
     void StopUpdates(); /* Stop reading data from FPGA. */
@@ -128,6 +126,7 @@ public slots:
 
     void LoadLOMInitParams();
     void SaveLOMInitParams();
+    void GetLOMInitParams();
 };
 
 #endif // LOMVIEW_H

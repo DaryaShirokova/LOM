@@ -17,7 +17,7 @@ LOMView::LOMView(QWidget *parent) :
     ui->setupUi(this);
 
     advancedMode = false;
-
+    lastCountersUpdate = 0;
     // Setup logging.
     SetLogType(ui->logTypeChBox->currentText());
     SetLogDepth(ui->logDepthspinBox->value());
@@ -47,11 +47,7 @@ LOMView::LOMView(QWidget *parent) :
     // Set axes ranges.
     ChangePlottersSettings();
 
-    // Set update timer.
-    plotsUpdateTimer = new QTimer(this);
-    connect(plotsUpdateTimer, SIGNAL(timeout()), SLOT(UpdateAll()));
-
-    //
+    // Set up menu.
     ui->menuFile->addAction("&Open config file", this, SLOT(LoadConfigurations()));
     ui->menuFile->addAction("&Edit configurations", this, SLOT(EditConfigurations()));
     ui->menuFile->addSeparator();
@@ -62,9 +58,15 @@ LOMView::LOMView(QWidget *parent) :
 
 }
 
+void LOMView::SetModel(LOMDataProcessor *model)
+{
+    this->model = model;
+    connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdateAll()));
+    connect(model, SIGNAL(CountersUpdated()), SLOT(UpdateCounters()));
+}
+
 LOMView::~LOMView()
 {
-    delete plotsUpdateTimer;
     delete ui;
 }
 
@@ -113,6 +115,19 @@ void LOMView::ChangePlottersSettings()
     ui->coinWidget->replot();
 }
 
+void LOMView::UpdateCounters()
+{
+
+    if(time.restart() < 900)
+        return;
+    ui->leBhabhaEvents->setText(QString::number(model->GetCounters().GetNBhabhaTotal()));
+    ui->leBackgroundEvents->setText(QString::number(model->GetCounters().GetNBkgTotal()));
+    ui->leDeadTime->setText(QString::number(model->GetCounters().GetDeadTimeMSec()) + " us");
+    ui->leDT->setText(QString::number(model->GetCounters().GetDeltaTMSec()) + " us");
+    ui->leTotalDeadTime->setText(QString::number(model->GetCounters().GetTotalDeadTimeMSec()) + " us");
+    ui->leVetoTime->setText(QString::number(model->GetCounters().GetVetoTimeMSec()) + " us");
+}
+
 void LOMView::UpdateAll()
 {
     UpdatePlots();
@@ -133,28 +148,29 @@ void LOMView::UpdateThresholds()
 
 void LOMView::UpdateSettings()
 {
-    this->redrawFreq = int(1000 * ui->spinBoxRedrawFreq->value());
-    model->SetUpdateFreq(int(1000 * ui->spinBoxUpdFreq->value()));
+    model->SetUpdateAmplsFreq(int(1000 * ui->sbUpdateAmplsFreq->value()));
+    model->SetUpdateCountersFreq(int(1000 * ui->sbUpdCountersFreq->value()));
 }
 
 void LOMView::StartUpdates()
 {
     UpdateSettings();
     model->Start();
+    time.start();
     UpdatePlots();
     UpdateEndcapsWiggets();
-    plotsUpdateTimer->start(redrawFreq);
     ui->pushButtonSetThresholds->setEnabled(false);
     ui->pushButtonSetSettings->setEnabled(false);
     ui->pushButtonStart->setEnabled(false);
+    ui->pushButtonGetThresholds->setEnabled(false);
     ui->pushButtonStop->setEnabled(true);
 }
 
 void LOMView::StopUpdates()
 {
     model->Stop();
-    plotsUpdateTimer->stop();
     ui->pushButtonSetThresholds->setEnabled(true);
+    ui->pushButtonGetThresholds->setEnabled(true);
     ui->pushButtonSetSettings->setEnabled(true);
     ui->pushButtonStart->setEnabled(true);
     ui->pushButtonStop->setEnabled(false);
@@ -199,8 +215,8 @@ void LOMView::UpdatePlots()
     // Choose mode of data plotters (fixed sectors / hit sectors)
     if(ui->checkBoxHitSector->isChecked())
     {
-        fwdSector = model->GetEventData().GetAmplsFWD().GetHitSector() + 1;
-        bwdSector = model->GetEventData().GetAmplsBWD().GetHitSector() + 1;
+        fwdSector = model->GetAmplitudes().GetAmplsFWD().GetHitSector() + 1;
+        bwdSector = model->GetAmplitudes().GetAmplsBWD().GetHitSector() + 1;
     }
     else
     {
@@ -216,7 +232,7 @@ void LOMView::UpdatePlots()
     pen.setColor(QColor("blue"));
 
     // Prepare data.
-    QVector<double> y = model->GetEventData().GetAmplsFWD()
+    QVector<double> y = model->GetAmplitudes().GetAmplsFWD()
                                     .GetAmplitudesInSector(fwdSector - 1);
     QVector<double> x(64);
     for (int i=0; i<64; ++i)
@@ -257,7 +273,7 @@ void LOMView::UpdatePlots()
     pen.setColor(QColor("blue"));
 
     // Prepare data.
-    y = model->GetEventData().GetAmplsBWD()
+    y = model->GetAmplitudes().GetAmplsBWD()
                                     .GetAmplitudesInSector(bwdSector - 1);
     // Set up style.
     ui->amplBWDWidget->addGraph();
@@ -289,7 +305,7 @@ void LOMView::UpdatePlots()
     pen.setColor(QColor("red"));
 
     // Prepare data.
-    QVector<int> y_coin = model->GetEventData()
+    QVector<int> y_coin = model->GetAmplitudes()
             .GetCoincidenceRegion(fwdSector-1, bwdSector-1, thresholdFE, thresholdBE);
 
     for (int i=0; i<64; ++i)
@@ -307,14 +323,14 @@ void LOMView::UpdatePlots()
     ui->coinWidget->replot();
 
     // Update label.
-    if(model->GetEventData().haveCoincidenceRegion(fwdSector-1, bwdSector-1,
+    if(model->GetAmplitudes().haveCoincidenceRegion(fwdSector-1, bwdSector-1,
                                                    thresholdFE, thresholdBE))
     {
         ui->coinWidgetLabel->setText("Coincidence region: " +
-            QString::number(model->GetEventData().GetCoincidenceRegionLeftBoundary
+            QString::number(model->GetAmplitudes().GetCoincidenceRegionLeftBoundary
                             (fwdSector-1, bwdSector-1, thresholdFE, thresholdBE))
                             + "-" +
-            QString::number(model->GetEventData().GetCoincidenceRegionRightBoundary
+            QString::number(model->GetAmplitudes().GetCoincidenceRegionRightBoundary
                            (fwdSector-1, bwdSector-1, thresholdFE, thresholdBE)));
 
     }
@@ -325,11 +341,11 @@ void LOMView::UpdatePlots()
 
 void LOMView::UpdateEndcapsWiggets()
 {
-    ui->fwdEndcap->SetAmplitudes(model->GetEventData()
+    ui->fwdEndcap->SetAmplitudes(model->GetAmplitudes()
                                  .GetAmplsFWD().GetMaxAmplitudes());
     ui->fwdEndcap->repaint();
 
-    ui->bwdEndcap->SetAmplitudes(model->GetEventData()
+    ui->bwdEndcap->SetAmplitudes(model->GetAmplitudes()
                                  .GetAmplsBWD().GetMaxAmplitudes());
     ui->bwdEndcap->repaint();
 }
@@ -433,8 +449,8 @@ void LOMView::OnSaveConfiguration(MenuConfig *config, QString path)
 void LOMView::Save(QString filename, MenuConfig* config)
 {
     QMap<QString, QString> map;
-    map.insert("UFREQ", QString::number(ui->spinBoxUpdFreq->value()));
-    map.insert("RFREQ", QString::number(ui->spinBoxRedrawFreq->value()));
+    map.insert("COUNFREQ", QString::number(ui->sbUpdCountersFreq->value()));
+    map.insert("AMPLFREQ", QString::number(ui->sbUpdateAmplsFreq->value()));
     map.insert("LOGLEVEL", ui->logTypeChBox->currentText());
     map.insert("LOGDEPTH", QString::number(ui->logDepthspinBox->value()));
     map.insert("WRITELOG", QString::number(ui->checkBoxSaveLog->isChecked()));
@@ -461,10 +477,10 @@ void LOMView::Load(QString filename)
     for(QString key : map.keys())
     {
         QString val = map.value(key);
-        if(key == "UFREQ")
-            ui->spinBoxUpdFreq->setValue(val.toDouble());
-        else if(key == "RFREQ")
-            ui->spinBoxRedrawFreq->setValue(val.toDouble());
+        if(key == "COUNFREQ")
+            ui->sbUpdCountersFreq->setValue(val.toDouble());
+        else if(key == "AMPLFREQ")
+            ui->sbUpdateAmplsFreq->setValue(val.toDouble());
         else if(key == "LOGLEVEL")
         {
             ui->logTypeChBox->setCurrentText(val);
@@ -505,6 +521,18 @@ void LOMView::Load(QString filename)
     Logger::Log(Logger::LogLevel::INFO, "App preferences are loaded from " + filename);
     UpdateSettings();
     ChangePlottersSettings();
+}
+void LOMView::GetLOMInitParams()
+{
+    if(model->LoadInitParameters())
+    {
+        ui->sbBufferSize->setValue(model->GetInitParameters().GetBufSize());
+        ui->spinBoxAmplFWD->setValue(model->GetInitParameters().GetThresholdFE());
+        ui->spinBoxAmplBWD->setValue(model->GetInitParameters().GetThresholdBE());
+        ui->spinBoxCoinDur->setValue(model->GetInitParameters().GetCoincidenceDurationThreshold());
+        ui->spinBoxBkg->setValue(model->GetInitParameters().GetHitThreshold());
+        ui->thresholdStatusLabel->setVisible(false);
+    }
 }
 
 void LOMView::LoadLOMInitParams()
