@@ -46,10 +46,10 @@ private:
     QTimer* timerCounters; /* Timer for counters updates.*/
 
     bool writeTree;
-
     int treeSize;
-
     QString dataDir;
+    QString CreateFileName();
+
 public:
 
     //**************************************************************************
@@ -105,7 +105,10 @@ private slots:
 
 
 public:
-    void SetWriteTree(bool writeTree) {this->writeTree = writeTree;}
+    void SetWriteTree(bool writeTree);
+
+    void SaveTreeToFile();
+
     bool GetWriteTree() {return writeTree;}
     void SetDataDir(QString dataDir) {this->dataDir = dataDir;}
     QString GetDataDir() {return dataDir;}

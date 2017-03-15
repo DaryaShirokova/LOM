@@ -4,10 +4,11 @@
 #include <QVector>
 #include "inc/Constants.h"
 
+#include <TTree.h>
+#include <TFile.h>
 
 class LOMCounters
 {
-
 private:
     int deltaT; /*!< Time between two readings. */
     int deadTime; /*!< Dead time in the calorimeter. */
@@ -16,6 +17,8 @@ private:
 
     int nBhabhaTotal; /*!< The total number of detected bhabha events.*/
     int nBkgTotal; /*!< The total number of background events.*/
+
+    TTree* tree;
 public:
     //**************************************************************************
     // Constructor/destructor.
@@ -26,6 +29,15 @@ public:
 
     //! A destructor.
     ~LOMCounters();
+
+    //**************************************************************************
+    // Saving to root tree.
+    //**************************************************************************
+    void InitTree();
+    void FillTree();
+    void ToFile(QString filename);
+    int TreeSize();
+    void ClearTree();
 
     //**************************************************************************
     // Getters/Setters.

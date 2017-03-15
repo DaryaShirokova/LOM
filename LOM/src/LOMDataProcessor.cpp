@@ -20,7 +20,6 @@ LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
 
 LOMDataProcessor::~LOMDataProcessor()
 {
-
 }
 
 void LOMDataProcessor::Start()
@@ -30,6 +29,8 @@ void LOMDataProcessor::Start()
     UpdateAmplitudes();
     timerAmpls->start(updateAmplsFreq);
     timerCounters->start(updateCountersFreq);
+    if(writeTree)
+        counters.InitTree();
 }
 
 void LOMDataProcessor::Stop()
@@ -38,6 +39,8 @@ void LOMDataProcessor::Stop()
     timerCounters->stop();
     isRunning = false;
     Logger::Log(Logger::LogLevel::INFO, "Data updating process has been stopped.");
+    if(writeTree)
+        counters.ToFile(CreateFileName());
 }
 
 
@@ -59,6 +62,16 @@ void LOMDataProcessor::UpdateCounters()
     {
         Logger::Log(Logger::LogLevel::DEBUG, "Received counters.");
         emit CountersUpdated();
+        if(writeTree)
+        {
+            counters.FillTree();
+            if(counters.TreeSize() >= treeSize)
+            {
+                counters.ToFile(CreateFileName());
+                counters.ClearTree();
+                counters.InitTree();
+            }
+        }
     }
     else
         Logger::Log(Logger::LogLevel::ERROR, "Can't update counters.");
@@ -101,4 +114,36 @@ bool LOMDataProcessor::LoadInitParameters()
     Logger::Log(Logger::LogLevel::ERROR, "Failed to get initialisation "
                                              "parameters.");
     return false;
+}
+
+void LOMDataProcessor::SetWriteTree(bool writeTree)
+{
+    this->writeTree = writeTree;
+}
+
+QString LOMDataProcessor::CreateFileName()
+{
+    QString name;
+    QStringList filters;
+    filters << "run*.root";
+    QDir dir(dataDir);
+    if(!dir.exists())
+    {
+        Logger::Log(Logger::ERROR, "LOMDataProcessor: The directory to save trees doesn't exist:" +
+                     dataDir + " The tree will be saved in the temporary file temp.root.");
+        return "temp.root";
+    }
+    QStringList l = dir.entryList(filters,
+                                    QDir::Files,
+                                    QDir::Name);
+    for(int i = 0; true; i++)
+    {
+        name = "run" + QString::number(i) + ".root";
+        if(!l.contains(name))
+            break;
+    }
+
+    if(!dataDir.endsWith('/'))
+        name = '/' + name;
+    return dataDir + name;
 }

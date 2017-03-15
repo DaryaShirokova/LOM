@@ -42,8 +42,8 @@ SOURCES += main.cpp\
     src/TCPTransporter.cpp \
     src/MenuConfig.cpp \
     src/QNetworkSettings.cpp \
-    src/LOMCountersData.cpp \
-    src/LOMAmplitudes.cpp
+    src/LOMAmplitudes.cpp \
+    src/LOMCounters.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
