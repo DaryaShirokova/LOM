@@ -46,14 +46,13 @@ void LOMDataProcessor::Stop()
 
 void LOMDataProcessor::UpdateAmplitudes()
 {
-    if(updater->ReadAmplitudes(&amplitudes))
+    if(updater->ReadAmplitudes(&amplitudes, initParams.GetBufSize()))
     {
         Logger::Log(Logger::LogLevel::DEBUG, "Received amplitudes.");
         emit AmplitudesUpdated();
     }
     else
         Logger::Log(Logger::LogLevel::ERROR, "Can't update amplitudes.");
-
 }
 
 void LOMDataProcessor::UpdateCounters()

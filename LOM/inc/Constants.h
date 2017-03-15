@@ -13,7 +13,7 @@
 //! The minimum possible amplitude of the event (GeV).
 #define MIN_AMPL    0
 
-#define SCALE_FACTOR    1000
+#define SCALE_FACTOR    200
 #define COUNTS_PER_MSEC 1000
 
 //! The names of registers.
@@ -29,8 +29,15 @@
 #define REG_DEADT       "DEADT"
 #define REG_TOTDEATT    "TOTDEADT"
 
+#define AMPL_BIT_SIZE   12
+#define HIST_BIT_SIZE   12
+#define CHANNEL_PER_BUF 8
+
 //! The names of memory blocks.
-#define MEM_EVENT   "EVENT"
+#define MEM_BLOCK1   "BLOCK1"   // 0-7 forward
+#define MEM_BLOCK2   "BLOCK2"   // 8-15 forward
+#define MEM_BLOCK3   "BLOCK3"   // 0-7 backward
+#define MEM_BLOCK4   "BLOCK4"   // 8-15 backward
 
 #define READ_TIMEOUT    3000
 #define WRITE_TIMEOUT   3000

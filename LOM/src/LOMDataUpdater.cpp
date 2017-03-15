@@ -41,6 +41,15 @@ int ReadInt(QByteArray arr, int k)
            (arr.at(n + 3) & 0xFF) << 24;
 }
 
+int ReadInt12(QByteArray arr, int k)
+{
+    int n = k * 3;
+    return (arr.at(n + 0) & 0xFF) |
+           (arr.at(n + 1) & 0xFF) << 8 |
+           (arr.at(n + 2) & 0xFF) << 16 |
+                       (0 & 0xFF) << 24;
+}
+
 LOMDataUpdater::LOMDataUpdater(AbstractTransporter *transporter)
 {
     this->transporter = transporter;
@@ -92,7 +101,8 @@ void LOMDataUpdater::Configure(QString config)
             ParseError(key);
             return;
         }
-        if(key == MEM_EVENT)
+        if(key == MEM_BLOCK1 || key == MEM_BLOCK2 || key == MEM_BLOCK3
+                || key == MEM_BLOCK4)
             memMap.insert(key, addr);
         else if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT
                 || key == REG_BUF || key == REG_BHABHA || key == REG_BKG
@@ -105,7 +115,6 @@ void LOMDataUpdater::Configure(QString config)
     }
     Logger::Log(Logger::INFO, "LOMDataUpdater: Network settings are loaded from "
                             + config);
-
 }
 
 bool LOMDataUpdater::Connect()
@@ -135,13 +144,19 @@ QByteArray LOMDataUpdater::GetAnswer()
     return arr = transporter->ReadData();
 }
 
-bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes)
+bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
 {
     QByteArray arr;
+    QVector<QVector<double>> amplitudesFE;
+    QVector<QVector<double>> amplitudesBE;
 
+    int bitsNum = bufSize * AMPL_BIT_SIZE * CHANNEL_PER_BUF;
+
+    // Reading out first 8 channels (0-7 forward).
     arr.push_back("R");
     arr.push_back("M");
-    pushNum(&arr, memMap.value(REG_FE));
+    pushNum(&arr, memMap.value(MEM_BLOCK1));
+    pushNum(&arr, bitsNum);
 
     transporter->WriteData(arr, arr.size());
 
@@ -149,25 +164,78 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes)
     if(arr.isNull())
         return false;
 
-    qDebug() << "answer size" << arr.size();
-    QVector<QVector<double>> amplitudesFE;
-    QVector<QVector<double>> amplitudesBE;
 
-    for(int i = 0; i < SECTOR_NUM; i++)
+    for(int i = 0; i < SECTOR_NUM / 2; i++)
     {
         QVector<double> sectorFE;
-        for(int j = 0; j < 64; j++)
-            sectorFE.push_back(ReadInt(arr, i*64 + j)* 1. / SCALE_FACTOR);
+        for(int j = 0; j < bufSize; j++)
+            sectorFE.push_back(ReadInt12(arr, i*bufSize + j)* 1. / SCALE_FACTOR);
+
         amplitudesFE.push_back(sectorFE);
     }
 
-    for(int i = 0; i < SECTOR_NUM; i++)
+    // Reading out first 8-16 forward.
+    arr.clear();
+    arr.push_back("R");
+    arr.push_back("M");
+    pushNum(&arr, memMap.value(MEM_BLOCK2));
+    pushNum(&arr, bitsNum);
+
+    transporter->WriteData(arr, arr.size());
+
+    arr = GetAnswer();
+    if(arr.isNull())
+        return false;
+
+    for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++)
+    {
+        QVector<double> sectorFE;
+        for(int j = 0; j < bufSize; j++)
+            sectorFE.push_back(ReadInt12(arr, (i-SECTOR_NUM / 2)*bufSize + j)* 1. / SCALE_FACTOR);
+        amplitudesFE.push_back(sectorFE);
+    }
+    // Reading out first 0-8 backward.
+    arr.clear();
+    arr.push_back("R");
+    arr.push_back("M");
+    pushNum(&arr, memMap.value(MEM_BLOCK3));
+    pushNum(&arr, bitsNum);
+
+    transporter->WriteData(arr, arr.size());
+
+    arr = GetAnswer();
+    if(arr.isNull())
+        return false;
+
+    for(int i = 0; i < SECTOR_NUM / 2; i++)
     {
         QVector<double> sectorBE;
-        for(int j = 0; j < 64; j++)
-            sectorBE.push_back(ReadInt(arr, SECTOR_NUM * 64 + i*64 + j) * 1. / SCALE_FACTOR);
+        for(int j = 0; j < bufSize; j++)
+            sectorBE.push_back(ReadInt12(arr, i*bufSize + j)* 1. / SCALE_FACTOR);
         amplitudesBE.push_back(sectorBE);
     }
+
+    // Reading out first 8-16 backward.
+    arr.clear();
+    arr.push_back("R");
+    arr.push_back("M");
+    pushNum(&arr, memMap.value(MEM_BLOCK4));
+    pushNum(&arr, bitsNum);
+
+    transporter->WriteData(arr, arr.size());
+
+    arr = GetAnswer();
+    if(arr.isNull())
+        return false;
+
+    for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++)
+    {
+        QVector<double> sectorBE;
+        for(int j = 0; j < bufSize; j++)
+            sectorBE.push_back(ReadInt12(arr, (i - SECTOR_NUM / 2)*bufSize + j)* 1. / SCALE_FACTOR);
+        amplitudesBE.push_back(sectorBE);
+    }
+
     amplitudes->GetAmplsFWD().SetAmplitudes(amplitudesFE);
     amplitudes->GetAmplsBWD().SetAmplitudes(amplitudesBE);
 
@@ -188,10 +256,9 @@ bool LOMDataUpdater::ReadCounters(LOMCounters *counters)
     if(!transporter->WriteData(arr, arr.size()))
         return false;
     QByteArray ans = GetAnswer();
-    qDebug() << "arrSize" << ans.size();
     if(ans.isNull() || ans.size() != arr.size() - 2)
         return false;
-    qDebug() << ReadInt(ans, 0) << ReadInt(ans, 1) << ReadInt(ans, 2);
+
     counters->SetNBhabhaTotal(ReadInt(ans, 0));
     counters->SetNBkgTotal(ReadInt(ans, 1));
     counters->SetDeadTime(ReadInt(ans, 2));
@@ -277,8 +344,7 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
         return false;
 
     else ans = transporter->ReadData();
-    qDebug() << ans.size();
-    qDebug() << ReadInt(ans, 0);
+
     if(uint(ans.size()) != uint(data.size() * sizeof(int)))
     {
         Logger::Log(Logger::ERROR, "LOMDataUpdater: can't read registers.");
@@ -291,8 +357,6 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
             Logger::Log(Logger::ERROR, "LOMDataUpdater: wrong parameters have been written.");
             return false;
         }
-
-        qDebug() << data.at(i) << ReadInt(ans, i);
     }
     return true;
 }
@@ -311,13 +375,12 @@ void LOMDataUpdater::CheckConnection()
     QByteArray ans = GetAnswer();
     if(ans.isNull())
     {
-        qDebug() << "Answer is null";
         transporter->CloseConnection();
         timer->stop();
         return;
     }
-    if(int(ans.at(0)) != 1) {
-        qDebug() << "Answer is not 1";
+    if(int(ans.at(0)) != 1)
+    {
         transporter->CloseConnection();
         timer->stop();
     }

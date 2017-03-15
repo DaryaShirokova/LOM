@@ -157,8 +157,8 @@ void LOMView::StartUpdates()
     UpdateSettings();
     model->Start();
     time.start();
-    UpdatePlots();
-    UpdateEndcapsWiggets();
+    //UpdatePlots();
+    //UpdateEndcapsWiggets();
     ui->pushButtonSetThresholds->setEnabled(false);
     ui->pushButtonSetSettings->setEnabled(false);
     ui->pushButtonStart->setEnabled(false);

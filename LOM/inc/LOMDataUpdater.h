@@ -80,7 +80,7 @@ public:
      * \param [out] amplitudes amplitudes in the calorimeter sectors.
      * \return  status of data transmition (true if OK).
      */
-    bool ReadAmplitudes(LOMAmplitudes* amplitudes);
+    bool ReadAmplitudes(LOMAmplitudes* amplitudes, int bufSize);
 
     /*!
      * \brief ReadCounters
