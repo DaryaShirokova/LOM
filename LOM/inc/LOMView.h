@@ -9,7 +9,7 @@
 #include "inc/Constants.h"
 #include "inc/MenuConfig.h"
 
-
+#include "inc/QHistPoolWidget.h"
 namespace Ui {
 class LOMView;
 }
@@ -95,7 +95,7 @@ private:
     long lastCountersUpdate;
     QTime time;
 
-
+    QHistPoolWidget * widgetHists;
 public slots:
     void UpdateThresholds(); /* Set the values of thresholds to model. */
     void UpdateSettings(); /* Update timing settings. */

@@ -4,6 +4,8 @@
 #include "inc/LOMInitParameters.h"
 #include "inc/LOMCounters.h"
 #include "inc/LOMAmplitudes.h"
+#include "inc/LOMHistograms.h"
+
 #include "inc/LOMDataUpdater.h"
 
 #include <QTimer>
@@ -30,8 +32,11 @@ private:
 
     LOMAmplitudes amplitudes; /*!< Amplitudes from LOM.*/
 
+    LOMHistograms hists; /*!< Histograms collected by LOM.*/
+
     long int updateAmplsFreq; /*!< The frequency of amplitudes updates.*/
     long int updateCountersFreq; /*!< The frequency of counters updates.*/
+    long int updateHistsFreq;
 
     bool isRunning; /*!< The status of data updates.*/
 
@@ -44,6 +49,7 @@ private:
 
     QTimer* timerAmpls; /* Timer for amplitudes updates.*/
     QTimer* timerCounters; /* Timer for counters updates.*/
+    QTimer* timerHists; /* Timer for histograms updates.*/
 
     bool writeTree;
     int treeSize;
@@ -98,7 +104,7 @@ private slots:
      */
     void UpdateAmplitudes();
     void UpdateCounters();
-
+    void UpdateHists();
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************
@@ -156,6 +162,7 @@ public:
      */
     LOMAmplitudes& GetAmplitudes() {return amplitudes;}
 
+    LOMHistograms* GetHistograms() {return &hists;}
     /*!
      * \brief SetUpdateAmplsFreq setter.
      * \param freq    update amplitudes frequence (msec).
@@ -164,11 +171,14 @@ public:
 
     void SetUpdateCountersFreq(int freq) {this->updateCountersFreq = freq;}
 
+    void SetUpdateHistsFreq(int freq) {this->updateHistsFreq = freq;}
+
     LOMDataUpdater* GetDataUpdater() {return updater;}
 
 signals:
     void AmplitudesUpdated();
     void CountersUpdated();
+    void HistsUpdated();
 };
 
 #endif // LOMDATAPROCESSOR_H

@@ -14,7 +14,7 @@
 #define MIN_AMPL    0
 
 #define SCALE_FACTOR    200
-#define COUNTS_PER_MSEC 1000
+#define COUNTS_PER_MSEC 40
 
 //! The names of registers.
 #define REG_FE          "FE"
@@ -38,6 +38,15 @@
 #define MEM_BLOCK2   "BLOCK2"   // 8-15 forward
 #define MEM_BLOCK3   "BLOCK3"   // 0-7 backward
 #define MEM_BLOCK4   "BLOCK4"   // 8-15 backward
+
+//! Histogramms.
+#define HIST_AMPLFE "HIST_AMPLFE"   // prefix (+1-16)
+#define HIST_AMPLBE "HIST_AMPLBE"   // prefix (+1-16)
+#define HIST_AMPL_NBINS 50
+#define HIST_AMPL_X0    0.0
+#define HIST_AMPL_FE_X1    8.0
+#define HIST_AMPL_BE_X1    6.0
+
 
 #define READ_TIMEOUT    3000
 #define WRITE_TIMEOUT   3000

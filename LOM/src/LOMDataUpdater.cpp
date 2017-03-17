@@ -63,58 +63,91 @@ void ParseError(QString value)
                               "to address or port.");
 }
 
-void LOMDataUpdater::Configure(QString config)
-{
+bool LOMDataUpdater::Configure(QString config) {
+    int check = 0;
+    QStringList expectedReg;
+    QStringList expectedMem;
+
+    // Add all known registers.
+    expectedReg << REG_FE     << REG_BE  << REG_COIN  << REG_HIT  << REG_BUF
+                << REG_BHABHA << REG_BKG << REG_DEADT << REG_TOTDEATT
+                << REG_DELTAT << REG_VETO;
+    expectedMem << MEM_BLOCK1 << MEM_BLOCK2 << MEM_BLOCK3 << MEM_BLOCK4;
+    for(int i = 1; i <= SECTOR_NUM; i++)
+    {
+        expectedMem << QString(HIST_AMPLFE) + QString::number(i);
+        expectedMem << QString(HIST_AMPLBE) + QString::number(i);
+    }
+
     QMap<QString, QString> map = ConfigFileHandler::ReadFile(config);
 
-    for(QString key : map.keys())
-    {
+    for(QString key : map.keys()) {
+
+        // IP address.
         QString value = map.value(key);
-        if(key == "IP")
-        {
+        if(key == "IP") {
+            check++;
             QRegExp ipreg(VALIDIP);
-            if (!ipreg.exactMatch(value))
-            {
+            if (!ipreg.exactMatch(value)) {
                 Logger::Log(Logger::ERROR, "LOMDataUpdater: IP address is not valid! "
                            + value);
-                return;
+                return false;
             }
             this->ipaddr = value;
             continue;
         }
+
+        // Port.
         bool res;
-        if(key == "PORT")
-        {
+        if(key == "PORT") {
+            check++;
             int newport = value.toInt(&res, 10);
-            if(!res)
-            {
+            if(!res) {
                 ParseError(key);
-                return;
+                return false;
             }
             this->port = newport;
             continue;
         }
 
+        // Parse address.
         int addr = value.toInt(&res, 16);
-        if(!res)
-        {
+        if(!res) {
             ParseError(key);
-            return;
+            return false;
         }
-        if(key == MEM_BLOCK1 || key == MEM_BLOCK2 || key == MEM_BLOCK3
-                || key == MEM_BLOCK4)
+        // Memory address.
+        if(expectedMem.contains(key)) {
             memMap.insert(key, addr);
-        else if(key == REG_FE || key == REG_BE || key == REG_COIN || key == REG_HIT
-                || key == REG_BUF || key == REG_BHABHA || key == REG_BKG
-                || key == REG_DEADT || key == REG_TOTDEATT || key == REG_DELTAT
-                || key == REG_VETO)
+            expectedMem.removeAll(key);
+            continue;
+        }
+        // Register address.
+        if(expectedReg.contains(key)) {
             regMap.insert(key, addr);
-        else Logger::Log(Logger::ERROR,
-                        "LOMDataUpdater: Unknown register or memory address "
-                        + key);
+            expectedReg.removeAll(key);
+            continue;
+        }
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: unknown key " + key);
+    }
+
+    if(check != 2) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: IP or port is not configured.");
+        return false;
+    }
+    if(!expectedMem.isEmpty() || !expectedReg.isEmpty()) {
+        QString str;
+        for(QString s :expectedMem)
+            str += " " + s;
+        for(QString s :expectedReg)
+            str += " " + s;
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: Required registers "
+                                   "are not configured." + str);
+        return false;
     }
     Logger::Log(Logger::INFO, "LOMDataUpdater: Network settings are loaded from "
                             + config);
+    return true;
 }
 
 bool LOMDataUpdater::Connect()
@@ -242,8 +275,33 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     return true;
 }
 
-bool LOMDataUpdater::ReadCounters(LOMCounters *counters)
-{
+bool LOMDataUpdater::ReadHists(LOMHistograms *hists) {
+
+
+    // Update amplitude hists.
+    QMap<QString, Hist*> map = hists->GetHists();
+    QMap<QString, Hist*>::iterator i;
+    for(i = map.begin(); i != map.end(); ++i) {
+        QByteArray arr;
+        arr.push_back("R");
+        arr.push_back("M");
+        pushNum(&arr, memMap.value(i.key()));
+        int bitSize = i.value()->GetBinsNumber() * 32;
+        pushNum(&arr, bitSize);
+        if(!transporter->WriteData(arr, arr.size()))
+            return false;
+        QByteArray ans = GetAnswer();
+        if(ans.isNull() || ans.size() * 8 != bitSize)
+            return false;
+        QVector<int> hist;
+        for(int k = 0; k < i.value()->GetBinsNumber(); k++)
+            hist.push_back(ReadInt(ans, k));
+        i.value()->SetHist(hist);
+    }
+    return true;
+}
+
+bool LOMDataUpdater::ReadCounters(LOMCounters *counters) {
     QByteArray arr;
     arr.push_back("R");
     arr.push_back("R");

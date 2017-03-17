@@ -5,6 +5,7 @@
 #include "inc/LOMAmplitudes.h"
 #include "inc/LOMInitParameters.h"
 #include "inc/LOMCounters.h"
+#include "inc/LOMHistograms.h"
 
 #include <QMap>
 #include <QTimer>
@@ -52,7 +53,7 @@ public:
      * \brief Configure load register settings from config file.
      * \param config    config file path.
      */
-    void Configure(QString config);
+    bool Configure(QString config);
 
     /*!
      * \brief Connect connect to the host.
@@ -89,6 +90,7 @@ public:
      */
     bool ReadCounters(LOMCounters *counters);
 
+    bool ReadHists(LOMHistograms* hists);
     QMap<QString, int> GetRegMap() {return regMap;}
     QMap<QString, int> GetMemMap() {return memMap;}
     QString GetIP() {return ipaddr;}

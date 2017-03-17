@@ -11,10 +11,11 @@
 
 LOMView::LOMView(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::LOMView)
-{
-
+    ui(new Ui::LOMView) {
     ui->setupUi(this);
+
+    widgetHists = new QHistPoolWidget(ui->tab_2);
+    ui->tab_2->layout()->addWidget(widgetHists);
 
     advancedMode = false;
     lastCountersUpdate = 0;
@@ -63,6 +64,9 @@ void LOMView::SetModel(LOMDataProcessor *model)
     this->model = model;
     connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdateAll()));
     connect(model, SIGNAL(CountersUpdated()), SLOT(UpdateCounters()));
+
+    widgetHists->SetModel(model->GetHistograms());
+    connect(model, SIGNAL(HistsUpdated()), widgetHists, SLOT(UpdateHists()));
 }
 
 LOMView::~LOMView()
@@ -150,6 +154,7 @@ void LOMView::UpdateSettings()
 {
     model->SetUpdateAmplsFreq(int(1000 * ui->sbUpdateAmplsFreq->value()));
     model->SetUpdateCountersFreq(int(1000 * ui->sbUpdCountersFreq->value()));
+    model->SetUpdateHistsFreq(int(1000 * ui->sbUpdateHistsFreq->value()));
 }
 
 void LOMView::StartUpdates()

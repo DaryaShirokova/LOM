@@ -43,7 +43,10 @@ SOURCES += main.cpp\
     src/MenuConfig.cpp \
     src/QNetworkSettings.cpp \
     src/LOMAmplitudes.cpp \
-    src/LOMCounters.cpp
+    src/LOMCounters.cpp \
+    src/LOMHistograms.cpp \
+    src/QHistPlot.cpp \
+    src/QHistPoolWidget.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -61,8 +64,13 @@ HEADERS  += inc/LOMView.h \
     inc/ConfigFileHandler.h \
     inc/QNetworkSettings.h \
     inc/LOMAmplitudes.h \
-    inc/LOMCounters.h
+    inc/LOMCounters.h \
+    inc/LOMHistograms.h \
+    inc/QHistPlot.h \
+    inc/QHistPoolWidget.h
 
 FORMS    += forms/LOMView.ui \
     forms/MenuConfig.ui \
-    forms/QNetworkSettings.ui
+    forms/QNetworkSettings.ui \
+    forms/QHistPlot.ui \
+    forms/QHistPoolWidget.ui
