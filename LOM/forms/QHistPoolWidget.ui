@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QHistPoolWidget</class>
+ <widget class="QWidget" name="QHistPoolWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>947</width>
+    <height>599</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="pbNext">
+   <property name="geometry">
+    <rect>
+     <x>452</x>
+     <y>503</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Next (D)</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbPrevious">
+   <property name="geometry">
+    <rect>
+     <x>345</x>
+     <y>503</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Previous (A)</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbUpdate">
+   <property name="geometry">
+    <rect>
+     <x>791</x>
+     <y>491</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Update</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pbSave">
+   <property name="geometry">
+    <rect>
+     <x>791</x>
+     <y>524</y>
+     <width>100</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelPage">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>550</y>
+     <width>81</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Page 0 / 0</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pbPrevious</sender>
+   <signal>clicked()</signal>
+   <receiver>QHistPoolWidget</receiver>
+   <slot>ShowPrevious()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>389</x>
+     <y>525</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>214</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbNext</sender>
+   <signal>clicked()</signal>
+   <receiver>QHistPoolWidget</receiver>
+   <slot>ShowNext()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>504</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>703</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>ShowPrevious()</slot>
+  <slot>ShowNext()</slot>
+ </slots>
+</ui>

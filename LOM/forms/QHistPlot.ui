@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QHistPlot</class>
+ <widget class="QWidget" name="QHistPlot">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QCustomPlot" name="widgetHist" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>70</y>
+     <width>381</width>
+     <height>161</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelTitle">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>30</y>
+     <width>121</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Title</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="chBoxFavorite">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>240</y>
+     <width>131</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Favorite</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot/qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>chBoxFavorite</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>QHistPlot</receiver>
+   <slot>SetFavorite(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>258</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>SetFavorite(bool)</slot>
+ </slots>
+</ui>
