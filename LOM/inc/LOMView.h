@@ -17,11 +17,10 @@ class LOMView;
 class LOMDataProcessor;
 
 
-class UIConfig
-{
+class UIConfig {
     QMap<QString, QString> params;
 public:
-    bool load()
+  /*  bool load()
     {
        // return load(CONFIG_PATH + DEFAULT_CONF);
     }
@@ -34,7 +33,7 @@ public:
     bool save(QString file)
     {
 
-    }
+    }*/
     QString GetParam(QString key)
     {
         return params.value(key);
@@ -113,6 +112,7 @@ public slots:
     void SetLogType(QString str); /* Set loggig detalization. */
     void SetLogDepth(int depth); /* Set logging depth. */
     void SetLogToFile(bool val); /* Switch on/of logging to file. */
+    void RecreateLogFile();
 
     void Connected();
     void Disconnected();

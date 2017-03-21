@@ -27,6 +27,8 @@ private:
     Hist* h;
 public slots:
     void SetFavorite(bool val);
+signals:
+    void HistChecked();
 };
 
 #endif // QHISTPLOT_H

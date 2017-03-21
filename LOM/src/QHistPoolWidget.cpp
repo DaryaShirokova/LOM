@@ -13,7 +13,8 @@ QHistPoolWidget::QHistPoolWidget(QWidget *parent) :
     for(int i = 0; i < 4; i++) {
         QHistPlot* hp = new QHistPlot(this);
        hp->setObjectName("widget" + QString::number(i));
-        plotsPool.push_back(hp);
+       connect(hp, SIGNAL(HistChecked()), this, SLOT(CheckFavotite()));
+       plotsPool.push_back(hp);
     }
     curPage = 0;
     SetLabel();
@@ -84,9 +85,16 @@ void QHistPoolWidget::UpdateHists() {
         return;
 
     int i = 0;
+    int favoriteN = GetFavorite().size();
     for(i = 0; i < activeHist.size(); i++) {
         plotsPool.at(i)->SetHist(histPool->GetHists().value(activeHist.at(i)));
         plotsPool.at(i)->setVisible(true);
+        if(favoriteN < 4)
+            plotsPool.at(i)->SetEnableFavorite(true);
+        else if(!histPool->GetHists().value(activeHist.at(i))->IsFavorite())
+            plotsPool.at(i)->SetEnableFavorite(false);
+        else plotsPool.at(i)->SetEnableFavorite(true);
+
     }
 }
 
@@ -141,6 +149,7 @@ QStringList QHistPoolWidget::GetFavorite(){
 
     for (i = map.begin(); i != map.end(); ++i)
         if(list.size() < 4 && i.value()->IsFavorite())
+            list.push_back(i.key());
 
 
     return list;
@@ -157,4 +166,10 @@ void QHistPoolWidget::SetModel(LOMHistograms *histPool) {
     activeHist = GetFavorite();
     if(activeHist.size() == 0)
         ShowNext();
+}
+
+void QHistPoolWidget::CheckFavotite() {
+    if(curPage == 1)
+        activeHist = GetFavorite();
+    UpdateHists();
 }

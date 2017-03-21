@@ -33,7 +33,7 @@ void QHistPlot::SetHist(Hist *h) {
     this->h = h;
 
     // Set favorite.
-    //ui->chBoxFavorite->setChecked(h->IsFavorite());
+    ui->chBoxFavorite->setChecked(h->IsFavorite());
 
     // Set labels and axis.
     ui->labelTitle->setText(h->GetTitle());
@@ -67,6 +67,7 @@ void QHistPlot::SetEnableFavorite(bool val) {
 void QHistPlot::SetFavorite(bool val) {
     if(h != NULL)
         h->SetFavorite(val);
+    emit HistChecked();
 }
 
 void QHistPlot::paintEvent(QPaintEvent *event) {
