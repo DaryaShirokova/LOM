@@ -44,7 +44,6 @@ void QHistPlot::SetHist(Hist *h) {
 
     if(h == NULL)
         return;
-    qDebug() << "ss2";
 
     // Set plot style;
     QPen pen;

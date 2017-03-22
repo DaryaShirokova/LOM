@@ -20,7 +20,7 @@ LOMView::LOMView(QWidget *parent) :
     advancedMode = false;
     lastCountersUpdate = 0;
     // Setup logging.
-    SetLogType(ui->logTypeChBox->currentText());
+    SetLogType(ui->logTypeCheckBox->currentText());
     SetLogDepth(ui->logDepthspinBox->value());
 
     // Toggle buttons.
@@ -36,8 +36,8 @@ LOMView::LOMView(QWidget *parent) :
     ui->connectionStatusLabel->setPalette(palette);
 
     // Give titles to axis
-    ui->luminosityWidget->xAxis->setLabel("t, s");
-    ui->luminosityWidget->yAxis->setLabel("L, 1/s/cm2");
+    ui->widgetLuminosity->xAxis->setLabel("t, s");
+    ui->widgetLuminosity->yAxis->setLabel("L, 1/s/cm2");
     ui->amplFWDWidget->xAxis->setLabel("Time stamps");
     ui->amplFWDWidget->yAxis->setLabel("Amplitude, GeV");
     ui->amplBWDWidget->xAxis->setLabel("Time stamps");
@@ -57,10 +57,11 @@ LOMView::LOMView(QWidget *parent) :
     ui->menuFile->addSeparator();
     ui->menuFile->addAction("&Exit", this, SLOT(EditConfigurations()));
 
+
 }
 
-void LOMView::SetModel(LOMDataProcessor *model)
-{
+
+void LOMView::SetModel(LOMDataProcessor *model) {
     this->model = model;
     connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdateAll()));
     connect(model, SIGNAL(CountersUpdated()), SLOT(UpdateCounters()));
@@ -69,8 +70,7 @@ void LOMView::SetModel(LOMDataProcessor *model)
     connect(model, SIGNAL(HistsUpdated()), widgetHists, SLOT(UpdateHists()));
 }
 
-LOMView::~LOMView()
-{
+LOMView::~LOMView() {
     delete ui;
 }
 
@@ -456,7 +456,7 @@ void LOMView::Save(QString filename, MenuConfig* config)
     QMap<QString, QString> map;
     map.insert("COUNFREQ", QString::number(ui->sbUpdCountersFreq->value()));
     map.insert("AMPLFREQ", QString::number(ui->sbUpdateAmplsFreq->value()));
-    map.insert("LOGLEVEL", ui->logTypeChBox->currentText());
+    map.insert("LOGLEVEL", ui->logTypeCheckBox->currentText());
     map.insert("LOGDEPTH", QString::number(ui->logDepthspinBox->value()));
     map.insert("WRITELOG", QString::number(ui->checkBoxSaveLog->isChecked()));
     map.insert("X0", QString::number(ui->xMinSpinBox->value()));
@@ -488,7 +488,7 @@ void LOMView::Load(QString filename)
             ui->sbUpdateAmplsFreq->setValue(val.toDouble());
         else if(key == "LOGLEVEL")
         {
-            ui->logTypeChBox->setCurrentText(val);
+            ui->logTypeCheckBox->setCurrentText(val);
             SetLogType(val);
         }
         else if(key == "LOGDEPTH")
@@ -577,4 +577,38 @@ void LOMView::SaveLOMInitParams()
         map.insert("BUF", QString::number(ui->sbBufferSize->value()));
         ConfigFileHandler::WriteFile(filename, map);
     }
+}
+
+void LOMView::resizeEvent(QResizeEvent *event) {
+    QWidget::resizeEvent(event);
+
+    /*ui->logBrowser->resize(ui->logBrowser->width(), 0.18 * this->height());
+    ui->coinWidget->resize(ui->coinWidget->width(), 0.18 * this->height());
+    ui->amplBWDWidget->resize(ui->amplBWDWidget->width(), 0.18 * this->height());
+    ui->amplFWDWidget->resize(ui->amplFWDWidget->width(), 0.18 * this->height());
+    ui->fwdEndcap->resize(0.18 * this->height(), 0.18 * this->height());
+    ui->bwdEndcap->resize(0.18 * this->height(), 0.18 * this->height());*/
+
+    double scaleY = 0.16;
+    double scaleX = 0.3;
+
+    ui->logBrowser->setMinimumHeight(scaleY * this->height());
+    ui->coinWidget->setMinimumSize(scaleX * this->width(),  scaleY * this->height());
+    ui->amplBWDWidget->setMinimumSize(scaleX * this->width(),  scaleY * this->height());
+    ui->amplFWDWidget->setMinimumSize(scaleX * this->width(),  scaleY * this->height());
+    ui->fwdEndcap->setMinimumSize(scaleY * this->height(), scaleY * this->height());
+    ui->bwdEndcap->setMinimumSize(scaleY * this->height(), scaleY * this->height());
+
+    ui->logBrowser->setMaximumHeight(scaleY * this->height());
+    ui->coinWidget->setMaximumSize(scaleX * this->width(),  scaleY * this->height());
+    ui->amplBWDWidget->setMaximumSize(scaleX * this->width(),  scaleY * this->height());
+    ui->amplFWDWidget->setMaximumSize(scaleX * this->width(),  scaleY * this->height());
+    ui->fwdEndcap->setMaximumSize(scaleY * this->height(), scaleY * this->height());
+    ui->bwdEndcap->setMaximumSize(scaleY * this->height(), scaleY * this->height());
+
+    ui->labelBwdSector->setMaximumWidth(ui->fwdEndcap->width()-40);
+    ui->labelFwdSector->setMaximumWidth(ui->fwdEndcap->width()-40);
+    ui->labelBwdSector->setMinimumWidth(ui->fwdEndcap->width()-40);
+    ui->labelFwdSector->setMinimumWidth(ui->fwdEndcap->width()-40);
+
 }

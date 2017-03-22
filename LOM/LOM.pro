@@ -34,7 +34,6 @@ SOURCES += main.cpp\
     src/LOMInitParameters.cpp \
     src/LOMDataProcessor.cpp \
     src/LOMDataUpdater.cpp \
-    src/AbstractTransporter.cpp \
     qcustomplot/qcustomplot.cpp \
     src/QEndcapWidget.cpp \
     src/QColorBar.cpp \
@@ -46,8 +45,7 @@ SOURCES += main.cpp\
     src/LOMCounters.cpp \
     src/LOMHistograms.cpp \
     src/QHistPlot.cpp \
-    src/QHistPoolWidget.cpp \
-    forms/QMainInfo.cpp
+    src/QHistPoolWidget.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -68,12 +66,10 @@ HEADERS  += inc/LOMView.h \
     inc/LOMCounters.h \
     inc/LOMHistograms.h \
     inc/QHistPlot.h \
-    inc/QHistPoolWidget.h \
-    forms/QMainInfo.h
+    inc/QHistPoolWidget.h
 
 FORMS    += forms/LOMView.ui \
     forms/MenuConfig.ui \
     forms/QNetworkSettings.ui \
     forms/QHistPlot.ui \
-    forms/QHistPoolWidget.ui \
-    forms/QMainInfo.ui
+    forms/QHistPoolWidget.ui

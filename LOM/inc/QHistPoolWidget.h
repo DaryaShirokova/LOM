@@ -22,6 +22,7 @@ protected:
     //! Paint event.
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *) override;
+    void  keyPressEvent(QKeyEvent *event) override;
 private:
     Ui::QHistPoolWidget *ui;
     QVector<QHistPlot*> plotsPool;

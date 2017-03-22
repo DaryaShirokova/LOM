@@ -2,6 +2,7 @@
 #include "ui_QHistPoolWidget.h"
 
 #include <QPainter>
+#include <QKeyEvent>
 #include <QDebug>
 QHistPoolWidget::QHistPoolWidget(QWidget *parent) :
     QWidget(parent),
@@ -33,6 +34,7 @@ void QHistPoolWidget::resizeEvent(QResizeEvent *event) {
 
     QWidget::resizeEvent(event);
 
+    setFocus();
     // Hist plots.
     int deltaH = 20 + ui->pbPrevious->height() + ui->labelPage->height();
     int indentY = 10;
@@ -72,7 +74,6 @@ void QHistPoolWidget::resizeEvent(QResizeEvent *event) {
 
 void QHistPoolWidget::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
-
 }
 
 void QHistPoolWidget::UpdateHists() {
@@ -172,4 +173,12 @@ void QHistPoolWidget::CheckFavotite() {
     if(curPage == 1)
         activeHist = GetFavorite();
     UpdateHists();
+    setFocus();
+}
+
+void QHistPoolWidget::keyPressEvent(QKeyEvent *event) {
+    if(event->key() == Qt::Key_A)
+        ShowPrevious();
+    if(event->key() == Qt::Key_D)
+        ShowNext();
 }

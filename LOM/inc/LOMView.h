@@ -53,7 +53,8 @@ public:
 class LOMView : public QMainWindow, public LogListener
 {
     Q_OBJECT
-
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 public:
     //! Constructor.
     explicit LOMView(QWidget *parent = 0);
@@ -112,7 +113,7 @@ public slots:
     void SetLogType(QString str); /* Set loggig detalization. */
     void SetLogDepth(int depth); /* Set logging depth. */
     void SetLogToFile(bool val); /* Switch on/of logging to file. */
-    void RecreateLogFile();
+   // void RecreateLogFile();
 
     void Connected();
     void Disconnected();
