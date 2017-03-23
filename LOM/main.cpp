@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     w.SetModel(model);
 
     w.Load(DEFAULT_CONF);
-    w.InitFromFile(DEFAULT_PARAM);
+    model->GetInitParameters().Init(DEFAULT_PARAM);
 
     updater->Connect();
 

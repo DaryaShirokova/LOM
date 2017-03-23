@@ -1,14 +1,16 @@
 #ifndef LOMINITPARAMETERS_H
 #define LOMINITPARAMETERS_H
 
+#include <QObject>
 //! A class containing initial parameters of LOM.
 /*!
   A class containing thresholds, time settings and other information which can
   be configured.
 */
 
-class LOMInitParameters
+class LOMInitParameters : public QObject
 {
+    Q_OBJECT
 private:
     double thresholdFE; /*!< Forward endcap hit threshlold. */
     double thresholdBE; /*!< Backward endcap hit threshlold. */
@@ -19,6 +21,8 @@ private:
     int hitThreshold; /*!< The threshold for quality signal detection. */
 
     int bufSize;
+
+    bool status;
 
 public:
 
@@ -46,9 +50,16 @@ public:
 
     void Init(LOMInitParameters* newInit);
 
+    void Init(QString filename);
+
+    void Save(QString filename);
+
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************
+    void SetStatus(bool status) { this->status = status; emit StatusChanged(status); }
+
+    bool GetStatus() {return this->status;}
 
     //! Setter
     /*!
@@ -103,6 +114,9 @@ public:
 
     void SetBufSize(int bufSize) {this->bufSize = bufSize;}
     int GetBufSize() {return this->bufSize;}
+signals:
+    void StatusChanged(bool);
+    void ParamsChanged();
 
 };
 

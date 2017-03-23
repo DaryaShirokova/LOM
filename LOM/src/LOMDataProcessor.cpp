@@ -89,14 +89,12 @@ void LOMDataProcessor::UpdateHists() {
 bool LOMDataProcessor::SetInitParameters(double thresholdFE, double thresholdBE,
                                          int coincidenceDurationThreshold,
                                          int hitThreshold, int bufSize) {
-    LOMInitParameters tempParams;
-    tempParams.Init(thresholdFE, thresholdBE, coincidenceDurationThreshold,
+    initParams.Init(thresholdFE, thresholdBE, coincidenceDurationThreshold,
                     hitThreshold, bufSize);
-    if(updater->WriteInitParameters(&tempParams)) {
+    if(updater->WriteInitParameters(&initParams)) {
         Logger::Log(Logger::LogLevel::INFO, "Initialisation parameters has been"
                                             " succesfully updated.");
-        initParams.Init(thresholdFE, thresholdBE, coincidenceDurationThreshold,
-                        hitThreshold, bufSize);
+        initParams.SetStatus(true);
         return true;
     }
     else {

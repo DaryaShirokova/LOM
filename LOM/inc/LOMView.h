@@ -17,39 +17,11 @@ class LOMView;
 class LOMDataProcessor;
 
 
-class UIConfig {
-    QMap<QString, QString> params;
-public:
-  /*  bool load()
-    {
-       // return load(CONFIG_PATH + DEFAULT_CONF);
-    }
-
-    bool load(QString file)
-    {
-
-    }
-
-    bool save(QString file)
-    {
-
-    }*/
-    QString GetParam(QString key)
-    {
-        return params.value(key);
-    }
-
-    void SetParam(QString key, QString value)
-    {
-        params.insert(key, value);
-    }
-};
-
 //! View class.
 /*!
   This class represents the graphical interface of the program for communication
   with users.
-  */
+*/
 class LOMView : public QMainWindow, public LogListener
 {
     Q_OBJECT
@@ -83,6 +55,7 @@ private:
     Ui::LOMView *ui; /* User interface.*/
     LOMDataProcessor* model; /* Model.*/
 
+    bool advancedMode;
     double ymaxFWD; /* Max value of fwd ampl (for plotter).*/
     double ymaxBWD; /* Max value of bwd ampl (for plotter).*/
     int x0; /* Left value of x axis (for plotter).*/
@@ -91,7 +64,6 @@ private:
     int logDepth; /* Number of messages to show in log text browser.*/
     Logger::LogLevel logtype; /* Detalization of logging.*/
 
-    bool advancedMode;
     long lastCountersUpdate;
     QTime time;
 
@@ -113,7 +85,6 @@ public slots:
     void SetLogType(QString str); /* Set loggig detalization. */
     void SetLogDepth(int depth); /* Set logging depth. */
     void SetLogToFile(bool val); /* Switch on/of logging to file. */
-   // void RecreateLogFile();
 
     void Connected();
     void Disconnected();
@@ -121,13 +92,17 @@ public slots:
     void OpenNetworkSettings();
     void LoadConfigurations();
     void EditConfigurations();
-    void Reconnect();
+
     void OnApplyCongiguration(MenuConfig* config);
     void OnSaveConfiguration(MenuConfig* config, QString path);
 
+    void InitThresholds();
+    void SetThresholdStatus(bool val);
+
+    void Reconnect();
+    void GetLOMInitParams();
     void LoadLOMInitParams();
     void SaveLOMInitParams();
-    void GetLOMInitParams();
 };
 
 #endif // LOMVIEW_H

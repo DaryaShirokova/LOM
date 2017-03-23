@@ -68,6 +68,11 @@ void LOMView::SetModel(LOMDataProcessor *model) {
 
     widgetHists->SetModel(model->GetHistograms());
     connect(model, SIGNAL(HistsUpdated()), widgetHists, SLOT(UpdateHists()));
+
+    connect(&(model->GetInitParameters()),
+            SIGNAL(StatusChanged(bool)),this, SLOT(SetThresholdStatus(bool)));
+    connect(&(model->GetInitParameters()),
+            SIGNAL(ParamsChanged()),this, SLOT(InitThresholds()));
 }
 
 LOMView::~LOMView() {
@@ -101,9 +106,19 @@ void LOMView::handleMessage(QString message)
 //******************************************************************************
 // SLOTS
 //******************************************************************************
+void LOMView::SetThresholdStatus(bool val) {
+    ui->thresholdStatusLabel->setVisible(!val);
+}
 
-void LOMView::ChangePlottersSettings()
-{
+void LOMView::InitThresholds() {
+    ui->sbBufferSize->setValue(model->GetInitParameters().GetBufSize());
+    ui->spinBoxAmplFWD->setValue(model->GetInitParameters().GetThresholdFE());
+    ui->spinBoxAmplBWD->setValue(model->GetInitParameters().GetThresholdBE());
+    ui->spinBoxCoinDur->setValue(model->GetInitParameters().GetCoincidenceDurationThreshold());
+    ui->spinBoxBkg->setValue(model->GetInitParameters().GetHitThreshold());
+}
+
+void LOMView::ChangePlottersSettings() {
     this->x0 = ui->xMinSpinBox->value();
     this->x1 = ui->xMaxSpinBox->value();
     this->ymaxFWD = ui->yFWDMaxSpinBox->value();
@@ -145,9 +160,7 @@ void LOMView::UpdateThresholds()
     int newValCoin = ui->spinBoxCoinDur->value();
     int newValBkg = ui->spinBoxBkg->value();
     int newBufSize = ui->sbBufferSize->value();
-    if(model->SetInitParameters(newValFE, newValBE, newValCoin, newValBkg, newBufSize))
-        ui->thresholdStatusLabel->setVisible(false);
-    else ui->thresholdStatusLabel->setVisible(true);
+    model->SetInitParameters(newValFE, newValBE, newValCoin, newValBkg, newBufSize);
 }
 
 void LOMView::UpdateSettings()
@@ -157,13 +170,11 @@ void LOMView::UpdateSettings()
     model->SetUpdateHistsFreq(int(1000 * ui->sbUpdateHistsFreq->value()));
 }
 
-void LOMView::StartUpdates()
-{
+void LOMView::StartUpdates() {
     UpdateSettings();
     model->Start();
     time.start();
-    //UpdatePlots();
-    //UpdateEndcapsWiggets();
+
     ui->pushButtonSetThresholds->setEnabled(false);
     ui->pushButtonSetSettings->setEnabled(false);
     ui->pushButtonStart->setEnabled(false);
@@ -171,8 +182,7 @@ void LOMView::StartUpdates()
     ui->pushButtonStop->setEnabled(true);
 }
 
-void LOMView::StopUpdates()
-{
+void LOMView::StopUpdates() {
     model->Stop();
     ui->pushButtonSetThresholds->setEnabled(true);
     ui->pushButtonGetThresholds->setEnabled(true);
@@ -181,15 +191,12 @@ void LOMView::StopUpdates()
     ui->pushButtonStop->setEnabled(false);
 }
 
-void LOMView::ChangePlottersMode()
-{
-    if(ui->checkBoxHitSector->isChecked())
-    {
+void LOMView::ChangePlottersMode() {
+    if(ui->checkBoxHitSector->isChecked()) {
         ui->fwdSectorCB->setEnabled(false);
         ui->bwdSectorCB->setEnabled(false);
     }
-    else
-    {
+    else {
         ui->fwdSectorCB->setEnabled(true);
         ui->bwdSectorCB->setEnabled(true);
     }
@@ -405,8 +412,7 @@ void LOMView::EditConfigurations()
     configWidget->show();
 }
 
-void LOMView::Reconnect()
-{
+void LOMView::Reconnect() {
     model->GetDataUpdater()->Connect();
 }
 
@@ -527,17 +533,11 @@ void LOMView::Load(QString filename)
     UpdateSettings();
     ChangePlottersSettings();
 }
-void LOMView::GetLOMInitParams()
-{
-    if(model->LoadInitParameters())
-    {
-        ui->sbBufferSize->setValue(model->GetInitParameters().GetBufSize());
-        ui->spinBoxAmplFWD->setValue(model->GetInitParameters().GetThresholdFE());
-        ui->spinBoxAmplBWD->setValue(model->GetInitParameters().GetThresholdBE());
-        ui->spinBoxCoinDur->setValue(model->GetInitParameters().GetCoincidenceDurationThreshold());
-        ui->spinBoxBkg->setValue(model->GetInitParameters().GetHitThreshold());
-        ui->thresholdStatusLabel->setVisible(false);
-    }
+
+
+
+void LOMView::GetLOMInitParams() {
+    model->LoadInitParameters();
 }
 
 void LOMView::LoadLOMInitParams()
@@ -546,20 +546,8 @@ void LOMView::LoadLOMInitParams()
                                "config/initparams.conf",
                                tr("Config (*.conf)"));
     if(!filename.isNull())
-        InitFromFile(filename);
+        model->GetInitParameters().Init(filename);
 
-}
-
-void LOMView::InitFromFile(QString filename)
-{
-    QMap<QString, QString> map = ConfigFileHandler::ReadFile(filename);
-    ui->sbBufferSize->setValue(map.value("BUF").toInt());
-    ui->spinBoxAmplFWD->setValue(map.value("FWD").toDouble());
-    ui->spinBoxAmplBWD->setValue(map.value("BWD").toDouble());
-    ui->spinBoxCoinDur->setValue(map.value("COIN").toInt());
-    ui->spinBoxBkg->setValue(map.value("HIT").toInt());
-    ui->thresholdStatusLabel->setVisible(true);
-    Logger::Log(Logger::INFO, "LOM init parameters are loaded from " + filename);
 }
 
 void LOMView::SaveLOMInitParams()
@@ -581,13 +569,6 @@ void LOMView::SaveLOMInitParams()
 
 void LOMView::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
-
-    /*ui->logBrowser->resize(ui->logBrowser->width(), 0.18 * this->height());
-    ui->coinWidget->resize(ui->coinWidget->width(), 0.18 * this->height());
-    ui->amplBWDWidget->resize(ui->amplBWDWidget->width(), 0.18 * this->height());
-    ui->amplFWDWidget->resize(ui->amplFWDWidget->width(), 0.18 * this->height());
-    ui->fwdEndcap->resize(0.18 * this->height(), 0.18 * this->height());
-    ui->bwdEndcap->resize(0.18 * this->height(), 0.18 * this->height());*/
 
     double scaleY = 0.16;
     double scaleX = 0.3;

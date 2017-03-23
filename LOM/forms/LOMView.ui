@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1268</width>
+    <width>1350</width>
     <height>866</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1200</width>
+    <width>1300</width>
     <height>800</height>
    </size>
   </property>
@@ -26,7 +26,7 @@
    <locale language="Estonian" country="Estonia"/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_8">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -574,6 +574,12 @@
             </item>
             <item row="2" column="1">
              <widget class="QLineEdit" name="leDeadTime">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>1 us</string>
               </property>
@@ -620,6 +626,12 @@
             </item>
             <item row="1" column="1">
              <widget class="QLineEdit" name="leDT">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>1 s</string>
               </property>
@@ -630,6 +642,12 @@
             </item>
             <item row="3" column="1">
              <widget class="QLineEdit" name="leBhabhaEvents">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>0</string>
               </property>
@@ -652,6 +670,12 @@
             </item>
             <item row="2" column="4">
              <widget class="QLineEdit" name="leTotalDeadTime">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>1 s</string>
               </property>
@@ -674,6 +698,12 @@
             </item>
             <item row="1" column="4">
              <widget class="QLineEdit" name="leVetoTime">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>2 us</string>
               </property>
@@ -684,6 +714,12 @@
             </item>
             <item row="3" column="4">
              <widget class="QLineEdit" name="leBackgroundEvents">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="text">
                <string>0</string>
               </property>
@@ -750,12 +786,12 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>50</height>
+              <height>35</height>
              </size>
             </property>
             <property name="font">
              <font>
-              <pointsize>16</pointsize>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -767,6 +803,26 @@
           </item>
           <item>
            <widget class="QCustomPlot" name="widgetLuminosity" native="true"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelBkg">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Background: not measured</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QCustomPlot" name="widgetBkg" native="true"/>
@@ -944,8 +1000,6 @@
                 <height>150</height>
                </size>
               </property>
-              <zorder></zorder>
-              <zorder>fwdSectorCB</zorder>
              </widget>
             </item>
             <item>
@@ -1376,16 +1430,6 @@
        </layout>
        <zorder>line</zorder>
        <zorder>line_2</zorder>
-       <zorder>widgetLuminosity</zorder>
-       <zorder>layoutWidget</zorder>
-       <zorder>widgetBkg</zorder>
-       <zorder>formLayoutWidget_3</zorder>
-       <zorder>labelLuminosity</zorder>
-       <zorder>gridLayoutWidget</zorder>
-       <zorder>formLayoutWidget</zorder>
-       <zorder>layoutWidget_2</zorder>
-       <zorder>formLayoutWidget_2</zorder>
-       <zorder>colorBarFwd</zorder>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
@@ -1402,7 +1446,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1268</width>
+     <width>1350</width>
      <height>27</height>
     </rect>
    </property>
@@ -1488,7 +1532,184 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButtonSetThresholds_2</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>UpdateThresholds()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>394</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>188</x>
+     <y>836</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSetSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>UpdateSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>280</x>
+     <y>556</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>269</x>
+     <y>841</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSaveSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>SaveLOMInitParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>142</x>
+     <y>390</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>31</x>
+     <y>836</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonLoadSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>LoadLOMInitParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>70</x>
+     <y>392</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>838</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonStop</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>StopUpdates()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>173</x>
+     <y>563</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>699</x>
+     <y>839</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonStart</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>StartUpdates()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>561</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>807</x>
+     <y>837</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSetThresholds</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>ChangePlottersSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>797</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>916</x>
+     <y>836</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxHitSector</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>ChangePlottersMode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1250</x>
+     <y>644</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1091</x>
+     <y>838</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logTypeCheckBox</sender>
+   <signal>activated(QString)</signal>
+   <receiver>LOMView</receiver>
+   <slot>SetLogType(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1035</x>
+     <y>815</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>634</x>
+     <y>843</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>logDepthspinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>LOMView</receiver>
+   <slot>SetLogDepth(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1152</x>
+     <y>800</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>413</x>
+     <y>843</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxSaveLog</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>LOMView</receiver>
+   <slot>SetLogToFile(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1260</x>
+     <y>810</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1191</x>
+     <y>842</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>UpdateThresholds()</slot>
   <slot>UpdateSettings()</slot>

@@ -130,7 +130,7 @@ public:
      * \brief GetInitParameters getter.
      * \return  init params.
      */
-    LOMInitParameters GetInitParameters() {return initParams;}
+    LOMInitParameters& GetInitParameters() {return initParams;}
 
     //! Update init parameters.
     /*!
