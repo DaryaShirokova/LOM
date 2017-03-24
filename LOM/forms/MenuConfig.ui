@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>195</height>
+    <width>550</width>
+    <height>243</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QFormLayout" name="formLayout">
      <item row="0" column="0">
@@ -68,106 +68,128 @@
        </item>
       </layout>
      </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_6">
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelHist">
+       <property name="text">
+        <string>Hist dir:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Events per file:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="sbRootFileSize">
-           <property name="maximum">
-            <number>1000000</number>
-           </property>
-           <property name="singleStep">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>10000</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
+        <widget class="QLineEdit" name="lineHistDir"/>
        </item>
        <item>
-        <widget class="QCheckBox" name="chbSaveRootFile">
+        <widget class="QPushButton" name="pbBrowseHist">
          <property name="text">
-          <string>Save events to .root file</string>
+          <string>Browse</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item>
-          <widget class="QCheckBox" name="chbAdvanced">
-           <property name="text">
-            <string>Advanced mode</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
        </item>
       </layout>
      </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QPushButton" name="pbApply">
-         <property name="text">
-          <string>Apply</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pbCancel">
-         <property name="text">
-          <string>Cancel</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pbSaveToFile">
-         <property name="text">
-          <string>Save to file</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_10">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="chbSaveHist">
+       <property name="text">
+        <string>Record histograms</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="label_11">
+       <property name="minimumSize">
+        <size>
+         <width>10</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QSpinBox" name="sbHistRecord">
+       <property name="maximum">
+        <number>1440</number>
+       </property>
+       <property name="value">
+        <number>60</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Record frequency (min)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="chbSaveRootFile">
+       <property name="text">
+        <string>Record events to .root file</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QSpinBox" name="sbRootFileSize">
+       <property name="maximum">
+        <number>1000000</number>
+       </property>
+       <property name="singleStep">
+        <number>10000</number>
+       </property>
+       <property name="value">
+        <number>10000</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Events per .root file:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QCheckBox" name="chbAdvanced">
+       <property name="text">
+        <string>Advanced mode</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QPushButton" name="pbCancel">
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QPushButton" name="pbApply">
+       <property name="text">
+        <string>Apply</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -182,8 +204,8 @@
    <slot>OnBrowseLog()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>398</x>
-     <y>19</y>
+     <x>538</x>
+     <y>30</y>
     </hint>
     <hint type="destinationlabel">
      <x>316</x>
@@ -198,8 +220,8 @@
    <slot>OnApply()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>109</y>
+     <x>539</x>
+     <y>141</y>
     </hint>
     <hint type="destinationlabel">
      <x>259</x>
@@ -214,28 +236,12 @@
    <slot>OnCancel()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>375</x>
-     <y>136</y>
+     <x>539</x>
+     <y>174</y>
     </hint>
     <hint type="destinationlabel">
      <x>295</x>
      <y>162</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pbSaveToFile</sender>
-   <signal>clicked()</signal>
-   <receiver>MenuConfig</receiver>
-   <slot>OnSave()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>382</x>
-     <y>177</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>191</x>
-     <y>159</y>
     </hint>
    </hints>
   </connection>
@@ -246,8 +252,8 @@
    <slot>OnBrowseData()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>387</x>
-     <y>59</y>
+     <x>538</x>
+     <y>72</y>
     </hint>
     <hint type="destinationlabel">
      <x>293</x>

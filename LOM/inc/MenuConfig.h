@@ -26,15 +26,19 @@ public:
     void SetWriteFile(bool writeFile);
     bool IsAdvanced();
     void SetAdvanced(bool advanced);
+    int GetHistRecordFreq();
+    void SetHistRecordFreq(int freq);
+    bool IfWriteHist();
+    void SetWriteHist(bool writeHist);
+    void SetHistDir(QString histDir);
+    QString GetHistDir();
 
 public slots:
     void OnBrowseLog();
     void OnBrowseData();
-    void OnSave();
     void OnApply();
     void OnCancel();
 signals:
-    void Save(MenuConfig* config, QString filename);
     void Apply(MenuConfig* config);
 };
 

@@ -262,7 +262,7 @@
              </layout>
             </item>
             <item row="8" column="1">
-             <widget class="QPushButton" name="pushButtonSetThresholds_2">
+             <widget class="QPushButton" name="pushButtonSetThresholds">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -521,13 +521,6 @@
               </property>
               <property name="value">
                <double>5.000000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QPushButton" name="pushButtonSetThresholds">
-              <property name="text">
-               <string>Set</string>
               </property>
              </widget>
             </item>
@@ -1534,7 +1527,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButtonSetThresholds_2</sender>
+   <sender>pushButtonSetThresholds</sender>
    <signal>clicked()</signal>
    <receiver>LOMView</receiver>
    <slot>UpdateThresholds()</slot>
@@ -1630,22 +1623,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButtonSetThresholds</sender>
-   <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
-   <slot>ChangePlottersSettings()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>231</x>
-     <y>797</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>916</x>
-     <y>836</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>checkBoxHitSector</sender>
    <signal>clicked()</signal>
    <receiver>LOMView</receiver>
@@ -1706,6 +1683,22 @@
     <hint type="destinationlabel">
      <x>1191</x>
      <y>842</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonGetThresholds</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMView</receiver>
+   <slot>GetLOMInitParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>331</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>401</x>
+     <y>44</y>
     </hint>
    </hints>
   </connection>

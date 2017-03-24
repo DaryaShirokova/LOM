@@ -79,30 +79,16 @@ private:
 public:
     LOMHistograms();
     QMap<QString, Hist*> GetHists() {return this->map;}
+    QStringList GetFavorite() {
+        QStringList l;
+
+        QMap<QString, Hist*>::iterator i;
+        for(i = map.begin(); i != map.end(); ++i)
+            if(i.value()->IsFavorite() && l.size() < 4)
+                l.push_back(i.key());
+        return l;
+    }
 };
-/*
- * class Compare {
-    public:
-        bool operator()(QString s1, QString s2) const {
-            int num1 = 0; int num2 = 0;
-            int n = std::min(s1.size(), s2.size());
-            for(int i = 0; i < n; i++) {
-                QChar c1 = s1.at(i);
-                QChar c2 = s1.at(i);
-                if(c1 != c2) {
-                    if(!c1.isDigit() || !c2.isDigit())
-                        return c1 < c2;
-                    else {
-                        num1 = s1.mid(i).toInt();
-                        num2 = s2.mid(i).toInt();
-                        return num1 < num2;
-                    }
-                }
-                if(i == n-1)
-                    return s1.size() < s2.size();
-            }
-        }
-};
-*/
+
 
 #endif // LOMHISTORRAMMS_H

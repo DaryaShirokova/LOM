@@ -17,12 +17,11 @@ MenuConfig::~MenuConfig()
     delete ui;
 }
 
-QString MenuConfig::GetDataDir()
-{
+QString MenuConfig::GetDataDir() {
     return ui->lineDataDir->text();
 }
-void MenuConfig::SetDataDir(QString dataDir)
-{
+
+void MenuConfig::SetDataDir(QString dataDir) {
     ui->lineDataDir->setText(dataDir);
 }
 
@@ -41,52 +40,60 @@ bool MenuConfig::IfWriteFile()
     return ui->chbSaveRootFile->isChecked();
 }
 
-void MenuConfig::SetWriteFile(bool writeFile)
-{
+void MenuConfig::SetWriteFile(bool writeFile) {
     ui->chbSaveRootFile->setChecked(writeFile);
 }
 
-bool MenuConfig::IsAdvanced()
-{
+bool MenuConfig::IsAdvanced() {
     return ui->chbAdvanced->isChecked();
 }
 
-void MenuConfig::SetAdvanced(bool advanced)
-{
+void MenuConfig::SetAdvanced(bool advanced) {
     ui->chbAdvanced->setChecked(advanced);
 }
 
-int MenuConfig::GetRootFileSize()
-{
+int MenuConfig::GetRootFileSize() {
     return ui->sbRootFileSize->value();
 }
 
-void MenuConfig::SetRootFileSize(int size)
-{
+void MenuConfig::SetRootFileSize(int size) {
     ui->sbRootFileSize->setValue(size);
 }
 
-void MenuConfig::OnApply()
-{
+int MenuConfig::GetHistRecordFreq() {
+    return ui->sbHistRecord->value();
+}
+
+void MenuConfig::SetHistRecordFreq(int freq) {
+    ui->sbHistRecord->setValue(freq);
+}
+
+bool MenuConfig::IfWriteHist() {
+    return ui->chbSaveHist->isChecked();
+}
+
+void MenuConfig::SetWriteHist(bool writeHist) {
+    ui->chbSaveHist->setChecked(writeHist);
+}
+
+void MenuConfig::SetHistDir(QString histDir) {
+    ui->lineHistDir->setText(histDir);
+}
+
+QString MenuConfig::GetHistDir() {
+    return ui->lineHistDir->text();
+}
+
+void MenuConfig::OnApply() {
     emit Apply(this);
 }
 
-void MenuConfig::OnSave()
-{
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"),
-                               "config/appset.conf",
-                               tr("Config (*.conf)"));
-    if(!filename.isNull())
-        emit Save(this, filename);
-}
 
-void MenuConfig::OnCancel()
-{
+void MenuConfig::OnCancel() {
     this->close();
 }
 
-void MenuConfig::OnBrowseData()
-{
+void MenuConfig::OnBrowseData() {
 
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                  ".",
@@ -96,8 +103,7 @@ void MenuConfig::OnBrowseData()
         ui->lineDataDir->setText(dir);
 }
 
-void MenuConfig::OnBrowseLog()
-{
+void MenuConfig::OnBrowseLog() {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                  ".",
                                                  QFileDialog::ShowDirsOnly

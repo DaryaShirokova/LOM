@@ -51,10 +51,11 @@
 #define READ_TIMEOUT    3000
 #define WRITE_TIMEOUT   3000
 
-#define DEFAULT_CONF    "config/appset.conf"
+#define DEFAULT_CONF    "config/appset.ini"
 #define DEFAULT_NETWORK "config/network.conf"
 #define DEFAULT_PARAM   "config/initparam.conf"
 #define DATA_PATH    "data/"
+#define HIST_PATH    "hist/"
 #define LOG_PATH    "log/"
 #define DEFAULT_TREE_SIZE   10000
 

@@ -32,6 +32,7 @@ private:
     int GetPagesNumber();
     int curPage;
     void SetLabel();
+    QStringList GetSortedKeys();
 
 public slots:
     void UpdateHists();

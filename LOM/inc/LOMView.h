@@ -27,6 +27,7 @@ class LOMView : public QMainWindow, public LogListener
     Q_OBJECT
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 public:
     //! Constructor.
     explicit LOMView(QWidget *parent = 0);
@@ -46,9 +47,8 @@ public:
      */
     void handleMessage(QString message);
 
-
-    void Save(QString filename, MenuConfig *config);
     void Load(QString filename);
+    void Save(QString filename);
 
     void InitFromFile(QString filename);
 private:
@@ -94,7 +94,7 @@ public slots:
     void EditConfigurations();
 
     void OnApplyCongiguration(MenuConfig* config);
-    void OnSaveConfiguration(MenuConfig* config, QString path);
+    void OnSaveConfiguration();
 
     void InitThresholds();
     void SetThresholdStatus(bool val);
@@ -103,6 +103,10 @@ public slots:
     void GetLOMInitParams();
     void LoadLOMInitParams();
     void SaveLOMInitParams();
+
+    void UpdateTiming();
+
+    void OnExit();
 };
 
 #endif // LOMVIEW_H

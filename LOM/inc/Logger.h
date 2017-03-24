@@ -172,16 +172,16 @@ public:
             break;
         }
 
-        if(!out.isEmpty())
-        {
+        if(!out.isEmpty()) {
             messageNum++;
 
-            if(writeToFile)
-            {
-                if(file.write(out.toStdString().c_str()) == -1)
-                {
-                    writeToFile = false;
-                    Log(LogLevel::ERROR, "Logger: error occured while writing to file: " + path);
+            if(writeToFile) {
+                qDebug() << "ab";
+                if(!file.exists() || file.write(out.toStdString().c_str()) != out.length()) {
+                    qDebug() << "aa";
+                    SetWriteToFile(true);
+                    Log(LogLevel::ERROR, "Logger: error occured while writing to log file. Creating new file.");
+
                 }
                 else file.flush();
             }

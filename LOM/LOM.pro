@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     src/LOMCounters.cpp \
     src/LOMHistograms.cpp \
     src/QHistPlot.cpp \
-    src/QHistPoolWidget.cpp
+    src/QHistPoolWidget.cpp \
+    src/AppSettings.cpp
 
 HEADERS  += inc/LOMView.h \
     inc/LOMInitParameters.h \
@@ -66,7 +67,8 @@ HEADERS  += inc/LOMView.h \
     inc/LOMCounters.h \
     inc/LOMHistograms.h \
     inc/QHistPlot.h \
-    inc/QHistPoolWidget.h
+    inc/QHistPoolWidget.h \
+    inc/AppSettings.h
 
 FORMS    += forms/LOMView.ui \
     forms/MenuConfig.ui \

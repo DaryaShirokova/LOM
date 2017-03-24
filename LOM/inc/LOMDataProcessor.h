@@ -9,6 +9,7 @@
 #include "inc/LOMDataUpdater.h"
 
 #include <QTimer>
+#include <QSettings>
 
 //! The model class of the program.
 /*!
@@ -34,9 +35,9 @@ private:
 
     LOMHistograms hists; /*!< Histograms collected by LOM.*/
 
-    long int updateAmplsFreq; /*!< The frequency of amplitudes updates.*/
-    long int updateCountersFreq; /*!< The frequency of counters updates.*/
-    long int updateHistsFreq;
+    double updateAmplsFreq; /*!< The frequency of amplitudes updates.*/
+    double updateCountersFreq; /*!< The frequency of counters updates.*/
+    double updateHistsFreq;
 
     bool isRunning; /*!< The status of data updates.*/
 
@@ -55,6 +56,10 @@ private:
     int treeSize;
     QString dataDir;
     QString CreateFileName();
+
+    bool writeHist;
+    int writeHistFreq;
+    QString histDir;
 
 public:
 
@@ -94,6 +99,8 @@ public:
      */
     double CalculateLuminosity();
 
+    void Save(QSettings *settings);
+    void Load(QSettings *settings);
     //**************************************************************************
     // Signals/slots.
     //**************************************************************************
@@ -111,15 +118,20 @@ private slots:
 
 
 public:
-    void SetWriteTree(bool writeTree);
-
-    void SaveTreeToFile();
-
+    void SetWriteTree(bool writeTree) { this->writeTree = writeTree; emit TreeSettingsUpdated();}
     bool GetWriteTree() {return writeTree;}
-    void SetDataDir(QString dataDir) {this->dataDir = dataDir;}
+    void SetDataDir(QString dataDir) {this->dataDir = dataDir; emit TreeSettingsUpdated();}
     QString GetDataDir() {return dataDir;}
     int GetTreeSize() {return treeSize;}
-    void SetTreeSize(int treeSize) {this->treeSize = treeSize;}
+    void SetTreeSize(int treeSize) {this->treeSize = treeSize; emit TreeSettingsUpdated();}
+
+    void SetWriteHist(bool writeHist) {this->writeHist = writeHist; emit HistSettingsUpdated();}
+    bool GetWriteHist() {return writeHist;}
+    void SetHistDir(QString histDir) {this->histDir = histDir; emit HistSettingsUpdated();}
+    QString GetHistDir() {return histDir;}
+    int GetWriteHistFreq() {return writeHistFreq;}
+    void SetWriteHistFreq(int writeHistFreq) {this->writeHistFreq = writeHistFreq; emit HistSettingsUpdated();}
+
     /*!
      * \brief IsRunning check the status of updates.
      * \return  the status of updates (true if updating).
@@ -167,11 +179,15 @@ public:
      * \brief SetUpdateAmplsFreq setter.
      * \param freq    update amplitudes frequence (msec).
      */
-    void SetUpdateAmplsFreq(int freq) {this->updateAmplsFreq = freq;}
+    void SetUpdateAmplsFreq(double freq) {this->updateAmplsFreq = freq; emit TimingUpdated();}
 
-    void SetUpdateCountersFreq(int freq) {this->updateCountersFreq = freq;}
+    void SetUpdateCountersFreq(double freq) {this->updateCountersFreq = freq; emit TimingUpdated();}
 
-    void SetUpdateHistsFreq(int freq) {this->updateHistsFreq = freq;}
+    void SetUpdateHistsFreq(double freq) {this->updateHistsFreq = freq; emit TimingUpdated();}
+
+    double GetUpdateCountersFreq() {return updateCountersFreq;}
+    double GetUpdateAmplsFreq() {return updateAmplsFreq;}
+    double GetUpdateHistsFreq() {return updateHistsFreq;}
 
     LOMDataUpdater* GetDataUpdater() {return updater;}
 
@@ -179,6 +195,9 @@ signals:
     void AmplitudesUpdated();
     void CountersUpdated();
     void HistsUpdated();
+    void TimingUpdated();
+    void TreeSettingsUpdated();
+    void HistSettingsUpdated();
 };
 
 #endif // LOMDATAPROCESSOR_H

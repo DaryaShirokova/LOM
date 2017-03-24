@@ -109,8 +109,8 @@ void QHistPoolWidget::ShowPrevious() {
             curPage = GetPagesNumber();
         else curPage--;
         activeHist.clear();
-        for(int i = (curPage-2)*4; i < (curPage-1)* 4; i++)
-            activeHist.push_back(histPool->GetHists().keys().at(i));
+        for(int i = (curPage-2)*4; i<(curPage-1)*4 && i<GetSortedKeys().size(); i++)
+            activeHist.push_back(GetSortedKeys().at(i));
     }
     if(activeHist.size() == 0 && GetPagesNumber() > 1)
         ShowPrevious();
@@ -125,8 +125,8 @@ void QHistPoolWidget::ShowNext() {
     }
     else {
         activeHist.clear();
-        for(int i = (curPage-1)*4; i < curPage * 4; i++)
-            activeHist.push_back(histPool->GetHists().keys().at(i));
+        for(int i=(curPage-1)*4; i < curPage*4 && i<GetSortedKeys().size(); i++)
+            activeHist.push_back(GetSortedKeys().at(i));
         curPage++;
     }
     if(activeHist.size() == 0 && GetPagesNumber() > 1)
@@ -145,13 +145,15 @@ int QHistPoolWidget::GetPagesNumber() {
 
 QStringList QHistPoolWidget::GetFavorite(){
     QStringList list;
+    QStringList keys = GetSortedKeys();
     QMap<QString, Hist*> map = histPool->GetHists();
-    QMap<QString, Hist*>::iterator i;
 
-    for (i = map.begin(); i != map.end(); ++i)
-        if(list.size() < 4 && i.value()->IsFavorite())
-            list.push_back(i.key());
-
+    for (QString key : keys) {
+        if(map.value(key)->IsFavorite())
+            list.push_back(key);
+        if(list.size() == 4)
+            break;
+    }
 
     return list;
 }
@@ -181,4 +183,36 @@ void QHistPoolWidget::keyPressEvent(QKeyEvent *event) {
         ShowPrevious();
     if(event->key() == Qt::Key_D)
         ShowNext();
+}
+
+bool mycomparator (QString s1, QString s2) {
+    int n = std::min(s1.length(), s2.length());
+    for(int i = 0; i < n; i++) {
+        QChar c1 = s1.at(i);
+        QChar c2 = s2.at(i);
+        if(c1.isDigit() && c2.isDigit()) {
+            int j, k;
+            for(j = i; j < s1.length(); j++)
+                if(!s1.at(j).isDigit())
+                    break;
+            int num1 = s1.mid(i, j-i+1).toInt();
+
+            for(k = i; k < s2.length(); k++)
+                if(!s2.at(k).isDigit())
+                    break;
+            int num2 = s2.mid(i, k-i+1).toInt();
+
+            if(num1 != num2)
+                return num1 < num2;
+
+        } else if (c1 != c2)
+            return c1 < c2;
+    }
+    return false;
+}
+
+QStringList QHistPoolWidget::GetSortedKeys() {
+    QStringList keys = histPool->GetHists().keys();
+    std::sort(keys.begin(), keys.end(), mycomparator);
+    return keys;
 }
