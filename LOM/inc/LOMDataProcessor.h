@@ -10,6 +10,7 @@
 
 #include <QTimer>
 #include <QSettings>
+#include <QTimer>
 
 //! The model class of the program.
 /*!
@@ -60,6 +61,7 @@ private:
     bool writeHist;
     int writeHistFreq;
     QString histDir;
+    QTimer* histsToFileTimer;
 
 public:
 
@@ -104,14 +106,15 @@ public:
     //**************************************************************************
     // Signals/slots.
     //**************************************************************************
-private slots:
+public slots:
 
     /*!
      * \brief Update    update event data.
      */
     void UpdateAmplitudes();
     void UpdateCounters();
-    void UpdateHists();
+    void UpdateHistograms();
+    void HistsToFile();
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************
@@ -125,7 +128,16 @@ public:
     int GetTreeSize() {return treeSize;}
     void SetTreeSize(int treeSize) {this->treeSize = treeSize; emit TreeSettingsUpdated();}
 
-    void SetWriteHist(bool writeHist) {this->writeHist = writeHist; emit HistSettingsUpdated();}
+    void SetWriteHist(bool writeHist) {
+        this->writeHist = writeHist;
+        if(histsToFileTimer == NULL)
+            return;
+        if(isRunning && writeHist)
+            histsToFileTimer->start(writeHistFreq * 60 * 1000);
+        else if(histsToFileTimer->isActive())
+            histsToFileTimer->stop();
+        emit HistSettingsUpdated();
+    }
     bool GetWriteHist() {return writeHist;}
     void SetHistDir(QString histDir) {this->histDir = histDir; emit HistSettingsUpdated();}
     QString GetHistDir() {return histDir;}
@@ -184,6 +196,12 @@ public:
     void SetUpdateCountersFreq(double freq) {this->updateCountersFreq = freq; emit TimingUpdated();}
 
     void SetUpdateHistsFreq(double freq) {this->updateHistsFreq = freq; emit TimingUpdated();}
+
+    void SetFrequencies(double fCounters, double fAmpls, double fHist) {
+        this->updateCountersFreq = fCounters;
+        this->updateAmplsFreq = fAmpls;
+        this->updateHistsFreq = fHist;
+    }
 
     double GetUpdateCountersFreq() {return updateCountersFreq;}
     double GetUpdateAmplsFreq() {return updateAmplsFreq;}

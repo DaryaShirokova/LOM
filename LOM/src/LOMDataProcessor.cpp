@@ -5,6 +5,11 @@ LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
 {
     this->updater = updater;
 
+    timerAmpls = new QTimer(this);
+    timerCounters = new QTimer(this);
+    timerHists = new QTimer(this);
+    histsToFileTimer = new QTimer(this);
+
     isRunning = false;
     SetWriteTree(false);
     SetWriteHist(false);
@@ -13,17 +18,18 @@ LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
     histDir = HIST_PATH;
 
     // Connect timers.
-    timerAmpls = new QTimer(this);
-    timerCounters = new QTimer(this);
-    timerHists = new QTimer(this);
-
     connect(timerAmpls, SIGNAL(timeout()), SLOT(UpdateAmplitudes()));
     connect(timerCounters, SIGNAL(timeout()), SLOT(UpdateCounters()));
-    connect(timerHists, SIGNAL(timeout()),SLOT(UpdateHists()));
+    connect(timerHists, SIGNAL(timeout()),SLOT(UpdateHistograms()));
+    connect(histsToFileTimer, SIGNAL(timeout()), SLOT(HistsToFile()));
 }
 
 LOMDataProcessor::~LOMDataProcessor()
 {
+    delete timerAmpls;
+    delete timerCounters;
+    delete timerHists;
+    delete histsToFileTimer;
 }
 
 void LOMDataProcessor::Start() {
@@ -34,6 +40,8 @@ void LOMDataProcessor::Start() {
         timerAmpls->start(updateAmplsFreq * 1000);
         timerCounters->start(updateCountersFreq * 1000);
         timerHists->start(updateHistsFreq * 1000);
+        if(writeHist)
+            histsToFileTimer->start(writeHistFreq * 60 * 1000);
         if(writeTree)
             counters.InitTree();
     }
@@ -45,6 +53,7 @@ void LOMDataProcessor::Stop()
         timerAmpls->stop();
         timerCounters->stop();
         timerHists->stop();
+        histsToFileTimer->stop();
         isRunning = false;
         Logger::Log(Logger::LogLevel::INFO, "Data updating process has been stopped.");
         if(writeTree)
@@ -82,7 +91,7 @@ void LOMDataProcessor::UpdateCounters() {
 
 }
 
-void LOMDataProcessor::UpdateHists() {
+void LOMDataProcessor::UpdateHistograms() {
     if(updater->ReadHists(&hists))     {
         Logger::Log(Logger::LogLevel::DEBUG, "Received hists.");
         emit HistsUpdated();
@@ -102,7 +111,7 @@ bool LOMDataProcessor::SetInitParameters(double thresholdFE, double thresholdBE,
     initParams.Init(thresholdFE, thresholdBE, coincidenceDurationThreshold,
                     hitThreshold, bufSize);
     if(updater->WriteInitParameters(&initParams)) {
-        Logger::Log(Logger::LogLevel::INFO, "Initialisation parameters has been"
+        Logger::Log(Logger::LogLevel::INFO, "Initialisation parameters have been"
                                             " succesfully updated.");
         initParams.SetStatus(true);
         return true;
@@ -133,6 +142,9 @@ bool LOMDataProcessor::LoadInitParameters() {
     return false;
 }
 
+void LOMDataProcessor::HistsToFile() {
+    hists.SaveToFiles(histDir);
+}
 
 QString LOMDataProcessor::CreateFileName() {
     QString name;
@@ -173,10 +185,14 @@ void LOMDataProcessor::Save(QSettings* settings) {
     settings->setValue("write_hist", this->writeHist);
     settings->setValue("write_hist_freq_min", this->writeHistFreq);
     settings->setValue("hist_dir", this->histDir);
-
-    for(int i = 0; i < hists.GetFavorite().size(); i++)
+    settings->setValue("hist_run_n", hists.GetRunNum());
+    int i;
+    for(i = 0; i < hists.GetFavorite().size(); i++)
         settings->setValue("favorite_hist"+QString::number(i+1),
                            hists.GetFavorite().at(i));
+    for(int j = i; j < 4; j++)
+        settings->setValue("favorite_hist"+QString::number(j+1),
+                           "");
 
     settings->endGroup();
 }
@@ -194,12 +210,14 @@ void LOMDataProcessor::Load(QSettings* settings) {
     writeHist = settings->value("write_hist", false).toBool();
     writeHistFreq = settings->value("write_hist_freq_min", 60).toInt();
     histDir = settings->value("hist_dir", HIST_PATH).toString();
-    settings->endGroup();
+    hists.SetRunNum(settings->value("hist_run_n", 0).toInt());
+
     for(int i = 0; i < 4; i++) {
         QString key = settings->value("favorite_hist"+QString::number(i+1), "").toString();
         if(hists.GetHists().contains(key))
             hists.GetHists().value(key)->SetFavorite(true);
     }
+    settings->endGroup();
     emit TimingUpdated();
     emit TreeSettingsUpdated();
     emit HistSettingsUpdated();

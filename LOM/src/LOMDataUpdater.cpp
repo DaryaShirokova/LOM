@@ -1,7 +1,6 @@
 #include "inc/LOMDataUpdater.h"
 #include "inc/Logger.h"
 #include "inc/Constants.h"
-#include "inc/ConfigFileHandler.h"
 
 #include <QByteArray>
 #include <QFile>
@@ -10,7 +9,7 @@
 #include <TFile.h>
 #include <time.h>
 #include <QDebug>
-
+#include <QSettings>
 /*!
  * \brief getByte   get Nth byte of interer value.
  * \param num       input number.
@@ -73,19 +72,23 @@ bool LOMDataUpdater::Configure(QString config) {
                 << REG_BHABHA << REG_BKG << REG_DEADT << REG_TOTDEATT
                 << REG_DELTAT << REG_VETO;
     expectedMem << MEM_BLOCK1 << MEM_BLOCK2 << MEM_BLOCK3 << MEM_BLOCK4;
-    for(int i = 1; i <= SECTOR_NUM; i++)
-    {
+    for(int i = 1; i <= SECTOR_NUM; i++) {
         expectedMem << QString(HIST_AMPLFE) + QString::number(i);
         expectedMem << QString(HIST_AMPLBE) + QString::number(i);
     }
 
-    QMap<QString, QString> map = ConfigFileHandler::ReadFile(config);
+    QSettings settings(config, QSettings::IniFormat);
+    QStringList keys = settings.allKeys();
 
-    for(QString key : map.keys()) {
+    for(QString key : keys) {
+        int k = key.indexOf('/');
+        QString subkey = key;
+        if(k != -1)
+            subkey = key.mid(k + 1, key.length());
 
         // IP address.
-        QString value = map.value(key);
-        if(key == "IP") {
+        if(subkey == "IP") {
+            QString value = settings.value(key, "127.0.0.1").toString();
             check++;
             QRegExp ipreg(VALIDIP);
             if (!ipreg.exactMatch(value)) {
@@ -99,33 +102,30 @@ bool LOMDataUpdater::Configure(QString config) {
 
         // Port.
         bool res;
-        if(key == "PORT") {
+        if(subkey == "PORT") {
             check++;
-            int newport = value.toInt(&res, 10);
-            if(!res) {
-                ParseError(key);
-                return false;
-            }
-            this->port = newport;
+            this->port = settings.value(key, 0).toInt();
             continue;
         }
 
+        QString value = settings.value(key, "0xFFFF").toString();
         // Parse address.
         int addr = value.toInt(&res, 16);
         if(!res) {
-            ParseError(key);
+            Logger::Log(Logger::ERROR, "LOMDataUpdater: " + value +
+                                      " is not an address.");
             return false;
         }
         // Memory address.
-        if(expectedMem.contains(key)) {
-            memMap.insert(key, addr);
-            expectedMem.removeAll(key);
+        if(expectedMem.contains(subkey)) {
+            memMap.insert(subkey, addr);
+            expectedMem.removeAll(subkey);
             continue;
         }
         // Register address.
-        if(expectedReg.contains(key)) {
-            regMap.insert(key, addr);
-            expectedReg.removeAll(key);
+        if(expectedReg.contains(subkey)) {
+            regMap.insert(subkey, addr);
+            expectedReg.removeAll(subkey);
             continue;
         }
         Logger::Log(Logger::ERROR, "LOMDataUpdater: unknown key " + key);
@@ -145,8 +145,14 @@ bool LOMDataUpdater::Configure(QString config) {
                                    "are not configured." + str);
         return false;
     }
-    Logger::Log(Logger::INFO, "LOMDataUpdater: Network settings are loaded from "
+    Logger::Log(Logger::DEBUG, "LOMDataUpdater: Network settings are loaded from "
                             + config);
+    if(settings.status() == QSettings::AccessError)
+        Logger::Log(Logger::LogLevel::ERROR,
+                    "Access error occured while loading configurations: " + config);
+    if(settings.status() == QSettings::FormatError)
+        Logger::Log(Logger::LogLevel::ERROR,
+                    "Wrong format of the configuration file: " + config);
     return true;
 }
 

@@ -103,6 +103,16 @@ void MenuConfig::OnBrowseData() {
         ui->lineDataDir->setText(dir);
 }
 
+void MenuConfig::OnBrowseHist() {
+
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                 ".",
+                                                 QFileDialog::ShowDirsOnly
+                                                 | QFileDialog::DontResolveSymlinks);
+    if(!dir.isNull())
+        ui->lineHistDir->setText(dir);
+}
+
 void MenuConfig::OnBrowseLog() {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                  ".",

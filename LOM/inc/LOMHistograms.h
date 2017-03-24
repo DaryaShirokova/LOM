@@ -5,6 +5,8 @@
 #include "inc/Logger.h"
 #include <QMap>
 #include <QVector>
+#include <QFile>
+#include <QString>
 #include <iostream>
 
 // lomdu - readhist. читать регистры из файла (переделать полностью)
@@ -25,6 +27,20 @@ public:
             xval.push_back(x0 + i * (x1-x0)/(nbins-1));
         return xval;
     }
+    void ToFile(QString filename) {
+        QFile file(filename);
+        file.open(QIODevice::WriteOnly | QIODevice::Text);
+        if(file.isOpen() && file.exists()) {
+            for(int i = 0; i < hist.size(); i++){
+                QString str = QString::number(GetXValues().at(i))+"\t"+QString::number(hist.at(i))+"\n";
+                file.write(str.toStdString().c_str());
+            }
+            file.flush();
+            file.close();
+        }
+        else Logger::Log(Logger::ERROR, "LOMHistograms: can't save histograms to file " +
+                         filename + ". " + file.errorString());
+    }
 
     double GetX0() {return x0;}
     double GetX1() {return x1;}
@@ -40,9 +56,6 @@ public:
             Logger::Log(Logger::DEBUG, "Logger: unexpected number of bins.");
             nbins = hist.size();
         }
-        for(int i = 0; i < hist.size(); i++)
-            std::cout << hist.at(i) << " ";
-        std::cout << std::endl;
         this->hist = hist;
     }
 
@@ -75,7 +88,7 @@ private:
 class LOMHistograms {
 private:
     QMap<QString, Hist*> map;
-
+    int runNum;
 public:
     LOMHistograms();
     QMap<QString, Hist*> GetHists() {return this->map;}
@@ -88,6 +101,9 @@ public:
                 l.push_back(i.key());
         return l;
     }
+    void SaveToFiles(QString path);
+    void SetRunNum(int runNum) {this->runNum = runNum; }
+    int GetRunNum() {return runNum; }
 };
 
 

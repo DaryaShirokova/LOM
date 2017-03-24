@@ -61,7 +61,6 @@ HEADERS  += inc/LOMView.h \
     inc/LogListener.h \
     inc/TCPTransporter.h \
     inc/MenuConfig.h \
-    inc/ConfigFileHandler.h \
     inc/QNetworkSettings.h \
     inc/LOMAmplitudes.h \
     inc/LOMCounters.h \

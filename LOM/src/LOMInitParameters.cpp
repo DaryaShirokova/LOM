@@ -1,6 +1,8 @@
 #include "../inc/LOMInitParameters.h"
 
 #include <QDebug>
+#include <QSettings>
+
 #include "inc/ConfigFileHandler.h"
 
 LOMInitParameters::LOMInitParameters() {
@@ -30,21 +32,41 @@ void LOMInitParameters::Init(LOMInitParameters *newInit) {
 }
 
 void LOMInitParameters::Init(QString filename) {
-    QMap<QString, QString> map = ConfigFileHandler::ReadFile(filename);
-    this->Init(map.value("FWD").toDouble(),
-               map.value("BWD").toDouble(),
-               map.value("COIN").toInt(),
-               map.value("HIT").toInt(),
-               map.value("BUF").toInt());
-    Logger::Log(Logger::INFO, "LOM init parameters are loaded from " + filename);
+    QSettings settings(filename, QSettings::IniFormat );
+
+    if(!settings.childGroups().contains("Thresholds"))
+        Logger::Log(Logger::ERROR, "Init file doesn't contain threshold section!"
+                                   " Default parameters are set.");
+    settings.beginGroup( "Thresholds" );
+    double thresholdFETemp = settings.value("fwd", DEFAULT_FWD_TH).toDouble();
+    double thresholdBETemp = settings.value("bwd", DEFAULT_BWD_TH).toDouble();
+    int coincidenceDurationThresholdTemp = settings.value("coin_dur", DEFAULT_COIN).toInt();
+    int hitThresholdTemp = settings.value("hit", DEFAULT_HIT).toInt();
+    settings.endGroup();
+
+    if(!settings.childGroups().contains("Readout"))
+        Logger::Log(Logger::ERROR, "Init file doesn't contain readout section!"
+                                   " Default parameters are set.");
+    settings.beginGroup( "Readout" );
+    int bufSizeTemp = settings.value("buf", DEFAULT_BUF).toInt();
+    settings.endGroup();
+
+    Init(thresholdFETemp, thresholdBETemp, coincidenceDurationThresholdTemp,
+         hitThresholdTemp, bufSizeTemp);
+    Logger::Log(Logger::DEBUG, "LOM init parameters are loaded from " + filename);
 }
 
 void LOMInitParameters::Save(QString filename) {
-    QMap<QString, QString> map;
-    map.insert("FWD", QString::number(thresholdFE));
-    map.insert("BWD", QString::number(thresholdBE));
-    map.insert("COIN",QString::number(coincidenceDurationThreshold));
-    map.insert("HIT", QString::number(hitThreshold));
-    map.insert("BUF", QString::number(bufSize));
-    ConfigFileHandler::WriteFile(filename, map);
+    QSettings settings(filename, QSettings::IniFormat );
+
+    settings.beginGroup( "Thresholds" );
+    settings.setValue("fwd", thresholdFE);
+    settings.setValue("bwd", thresholdBE);
+    settings.setValue("coin_dur", coincidenceDurationThreshold);
+    settings.setValue("hit", hitThreshold);
+    settings.endGroup();
+    settings.beginGroup( "Readout" );
+    settings.setValue("buf", bufSize);
+    settings.endGroup();
+    settings.sync();
 }

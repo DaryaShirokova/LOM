@@ -36,6 +36,7 @@ public:
 public slots:
     void OnBrowseLog();
     void OnBrowseData();
+    void OnBrowseHist();
     void OnApply();
     void OnCancel();
 signals:

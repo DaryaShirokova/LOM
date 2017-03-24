@@ -39,6 +39,11 @@ public slots:
     void ShowPrevious();
     void ShowNext();
     void CheckFavotite();
+    void Save();
+    void Update();
+signals:
+    void UpdateRequired();
+    void SaveHist();
 };
 
 #endif // QHISTPOOLWIDGET_H

@@ -53,11 +53,19 @@
 
 #define DEFAULT_CONF    "config/appset.ini"
 #define DEFAULT_NETWORK "config/network.conf"
-#define DEFAULT_PARAM   "config/initparam.conf"
+#define DEFAULT_PARAM   "config/init.param"
 #define DATA_PATH    "data/"
 #define HIST_PATH    "hist/"
 #define LOG_PATH    "log/"
 #define DEFAULT_TREE_SIZE   10000
+
+#define LOG_FILE_SIZE   100
+
+#define DEFAULT_HIT     20
+#define DEFAULT_COIN    20
+#define DEFAULT_FWD_TH  3.
+#define DEFAULT_BWD_TH  1.
+#define DEFAULT_BUF     64
 
 #define VALIDIP "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 #endif // CONSTANTS_H

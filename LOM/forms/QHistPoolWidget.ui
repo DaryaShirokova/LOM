@@ -142,9 +142,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pbSave</sender>
+   <signal>clicked()</signal>
+   <receiver>QHistPoolWidget</receiver>
+   <slot>Save()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>840</x>
+     <y>543</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>717</x>
+     <y>462</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbUpdate</sender>
+   <signal>clicked()</signal>
+   <receiver>QHistPoolWidget</receiver>
+   <slot>Update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>873</x>
+     <y>501</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>642</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>ShowPrevious()</slot>
   <slot>ShowNext()</slot>
+  <slot>Save()</slot>
+  <slot>Update()</slot>
  </slots>
 </ui>

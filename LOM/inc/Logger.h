@@ -6,6 +6,7 @@
 #include <QFile>
 
 #include "inc/LogListener.h"
+#include "inc/Constants.h"
 
 #include <QDir>
 #include <QDebug>
@@ -48,6 +49,12 @@ public:
         }
     }
 
+    static void NewLogFile() {
+        linesWritten = 0;
+        file.close();
+        SetPath(path);
+    }
+
     //! Convert string to enum.
     /*!
      * \param str   input string (INFO, DEBUG, ERROR).
@@ -75,13 +82,12 @@ private:
     static bool writeToFile; /*!< Switch on / off writing to file.*/
     static LogLevel logLevel; /*!< The detalization of logging.*/
     static QVector<LogListener*> listeners; /*!< Listeners of logger.*/
-
+    static int linesWritten;
 
     /*!
      * \brief OpenFile  auxiliary function for opening file.
      */
-    static void OpenFile()
-    {
+    static void OpenFile() {
         if(file.isOpen())
             file.close();
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
@@ -129,8 +135,10 @@ public:
     static void SetWriteToFile(bool val)
     {
         writeToFile = val;
-        if(val == true)
+        if(val == true) {
             OpenFile();
+            linesWritten = 0;
+        }
         else if(file.isOpen()) file.close();
 
     }
@@ -176,14 +184,17 @@ public:
             messageNum++;
 
             if(writeToFile) {
-                qDebug() << "ab";
                 if(!file.exists() || file.write(out.toStdString().c_str()) != out.length()) {
-                    qDebug() << "aa";
                     SetWriteToFile(true);
                     Log(LogLevel::ERROR, "Logger: error occured while writing to log file. Creating new file.");
 
                 }
-                else file.flush();
+                else {
+                    file.flush();
+                    linesWritten++;
+                    if(linesWritten >= LOG_FILE_SIZE)
+                        NewLogFile();
+                }
             }
 
             for(LogListener* l: listeners)

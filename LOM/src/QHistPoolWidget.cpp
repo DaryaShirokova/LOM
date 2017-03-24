@@ -70,6 +70,7 @@ void QHistPoolWidget::resizeEvent(QResizeEvent *event) {
 
     for(int i = 0; i < plotsPool.size(); i++)
         plotsPool.at(i)->raise();
+    UpdateHists();
 }
 
 void QHistPoolWidget::paintEvent(QPaintEvent *event) {
@@ -119,6 +120,7 @@ void QHistPoolWidget::ShowPrevious() {
 }
 
 void QHistPoolWidget::ShowNext() {
+    activeHist.clear();
     if(curPage == GetPagesNumber()) {
         activeHist = GetFavorite();
         curPage = 1;
@@ -165,10 +167,13 @@ void QHistPoolWidget::SetModel(LOMHistograms *histPool) {
     if(histPool == NULL)
         return;
 
-    activeHist.clear();
-    activeHist = GetFavorite();
-    if(activeHist.size() == 0)
-        ShowNext();
+    if(GetFavorite().size() != 0) {
+        curPage = 1;
+        activeHist = GetFavorite();
+        UpdateHists();
+    }
+    else ShowNext();
+
 }
 
 void QHistPoolWidget::CheckFavotite() {
@@ -215,4 +220,12 @@ QStringList QHistPoolWidget::GetSortedKeys() {
     QStringList keys = histPool->GetHists().keys();
     std::sort(keys.begin(), keys.end(), mycomparator);
     return keys;
+}
+
+void QHistPoolWidget::Save() {
+    emit SaveHist();
+}
+
+void QHistPoolWidget::Update() {
+    emit UpdateRequired();
 }

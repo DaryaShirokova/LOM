@@ -1,7 +1,6 @@
 #include "inc/LOMView.h"
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
-#include "inc/ConfigFileHandler.h"
 #include "inc/QNetworkSettings.h"
 #include "ui_LOMView.h"
 
@@ -69,8 +68,11 @@ void LOMView::SetModel(LOMDataProcessor *model) {
     connect(model, SIGNAL(CountersUpdated()), SLOT(UpdateCounters()));
 
     widgetHists->SetModel(model->GetHistograms());
+    connect(widgetHists, SIGNAL(UpdateRequired()), model, SLOT(UpdateHistograms()));
     connect(model, SIGNAL(HistsUpdated()), widgetHists, SLOT(UpdateHists()));
     connect(model, SIGNAL(TimingUpdated()), this, SLOT(UpdateTiming()));
+    connect(widgetHists, SIGNAL(SaveHist()), model, SLOT(HistsToFile()));
+
 
     connect(&(model->GetInitParameters()),
             SIGNAL(StatusChanged(bool)),this, SLOT(SetThresholdStatus(bool)));
@@ -144,8 +146,7 @@ void LOMView::ChangePlottersSettings() {
     ui->coinWidget->replot();
 }
 
-void LOMView::UpdateCounters()
-{
+void LOMView::UpdateCounters() {
 
     if(time.restart() < 900)
         return;
@@ -163,8 +164,7 @@ void LOMView::UpdateAll()
     UpdateEndcapsWiggets();
 }
 
-void LOMView::UpdateThresholds()
-{
+void LOMView::UpdateThresholds() {
     double newValFE = ui->spinBoxAmplFWD->value();
     double newValBE = ui->spinBoxAmplBWD->value();
     int newValCoin = ui->spinBoxCoinDur->value();
@@ -174,9 +174,9 @@ void LOMView::UpdateThresholds()
 }
 
 void LOMView::UpdateSettings() {
-    model->SetUpdateAmplsFreq(ui->sbUpdateAmplsFreq->value());
-    model->SetUpdateCountersFreq(ui->sbUpdCountersFreq->value());
-    model->SetUpdateHistsFreq(ui->sbUpdateHistsFreq->value());
+    model->SetFrequencies(ui->sbUpdCountersFreq->value(),
+                          ui->sbUpdateAmplsFreq->value(),
+                          ui->sbUpdateHistsFreq->value());
 }
 
 void LOMView::StartUpdates() {
@@ -493,7 +493,6 @@ void LOMView::Save(QString filename) {
     settings.endGroup();
 
     model->Save(&settings);
-
     settings.sync();
 }
 
@@ -531,6 +530,7 @@ void LOMView::Load(QString filename) {
     SetLogToFile(ui->checkBoxSaveLog->isChecked());
     SetLogDepth(ui->logDepthspinBox->value());
     SetLogType(ui->logTypeCheckBox->currentText());
+    widgetHists->SetModel(model->GetHistograms());
     Logger::Log(Logger::LogLevel::DEBUG, "App configurations are loaded from " + filename);
 
 }
@@ -544,8 +544,8 @@ void LOMView::GetLOMInitParams() {
 void LOMView::LoadLOMInitParams()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Save File"),
-                               "config/initparams.conf",
-                               tr("Config (*.conf)"));
+                               DEFAULT_PARAM,
+                               tr("Config (*.param)"));
     if(!filename.isNull())
         model->GetInitParameters().Init(filename);
 
@@ -554,17 +554,10 @@ void LOMView::LoadLOMInitParams()
 void LOMView::SaveLOMInitParams()
 {
     QString filename = QFileDialog::getSaveFileName(this, tr("Save File"),
-                               "config/initparams.conf",
-                               tr("Config (*.conf)"));
-    if(!filename.isNull())
-    {
-        QMap<QString, QString> map;
-        map.insert("FWD", QString::number(ui->spinBoxAmplFWD->value()));
-        map.insert("BWD", QString::number(ui->spinBoxAmplBWD->value()));
-        map.insert("COIN", QString::number(ui->spinBoxCoinDur->value()));
-        map.insert("HIT", QString::number(ui->spinBoxBkg->value()));
-        map.insert("BUF", QString::number(ui->sbBufferSize->value()));
-        ConfigFileHandler::WriteFile(filename, map);
+                               DEFAULT_PARAM,
+                               tr("Config (*.param)"));
+    if(!filename.isNull()) {
+        model->GetInitParameters().Save(filename);
     }
 }
 
