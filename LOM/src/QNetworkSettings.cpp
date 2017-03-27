@@ -1,6 +1,5 @@
 #include "inc/QNetworkSettings.h"
 #include "ui_QNetworkSettings.h"
-#include "inc/ConfigFileHandler.h"
 
 #include <QDebug>
 #include <QSettings>

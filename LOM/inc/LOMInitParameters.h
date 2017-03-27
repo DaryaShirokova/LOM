@@ -2,10 +2,11 @@
 #define LOMINITPARAMETERS_H
 
 #include <QObject>
+
 //! A class containing initial parameters of LOM.
 /*!
   A class containing thresholds, time settings and other information which can
-  be configured.
+  be configured in LOM.
 */
 
 class LOMInitParameters : public QObject
@@ -14,15 +15,12 @@ class LOMInitParameters : public QObject
 private:
     double thresholdFE; /*!< Forward endcap hit threshlold. */
     double thresholdBE; /*!< Backward endcap hit threshlold. */
-
     //! The minimal interval when both signals (FE, BE) must exceed thresholds.
     int coincidenceDurationThreshold;
-
     int hitThreshold; /*!< The threshold for quality signal detection. */
 
-    int bufSize;
-
-    bool status;
+    int bufSize;    /*!< Size of buffer. */
+    bool status;    /*!<  Shows whether init parameters are consistent with FPGA settings. */
 
 public:
 
@@ -30,15 +28,20 @@ public:
     // Constructors/destructors.
     //**************************************************************************
 
-    //! A default constructor.
-    /*! A void constructor to initialize the module by default parameters. */
+    /*!
+     * \brief LOMInitParameters A default constructor.
+     */
     LOMInitParameters();
 
     //! A default destructor.
     ~LOMInitParameters();
 
-    //! Initialisation function.
+    //**************************************************************************
+    // Initialisation.
+    //**************************************************************************
+
     /*!
+    * \brief Init Initialisation function.
     * \param thresholdFE forward endcap hit threshlold.
     * \param thresholdBE backward endcap hit threshlold.
     * \param coincidenceDurationThreshold the minimal coincidenc interval.
@@ -48,74 +51,59 @@ public:
               int coincidenceDurationThreshold,
               int hitThreshold, int bufSize);
 
+    /*!
+     * \brief Init  Initialisation function.
+     * \param newInit   Initialisation parameters to copy.
+     */
     void Init(LOMInitParameters* newInit);
 
+    /*!
+     * \brief Init  Initialisation function.
+     * \param filename  file with initialisation prameters.
+     */
     void Init(QString filename);
 
+    /*!
+     * \brief Save  Save current initialisation to a file.
+     * \param filename  file to save initialisation parameters.
+     */
     void Save(QString filename);
 
     //**************************************************************************
     // Getters/Setters.
     //**************************************************************************
+
     void SetStatus(bool status) { this->status = status; emit StatusChanged(status); }
-
     bool GetStatus() {return this->status;}
-
-    //! Setter
-    /*!
-     * \param thresholdFE a new value of threshold for forward part.
-     */
     void SetThresholdFE(double thresholdFE) {this->thresholdFE = thresholdFE;}
-
-    //! Getter
-    /*!
-     * \return current value of thresholdFE.
-     */
     double GetThresholdFE() {return this->thresholdFE;}
-
-    //! Setter
-    /*!
-     * \param thresholdBE a new value of threshold for backward part.
-     */
     void SetThresholdBE(double thresholdBE) {this->thresholdBE = thresholdBE;}
-
-    //! Getter
-    /*!
-     * \return current value of thresholdBE.
-     */
     double GetThresholdBE() {return this->thresholdBE;}
-
-    //! Setter
-    /*!
-     * \param coincidenceDurationThreshold a new value of coincidence threshold.
-     */
     void SetCoincidenceDurationThreshold(unsigned int coincidenceDurationThreshold)
            {this->coincidenceDurationThreshold = coincidenceDurationThreshold;}
-
-    //! Getter
-    /*!
-     * \return current value of coincidenceDurationThreshold.
-     */
     int GetCoincidenceDurationThreshold()
                               {return this->coincidenceDurationThreshold;}
-
-    //! Setter
-    /*!
-     * \param backgroundThreshold a new value of background threshold.
-     */
     void SetHitThreshold(unsigned int hitThreshold)
                               {this->hitThreshold = hitThreshold;}
 
-    //! Getter
-    /*!
-     * \return current value of hitThreshold.
-     */
     int GetHitThreshold() {return this->hitThreshold;}
-
     void SetBufSize(int bufSize) {this->bufSize = bufSize;}
     int GetBufSize() {return this->bufSize;}
+
+
+    //**************************************************************************
+    // Signals.
+    //**************************************************************************
+
 signals:
+    /*!
+     * \brief StatusChanged Status of data consistence.
+     */
     void StatusChanged(bool);
+
+    /*!
+     * \brief ParamsChanged Parameters has been changed.
+     */
     void ParamsChanged();
 
 };

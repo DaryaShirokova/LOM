@@ -9,39 +9,48 @@
 #include <QString>
 #include <iostream>
 
-// lomdu - readhist. читать регистры из файла (переделать полностью)
-// настроить таймеры и сигналы в датапроцессоре
+
+/*!
+  A class representing simple histogram.
+*/
 class Hist {
+private:
+    /*!
+     * \brief Hist  Default constructor.
+     */
+    Hist();
+
+    QVector<int> hist; /*!< Hist data. */
+    int nbins;  /*!< Number of bins. */
+    double x0;  /*!< The left x value */
+    double x1;  /*!< The right x value. */
+    QString xTitle; /*!< x axis title. */
+    QString yTitle; /*!< y axis title. */
+    QString title;  /*!< Histogram title. */
+    bool favorite;  /*!< Favorite flag. */
+
 public:
+    /*!
+     * \brief Hist  Constructor.
+     * \param nbins number of bins.
+     * \param x0    the left x value.
+     * \param x1    the right x value.
+     * \param title histogram title.
+     * \param xTitle    x axis title.
+     * \param yTitle    y axis title.
+     */
+    Hist(int nbins, double x0 = 0., double x1 = 1., QString title = "",
+         QString xTitle = "", QString yTitle = "");
+
+    //**************************************************************************
+    // Getters/setters.
+    //**************************************************************************
+
     int GetBinsNumber() { return nbins; }
     QVector<int> GetHist() { return hist; }
-    QVector<double> GetHistDouble() {
-        QVector<double> histDouble;
-        for(int i = 0; i < hist.size(); i++)
-            histDouble.push_back(hist.at(i));
-        return histDouble;
-    }
-    QVector<double> GetXValues() {
-        QVector<double> xval;
-        for(int i = 0; i < nbins; i++)
-            xval.push_back(x0 + i * (x1-x0)/(nbins-1));
-        return xval;
-    }
-    void ToFile(QString filename) {
-        QFile file(filename);
-        file.open(QIODevice::WriteOnly | QIODevice::Text);
-        if(file.isOpen() && file.exists()) {
-            for(int i = 0; i < hist.size(); i++){
-                QString str = QString::number(GetXValues().at(i))+"\t"+QString::number(hist.at(i))+"\n";
-                file.write(str.toStdString().c_str());
-            }
-            file.flush();
-            file.close();
-        }
-        else Logger::Log(Logger::ERROR, "LOMHistograms: can't save histograms to file " +
-                         filename + ". " + file.errorString());
-    }
-
+    QVector<double> GetHistDouble();
+    QVector<double> GetXValues();
+    void ToFile(QString filename);
     double GetX0() {return x0;}
     double GetX1() {return x1;}
     int GetMax() {return *std::max_element(hist.begin(), hist.end());}
@@ -50,57 +59,29 @@ public:
     QString GetXTitle() {return xTitle;}
     QString GetYTitle() {return yTitle;}
     QString GetTitle() {return title;}
-    void SetHist(QVector<int> hist)
-    {
-        if(hist.size() != nbins) {
-            Logger::Log(Logger::DEBUG, "Logger: unexpected number of bins.");
-            nbins = hist.size();
-        }
-        this->hist = hist;
-    }
-
+    void SetHist(QVector<int> hist);
     void SetX0(double x0) {this->x0 =x0;}
     void SetX1(double x1) {this->x1 =x1;}
-    Hist(int nbins, double x0 = 0., double x1 = 1., QString title = "",
-         QString xTitle = "", QString yTitle = "") {
-        this->nbins = nbins;
-        this->x0 = x0;
-        this->x1 = x1;
-        this->title = title;
-        this->xTitle = xTitle;
-        this->yTitle = yTitle;
-        this->favorite = false;
-    }
-
-private:
-    Hist();
-    QVector<int> hist;
-    int nbins;
-    double x0;
-    double x1;
-    QString xTitle;
-    QString yTitle;
-    QString title;
-    bool favorite;
 };
 
-
+/*!
+  A class representing LOM set of histograms.
+*/
 class LOMHistograms {
 private:
-    QMap<QString, Hist*> map;
-    int runNum;
+    QMap<QString, Hist*> map; /*!< Pairs: key/histogram. */
+    int runNum; /*!< The number used to create unique name for file. */
 public:
+    /*!
+     * \brief LOMHistograms  Default constructor.
+     */
     LOMHistograms();
-    QMap<QString, Hist*> GetHists() {return this->map;}
-    QStringList GetFavorite() {
-        QStringList l;
 
-        QMap<QString, Hist*>::iterator i;
-        for(i = map.begin(); i != map.end(); ++i)
-            if(i.value()->IsFavorite() && l.size() < 4)
-                l.push_back(i.key());
-        return l;
-    }
+    //**************************************************************************
+    // Getters/setters.
+    //**************************************************************************
+    QMap<QString, Hist*> GetHists() {return this->map;}
+    QStringList GetFavorite();
     void SaveToFiles(QString path);
     void SetRunNum(int runNum) {this->runNum = runNum; }
     int GetRunNum() {return runNum; }

@@ -790,7 +790,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Luminosity: not measured</string>
+             <string>Luminosity</string>
             </property>
            </widget>
           </item>
@@ -813,7 +813,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Background: not measured</string>
+             <string>Background</string>
             </property>
            </widget>
           </item>

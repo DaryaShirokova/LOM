@@ -222,3 +222,15 @@ void LOMDataProcessor::Load(QSettings* settings) {
     emit TreeSettingsUpdated();
     emit HistSettingsUpdated();
 }
+
+void LOMDataProcessor::SetWriteHist(bool writeHist) {
+    this->writeHist = writeHist;
+    if(histsToFileTimer == NULL)
+        return;
+    if(isRunning && writeHist)
+        histsToFileTimer->start(writeHistFreq * 60 * 1000);
+    else if(histsToFileTimer->isActive())
+        histsToFileTimer->stop();
+    emit HistSettingsUpdated();
+
+}

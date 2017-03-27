@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MenuConfig</class>
- <widget class="QDialog" name="MenuConfig">
+ <class>QMenuConfig</class>
+ <widget class="QDialog" name="QMenuConfig">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -200,7 +200,7 @@
   <connection>
    <sender>pbBrowseLog</sender>
    <signal>clicked()</signal>
-   <receiver>MenuConfig</receiver>
+   <receiver>QMenuConfig</receiver>
    <slot>OnBrowseLog()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -216,7 +216,7 @@
   <connection>
    <sender>pbApply</sender>
    <signal>clicked()</signal>
-   <receiver>MenuConfig</receiver>
+   <receiver>QMenuConfig</receiver>
    <slot>OnApply()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -232,7 +232,7 @@
   <connection>
    <sender>pbCancel</sender>
    <signal>clicked()</signal>
-   <receiver>MenuConfig</receiver>
+   <receiver>QMenuConfig</receiver>
    <slot>OnCancel()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -248,7 +248,7 @@
   <connection>
    <sender>pbBrowseData</sender>
    <signal>clicked()</signal>
-   <receiver>MenuConfig</receiver>
+   <receiver>QMenuConfig</receiver>
    <slot>OnBrowseData()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -264,7 +264,7 @@
   <connection>
    <sender>pbBrowseHist</sender>
    <signal>clicked()</signal>
-   <receiver>MenuConfig</receiver>
+   <receiver>QMenuConfig</receiver>
    <slot>OnBrowseHist()</slot>
    <hints>
     <hint type="sourcelabel">

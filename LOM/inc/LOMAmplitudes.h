@@ -31,28 +31,28 @@ public:
     // Data manipulating functions.
     //**************************************************************************
 
-    //! Get the values of amplitudes in a certain sector.
     /*!
+     * \brief   Get the values of amplitudes in the certain sector.
      * \param sector    sector number (1 - 16).
      * \return  the values of amplitudes.
      */
     VectorDouble GetAmplitudesInSector(unsigned int sector);
 
-    //! Get maximum value of amplitudes in sector.
     /*!
+     * \brief   Get maximum value of amplitudes in a sector.
      * \param sector    sector number (1 - 16).
      * \return  maximum value of amplitudes.
      */
     double GetMaxAmplitudeInSector(unsigned int sector);
 
-    //! Get maximum value of amplitudes in all sectors.
     /*!
+     * \brief   Get maximum value of amplitudes in each sectors.
      * \return  maximum values of amplitudes.
      */
     VectorDouble GetMaxAmplitudes();
 
-    //! Get the sector with maximum aplitude value.
     /*!
+     * \brief   Get the sector with maximum aplitude value.
      * \return  the sector with maximum aplitude value.
      */
     unsigned int GetHitSector();
@@ -61,14 +61,14 @@ public:
     // Getters/Setters.
     //**************************************************************************
 
-    //! Setter
     /*!
-     * \param amplitudes set the value of amplitudes.
+     * \brief Set apmlitudes.
+     * \param amplitudes the value of amplitudes.
      */
     void SetAmplitudes(VectorDouble2D amplitudes) {this->amplitudes = amplitudes;}
 
-    //! Getter
     /*!
+     * \brief Get apmlitudes.
      * \return array of amplitudes in all sectors.
      */
     VectorDouble2D GetAmplitudes() { return amplitudes;}
@@ -89,9 +89,8 @@ public:
     //**************************************************************************
     // Data manipulating functions.
     //**************************************************************************
-
-    //! Get coincidence region.
     /*!
+     * \brief Get coincidence region.
      * \param sectorFWD the forward sector number.
      * \param sectorBWD the backward sector number.
      * \param thresholdFE threshold for amplitude in forward sector.
@@ -102,8 +101,8 @@ public:
                                   double thresholdFE, double thresholdBE);
 
 
-    //! Get coincidence region left boundary.
     /*!
+     * \brief Get coincidence region left boundary.
      * \param sectorFWD the forward sector number.
      * \param sectorBWD the backward sector number.
      * \param thresholdFE threshold for amplitude in forward sector.
@@ -116,8 +115,8 @@ public:
                                               double thresholdFE,
                                               double thresholdBE);
 
-    //! Get coincidence region right boundary.
     /*!
+     * \brief Get coincidence region right boundary.
      * \param sectorFWD the forward sector number.
      * \param sectorBWD the backward sector number.
      * \param thresholdFE threshold for amplitude in forward sector.
@@ -130,8 +129,8 @@ public:
                                               double thresholdFE,
                                               double thresholdBE);
 
-    //! Check if there is a coincidence region for these two sectors.
     /*!
+     * \brief Check if there is a coincidence region for these two sectors.
      * \param sectorFWD the forward sector number.
      * \param sectorBWD the backward sector number.
      * \param thresholdFE threshold for amplitude in forward sector.
@@ -147,15 +146,16 @@ public:
     // Getters/Setters.
     //**************************************************************************
 
-    //! Getter
     /*!
-     * \return amplitudes in forward sectors.
+     * \brief Get amplitudes in the backward sectors.
+     * \return amplitudes in backward sectors.
      */
     Amplitudes& GetAmplsBWD() {return amplsBWD;}
 
     //! Getter
     /*!
-     * \return amplitudes in forward sectors.
+     * \brief Get amplitudes in the forward sectors.
+     * \return amplitudes in the forward sectors.
      */
     Amplitudes& GetAmplsFWD() {return amplsFWD;}
 

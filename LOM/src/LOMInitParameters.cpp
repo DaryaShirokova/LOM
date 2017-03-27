@@ -1,9 +1,9 @@
-#include "../inc/LOMInitParameters.h"
+#include "inc/LOMInitParameters.h"
+#include "inc/Constants.h"
+#include "inc/Logger.h"
 
 #include <QDebug>
 #include <QSettings>
-
-#include "inc/ConfigFileHandler.h"
 
 LOMInitParameters::LOMInitParameters() {
     SetStatus(false);

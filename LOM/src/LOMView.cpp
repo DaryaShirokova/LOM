@@ -1,8 +1,10 @@
 #include "inc/LOMView.h"
+#include "ui_LOMView.h"
+
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
 #include "inc/QNetworkSettings.h"
-#include "ui_LOMView.h"
+#include "inc/Constants.h"
 
 #include <QVector>
 #include <QFile>
@@ -19,19 +21,10 @@ LOMView::LOMView(QWidget *parent) :
 
     advancedMode = false;
     lastCountersUpdate = 0;
-    // Setup logging.
-    SetLogType(ui->logTypeCheckBox->currentText());
-    SetLogDepth(ui->logDepthspinBox->value());
-
-    // Toggle buttons.
-    ui->checkBoxHitSector->toggle();
-    ui->checkBoxSaveLog->toggle();
-    ChangePlottersMode();
 
     // Set luminosity/thresholds/connection palette labels to red.
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::red);
-    //ui->labelLuminosity->setPalette(palette);
     ui->thresholdStatusLabel->setPalette(palette);
     ui->connectionStatusLabel->setPalette(palette);
 
@@ -64,7 +57,8 @@ LOMView::LOMView(QWidget *parent) :
 
 void LOMView::SetModel(LOMDataProcessor *model) {
     this->model = model;
-    connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdateAll()));
+    connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdatePlots()));
+    connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdateEndcapsWiggets()));
     connect(model, SIGNAL(CountersUpdated()), SLOT(UpdateCounters()));
 
     widgetHists->SetModel(model->GetHistograms());
@@ -156,12 +150,6 @@ void LOMView::UpdateCounters() {
     ui->leDT->setText(QString::number(model->GetCounters().GetDeltaTMSec()) + " us");
     ui->leTotalDeadTime->setText(QString::number(model->GetCounters().GetTotalDeadTimeMSec()) + " us");
     ui->leVetoTime->setText(QString::number(model->GetCounters().GetVetoTimeMSec()) + " us");
-}
-
-void LOMView::UpdateAll()
-{
-    UpdatePlots();
-    UpdateEndcapsWiggets();
 }
 
 void LOMView::UpdateThresholds() {
@@ -395,18 +383,18 @@ void LOMView::Disconnected()
     ui->pushButtonStart->setEnabled(false);
     ui->pushButtonStop->setEnabled(false);
 }
-void LOMView::LoadConfigurations()
+/*void LOMView::LoadConfigurations()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Save File"),
                                DEFAULT_CONF,
                                tr("Config (*.ini)"));
     if(!filename.isNull())
         Load(filename);
-}
+}*/
 
 void LOMView::EditConfigurations()
 {
-    MenuConfig* configWidget = new MenuConfig(this);
+    QMenuConfig* configWidget = new QMenuConfig(this);
     configWidget->SetDataDir(model->GetDataDir());
     configWidget->SetLogDir(Logger::GetPath());
     configWidget->SetAdvanced(advancedMode);
@@ -416,8 +404,8 @@ void LOMView::EditConfigurations()
     configWidget->SetHistRecordFreq(model->GetWriteHistFreq());
     configWidget->SetHistDir(model->GetHistDir());
 
-    connect(configWidget, SIGNAL(Apply(MenuConfig*)), this,
-            SLOT(OnApplyCongiguration(MenuConfig*)));
+    connect(configWidget, SIGNAL(Apply(QMenuConfig*)), this,
+            SLOT(OnApplyCongiguration(QMenuConfig*)));
     configWidget->show();
 }
 
@@ -451,7 +439,7 @@ void LOMView::OpenNetworkSettings()
 
 }
 
-void LOMView::OnApplyCongiguration(MenuConfig *config)
+void LOMView::OnApplyCongiguration(QMenuConfig *config)
 {
     Logger::SetPath(config->GetLogDir());
     model->SetDataDir(config->GetDataDir());
@@ -464,13 +452,13 @@ void LOMView::OnApplyCongiguration(MenuConfig *config)
     ui->sbBufferSize->setEnabled(advancedMode);
 }
 
-void LOMView::OnSaveConfiguration() {
+/*void LOMView::OnSaveConfiguration() {
    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"),
                                DEFAULT_CONF,
                                tr("Config (*.ini)"));
     if(!filename.isNull())
         Save(filename);
-}
+}*/
 
 void LOMView::Save(QString filename) {
     QSettings settings(filename, QSettings::IniFormat );

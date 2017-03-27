@@ -3,16 +3,7 @@
 
 #include <QDebug>
 
-LOMCounters::LOMCounters()
-{
-}
-
-LOMCounters::~LOMCounters()
-{
-}
-
-void LOMCounters::InitTree()
-{
+void LOMCounters::InitTree() {
     Logger::Log(Logger::DEBUG, "Creating new tree.");
     tree = new TTree("tree", "LOM countets.");
     tree->Branch("nbhabha", &nBhabhaTotal,"nbhabha/I");

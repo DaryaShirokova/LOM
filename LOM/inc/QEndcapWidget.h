@@ -31,7 +31,7 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    QVector<double> amplitudes; /*  Max value of amplitude in each sector.*/
+    QVector<double> amplitudes; /*!< Max value of amplitude in each sector.*/
 
     /*!
      * \brief GetRayCircleIntersection Get intersection point of ray from the center of circle and circle.

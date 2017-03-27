@@ -1,99 +1,99 @@
-#include "inc/MenuConfig.h"
-#include "ui_MenuConfig.h"
+#include "inc/QMenuConfig.h"
+#include "ui_QMenuConfig.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDebug>
 
-MenuConfig::MenuConfig(QWidget *parent) :
+QMenuConfig::QMenuConfig(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::MenuConfig)
+    ui(new Ui::QMenuConfig)
 {
     ui->setupUi(this);
     setWindowTitle("Configurations");
 }
 
-MenuConfig::~MenuConfig()
+QMenuConfig::~QMenuConfig()
 {
     delete ui;
 }
 
-QString MenuConfig::GetDataDir() {
+QString QMenuConfig::GetDataDir() {
     return ui->lineDataDir->text();
 }
 
-void MenuConfig::SetDataDir(QString dataDir) {
+void QMenuConfig::SetDataDir(QString dataDir) {
     ui->lineDataDir->setText(dataDir);
 }
 
-QString MenuConfig::GetLogDir()
+QString QMenuConfig::GetLogDir()
 {
     return ui->lineLogDir->text();
 }
 
-void MenuConfig::SetLogDir(QString logDir)
+void QMenuConfig::SetLogDir(QString logDir)
 {
     ui->lineLogDir->setText(logDir);
 }
 
-bool MenuConfig::IfWriteFile()
+bool QMenuConfig::IfWriteFile()
 {
     return ui->chbSaveRootFile->isChecked();
 }
 
-void MenuConfig::SetWriteFile(bool writeFile) {
+void QMenuConfig::SetWriteFile(bool writeFile) {
     ui->chbSaveRootFile->setChecked(writeFile);
 }
 
-bool MenuConfig::IsAdvanced() {
+bool QMenuConfig::IsAdvanced() {
     return ui->chbAdvanced->isChecked();
 }
 
-void MenuConfig::SetAdvanced(bool advanced) {
+void QMenuConfig::SetAdvanced(bool advanced) {
     ui->chbAdvanced->setChecked(advanced);
 }
 
-int MenuConfig::GetRootFileSize() {
+int QMenuConfig::GetRootFileSize() {
     return ui->sbRootFileSize->value();
 }
 
-void MenuConfig::SetRootFileSize(int size) {
+void QMenuConfig::SetRootFileSize(int size) {
     ui->sbRootFileSize->setValue(size);
 }
 
-int MenuConfig::GetHistRecordFreq() {
+int QMenuConfig::GetHistRecordFreq() {
     return ui->sbHistRecord->value();
 }
 
-void MenuConfig::SetHistRecordFreq(int freq) {
+void QMenuConfig::SetHistRecordFreq(int freq) {
     ui->sbHistRecord->setValue(freq);
 }
 
-bool MenuConfig::IfWriteHist() {
+bool QMenuConfig::IfWriteHist() {
     return ui->chbSaveHist->isChecked();
 }
 
-void MenuConfig::SetWriteHist(bool writeHist) {
+void QMenuConfig::SetWriteHist(bool writeHist) {
     ui->chbSaveHist->setChecked(writeHist);
 }
 
-void MenuConfig::SetHistDir(QString histDir) {
+void QMenuConfig::SetHistDir(QString histDir) {
     ui->lineHistDir->setText(histDir);
 }
 
-QString MenuConfig::GetHistDir() {
+QString QMenuConfig::GetHistDir() {
     return ui->lineHistDir->text();
 }
 
-void MenuConfig::OnApply() {
+void QMenuConfig::OnApply() {
     emit Apply(this);
 }
 
 
-void MenuConfig::OnCancel() {
+void QMenuConfig::OnCancel() {
     this->close();
 }
 
-void MenuConfig::OnBrowseData() {
+void QMenuConfig::OnBrowseData() {
 
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                  ".",
@@ -103,7 +103,7 @@ void MenuConfig::OnBrowseData() {
         ui->lineDataDir->setText(dir);
 }
 
-void MenuConfig::OnBrowseHist() {
+void QMenuConfig::OnBrowseHist() {
 
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                  ".",
@@ -113,7 +113,7 @@ void MenuConfig::OnBrowseHist() {
         ui->lineHistDir->setText(dir);
 }
 
-void MenuConfig::OnBrowseLog() {
+void QMenuConfig::OnBrowseLog() {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                  ".",
                                                  QFileDialog::ShowDirsOnly

@@ -200,9 +200,10 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     transporter->WriteData(arr, arr.size());
 
     arr = GetAnswer();
-    if(arr.isNull())
+    if(arr.isNull() || arr.size() != bitsNum / 4) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
         return false;
-
+    }
 
     for(int i = 0; i < SECTOR_NUM / 2; i++)
     {
@@ -223,8 +224,10 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     transporter->WriteData(arr, arr.size());
 
     arr = GetAnswer();
-    if(arr.isNull())
+    if(arr.isNull() || arr.size() != bitsNum / 4) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
         return false;
+    }
 
     for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++)
     {
@@ -243,8 +246,10 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     transporter->WriteData(arr, arr.size());
 
     arr = GetAnswer();
-    if(arr.isNull())
+    if(arr.isNull() || arr.size() != bitsNum / 4) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
         return false;
+    }
 
     for(int i = 0; i < SECTOR_NUM / 2; i++)
     {
@@ -264,8 +269,10 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     transporter->WriteData(arr, arr.size());
 
     arr = GetAnswer();
-    if(arr.isNull())
+    if(arr.isNull() || arr.size() != bitsNum / 4) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
         return false;
+    }
 
     for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++)
     {
@@ -297,8 +304,10 @@ bool LOMDataUpdater::ReadHists(LOMHistograms *hists) {
         if(!transporter->WriteData(arr, arr.size()))
             return false;
         QByteArray ans = GetAnswer();
-        if(ans.isNull() || ans.size() * 8 != bitSize)
+        if(ans.isNull() || ans.size() * 8 != bitSize) {
+            Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (hists).");
             return false;
+        }
         QVector<int> hist;
         for(int k = 0; k < i.value()->GetBinsNumber(); k++)
             hist.push_back(ReadInt(ans, k));
@@ -346,8 +355,10 @@ bool LOMDataUpdater::ReadInitParameters(LOMInitParameters *initParameters)
         return false;
 
     QByteArray ans = GetAnswer();
-    if(ans.isNull() || ans.size() != arr.size() - 2)
+    if(ans.isNull() || ans.size() != arr.size() - 2) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (counters).");
         return false;
+    }
     initParameters->SetThresholdFE(1.0 * ReadInt(ans, 0) / SCALE_FACTOR);
     initParameters->SetThresholdBE(1.0 * ReadInt(ans, 1) / SCALE_FACTOR);
     initParameters->SetCoincidenceDurationThreshold(ReadInt(ans, 2));

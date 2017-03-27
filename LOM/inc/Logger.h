@@ -1,16 +1,13 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <QVector>
-#include <QString>
-#include <QFile>
-
 #include "inc/LogListener.h"
 #include "inc/Constants.h"
 
 #include <QDir>
-#include <QDebug>
-#include <QDateTime>
+#include <QVector>
+#include <QString>
+#include <QFile>
 
 //! A class for logging events.
 /*!
@@ -19,10 +16,8 @@
   types of events (errors, debug messages, info).
   These log messages are displayed on the main screen (last few events) and
   saved in file.
-  Use Logger::Log method to log events.
+  Use Logger::Log method to log an event.
 */
-
-
 class Logger
 {
 public:
@@ -31,47 +26,62 @@ public:
     //! Detalization of logging.
     enum LogLevel { ERROR, INFO, DEBUG };
 
-    //! Convert enum to string.
     /*!
+     * \brief Convert enum to string.
      * \param l log level
-     * \return  converted enum.
+     * \return  enum in form of QString.
      */
-    static QString enumToString(LogLevel l)
-    {
-        switch(l)
-        {
-        case ERROR: return "ERROR";
-        case INFO:  return "INFO";
-        case DEBUG: return "DEBUG";
-        default:
-            Log(LogLevel::ERROR, "Logger: trying to convert non-existing loglevel to string.");
-            return "DEBUG";
-        }
-    }
+    static QString enumToString(LogLevel l);
 
-    static void NewLogFile() {
-        linesWritten = 0;
-        file.close();
-        SetPath(path);
-    }
 
-    //! Convert string to enum.
     /*!
+     * \brief Convert string to enum.
      * \param str   input string (INFO, DEBUG, ERROR).
      * \return  log level.
      */
-    static LogLevel stringToEnum(QString str)
-    {
-        if(!QString::compare(str, "INFO"))
-            return Logger::INFO;
-        if(!QString::compare(str, "DEBUG"))
-            return Logger::DEBUG;
-        if(!QString::compare(str, "ERROR"))
-            return Logger::ERROR;
-        Logger::Log(Logger::ERROR, "Logger: attempting to convert inappropriate"
-                                   " string to log level");
-        return Logger::DEBUG;
-    }
+    static LogLevel stringToEnum(QString str);
+
+    /*!
+     * \brief Create new file where the log is stored.
+     */
+    static void NewLogFile();
+
+    /*!
+     * \brief Set path and open file for log output.
+     * \param newpath path to log.
+     */
+    static void SetPath(QString newPath);
+
+    /*!
+     * \brief Get current log path.
+     * \return path current log path
+     */
+    static QString GetPath() { return path;}
+
+    /*!
+     * \brief Set log level.
+     * \param newLogLevel new log level.
+     */
+    static void SetLogLevel(LogLevel newLogLevel) { logLevel = newLogLevel;}
+
+    /*!
+     * \brief Turn on/off writing log to file and open/close it.
+     * \param val on/off writing to file.
+     */
+    static void SetWriteToFile(bool val);
+
+    /*!
+     * \brief Add new listener.
+     * \param listener a listener.
+     */
+    static void AddListener(LogListener* listener) {listeners.push_back(listener);}
+
+    /*!
+     * \brief Logging function.
+     * \param messageLevel  type of message.
+     * \param message       content of message.
+     */
+    static void Log(LogLevel messageLevel, QString message);
 
 private:
     //! A constructor.
@@ -82,128 +92,12 @@ private:
     static bool writeToFile; /*!< Switch on / off writing to file.*/
     static LogLevel logLevel; /*!< The detalization of logging.*/
     static QVector<LogListener*> listeners; /*!< Listeners of logger.*/
-    static int linesWritten;
+    static int linesWritten; /*!< Number of lines in the current log file.*/
 
     /*!
      * \brief OpenFile  auxiliary function for opening file.
      */
-    static void OpenFile() {
-        if(file.isOpen())
-            file.close();
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
-        {
-            writeToFile = false;
-            Log(LogLevel::ERROR, "Logger: can not open log file: " + path);
-        }
-    }
-
-public:
-    //! Open file for log output.
-    /*!
-     * \param newpath the name of the log file.
-     */
-    static void SetPath(QString newPath)
-    {
-        if(file.isOpen())
-            file.close();
-        path = newPath;
-
-        QLocale::setDefault(QLocale(QLocale::English, QLocale::Japan));
-        QDateTime date = QDateTime::currentDateTime();
-        QString name = "Log-" + QLocale().toString(date);
-        if(!path.endsWith('/'))
-            name = '/' + name;
-
-        file.setFileName(path + name);
-        if(writeToFile)
-            OpenFile();
-    }
-
-    static QString GetPath() { return path;}
-
-
-    //! Setter
-    /*!
-     * \param newLogLevel new log level,
-     */
-    static void SetLogLevel(LogLevel newLogLevel) {logLevel = newLogLevel;}
-
-    //! Setter
-    /*!
-     * \param val on/off writing to file.
-     */
-    static void SetWriteToFile(bool val)
-    {
-        writeToFile = val;
-        if(val == true) {
-            OpenFile();
-            linesWritten = 0;
-        }
-        else if(file.isOpen()) file.close();
-
-    }
-
-    //! Add new listener.
-    /*!
-     * \param listener a listener.
-     */
-    static void AddListener(LogListener* listener) {listeners.push_back(listener);}
-
-    //! Logging function.
-    /*!
-     * \param messageLevel  type of message.
-     * \param message       content of message.
-     */
-    static void Log(LogLevel messageLevel, QString message)
-    {
-        static int messageNum = 0;
-        QString out;
-        QString type = enumToString(messageLevel) ;
-
-        switch(logLevel)
-        {
-        case ERROR:
-            if(messageLevel != ERROR)
-                out = "";
-            else out = type + " [message " + QString::number(messageNum) + "]: "
-                    + message + '\n';
-            break;
-        case INFO:
-            if(messageLevel == DEBUG)
-                out = "";
-            else out = type + " [message " + QString::number(messageNum) + "]: "
-                    + message + '\n';
-            break;
-        case DEBUG:
-            out = type + " [message " + QString::number(messageNum) + "]: "
-                                + message + '\n';
-            break;
-        }
-
-        if(!out.isEmpty()) {
-            messageNum++;
-
-            if(writeToFile) {
-                if(!file.exists() || file.write(out.toStdString().c_str()) != out.length()) {
-                    SetWriteToFile(true);
-                    Log(LogLevel::ERROR, "Logger: error occured while writing to log file. Creating new file.");
-
-                }
-                else {
-                    file.flush();
-                    linesWritten++;
-                    if(linesWritten >= LOG_FILE_SIZE)
-                        NewLogFile();
-                }
-            }
-
-            for(LogListener* l: listeners)
-                l->handleMessage(out);
-
-        }
-    }
-
-
+    static void OpenFile();
 };
 
 #endif // LOGGER_H

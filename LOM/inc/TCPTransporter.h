@@ -12,30 +12,55 @@ class TCPTransporter : public AbstractTransporter
 {
     Q_OBJECT
 private:
-    QTcpSocket* socket; /* Socket for communication with server. */
+    QTcpSocket* socket; /*!< Socket. */
 
 public:
+    /*!
+     * \brief TCPTransporter    Constructor.
+     */
     TCPTransporter();
+
+    //**************************************************************************
+    //* Parent functions.
+    //**************************************************************************
     void SetHostAddress(QHostAddress ipaddr, int port) override;
     bool ConnectToHost() override;
     bool CloseConnection() override;
     bool SetReadMode(int msec) override;
     bool WriteData(QByteArray data, qint32 size) override;
     QByteArray ReadData() override;
-    bool IsConnected();
 
 private:
-    bool connected;
+    bool connected; /*!< Status of connection. */
+    QByteArray inputBuffer; /*!< Input data buffer. */
+
+    /*!
+     * \brief AddrToString  Convert address and port to string.
+     * \return  address in QString format.
+     */
     QString AddrToString();
-    QByteArray inputBuffer;
 
 public slots:
+    /*!
+     * \brief Connected Connected to host.
+     */
     void Connected();
+
+    /*!
+     * \brief ReceiveData   Data has been received.
+     */
     void ReceiveData();
 
 
 signals:
+    /*!
+     * \brief SigConnected  Connected to host.
+     */
     void SigConnected();
+
+    /*!
+     * \brief SigDisconnected Disconnected from host.
+     */
     void SigDisconnected();
 };
 
