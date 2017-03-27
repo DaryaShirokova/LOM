@@ -1,0 +1,8 @@
+[Readout]
+buf=64
+
+[Thresholds]
+bwd=1
+coin_dur=0
+fwd=3
+hit=0
