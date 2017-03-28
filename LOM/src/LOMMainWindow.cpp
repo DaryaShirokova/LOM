@@ -20,6 +20,8 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
     ui(new Ui::LOMMainWindow) {
     ui->setupUi(this);
 
+    SetTips();
+
     // Set histogram widget to the second tab.
     widgetHists = new QHistPoolWidget(ui->tab_2);
     ui->tab_2->layout()->addWidget(widgetHists);
@@ -54,7 +56,6 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
     ui->menuFile->addSeparator();
     ui->menuFile->addAction("&Exit", this, SLOT(OnExit()));
 
-
 }
 
 LOMMainWindow::~LOMMainWindow() {
@@ -78,6 +79,29 @@ void LOMMainWindow::SetModel(LOMDataProcessor *model) {
             SIGNAL(StatusChanged(bool)),this, SLOT(SetThresholdStatus(bool)));
     connect(&(model->GetInitParameters()),
             SIGNAL(ParamsChanged()),this, SLOT(InitThresholds()));
+
+}
+
+void LOMMainWindow::SetTips() {
+    ui->pushButtonSetThresholds->setToolTip("Send initialization parameters to LOM.");
+    ui->pushButtonGetThresholds->setToolTip("Receive initialization parameters from LOM.");
+    ui->pushButtonSaveSettings->setToolTip("Save initialization parameters to .param file.");
+    ui->pushButtonLoadSettings->setToolTip("Load initialization parameters from .param file.");
+
+    ui->pushButtonStart->setToolTip("Start LOM.");
+    ui->pushButtonStop->setToolTip("Stop LOM.");
+    ui->pushButtonSetSettings->setToolTip("Apply timing settings.");
+
+    ui->pushButtonSetPlotters->setToolTip("Apply settings to amplitudes plotters.");
+
+    ui->checkBoxHitSector->setToolTip("Show sectors with maximum energy deposition.");
+    ui->bwdSectorCB->setToolTip("Choose backward sector.");
+    ui->fwdSectorCB->setToolTip("Choose forward sector.");
+
+    ui->logTypeCheckBox->setToolTip("Choose log level.");
+    ui->logDepthspinBox->setToolTip("Number of lines in the Log window.");
+
+    ui->checkBoxSaveLog->setToolTip("Turn on/off logging to file.");
 
 }
 
@@ -387,7 +411,7 @@ void LOMMainWindow::Connected() {
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::black);
     ui->connectionStatusLabel->setPalette(palette);
-    ui->connectionStatusLabel->setText("connected.");
+    ui->connectionStatusLabel->setText("Status: connected.");
 
     ui->pushButtonSetThresholds->setEnabled(true);
     ui->pushButtonStart->setEnabled(true);
@@ -398,7 +422,7 @@ void LOMMainWindow::Disconnected() {
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::red);
     ui->connectionStatusLabel->setPalette(palette);
-    ui->connectionStatusLabel->setText("disconnected.");
+    ui->connectionStatusLabel->setText("Status: disconnected.");
 
     if(model->IsRunning())
         StopUpdates();

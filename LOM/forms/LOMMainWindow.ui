@@ -12,8 +12,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1300</width>
-    <height>800</height>
+    <width>1350</width>
+    <height>820</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@
           <item>
            <layout class="QHBoxLayout" name="lauoutStatus_2">
             <item>
-             <widget class="QLabel" name="labelStatus">
+             <widget class="QLabel" name="connectionStatusLabel">
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
@@ -58,29 +58,6 @@
               </property>
               <property name="text">
                <string>Status:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="connectionStatusLabel">
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>30</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="text">
-               <string>disonnected.</string>
               </property>
              </widget>
             </item>
@@ -521,6 +498,13 @@
               </property>
               <property name="value">
                <double>5.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QPushButton" name="pushButtonSetPlotters">
+              <property name="text">
+               <string>Set</string>
               </property>
              </widget>
             </item>
@@ -1313,6 +1297,19 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_19">
               <item>
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="labelLogLevel">
                 <property name="maximumSize">
                  <size>
@@ -1385,6 +1382,9 @@
                   <height>30</height>
                  </size>
                 </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
                 <property name="maximum">
                  <number>1000</number>
                 </property>
@@ -1412,7 +1412,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Write to file</string>
+               <string>Write log to file</string>
               </property>
              </widget>
             </item>
@@ -1698,6 +1698,22 @@
     </hint>
     <hint type="destinationlabel">
      <x>401</x>
+     <y>44</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSetPlotters</sender>
+   <signal>clicked()</signal>
+   <receiver>LOMMainWindow</receiver>
+   <slot>ChangePlottersSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>302</x>
+     <y>796</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>289</x>
      <y>44</y>
     </hint>
    </hints>

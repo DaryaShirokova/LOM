@@ -9,6 +9,11 @@ QHistPoolWidget::QHistPoolWidget(QWidget *parent) :
     ui(new Ui::QHistPoolWidget) {
     ui->setupUi(this);
 
+    ui->pbSave->setToolTip("Save histograms to files.");
+    ui->pbUpdate->setToolTip("Update histograms.");
+    ui->pbNext->setToolTip("Show next page.");
+    ui->pbPrevious->setToolTip("Show previous page.");
+
     histPool = NULL;
 
     for(int i = 0; i < 4; i++) {

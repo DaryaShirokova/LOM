@@ -76,6 +76,11 @@ private:
 
     QHistPoolWidget * widgetHists; /*!< Widget in tab2 to show histograms. */
 
+    /*!
+     * \brief SetTips   Set tips to GUI elements.
+     */
+    void SetTips();
+
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
