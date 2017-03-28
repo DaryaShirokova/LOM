@@ -1,5 +1,5 @@
-#include "inc/LOMView.h"
-#include "ui_LOMView.h"
+#include "inc/LOMMainWindow.h"
+#include "ui_LOMMainWindow.h"
 
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
@@ -11,9 +11,9 @@
 #include <algorithm>
 #include <QSettings>
 
-LOMView::LOMView(QWidget *parent) :
+LOMMainWindow::LOMMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::LOMView) {
+    ui(new Ui::LOMMainWindow) {
     ui->setupUi(this);
 
     widgetHists = new QHistPoolWidget(ui->tab_2);
@@ -55,7 +55,7 @@ LOMView::LOMView(QWidget *parent) :
 }
 
 
-void LOMView::SetModel(LOMDataProcessor *model) {
+void LOMMainWindow::SetModel(LOMDataProcessor *model) {
     this->model = model;
     connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdatePlots()));
     connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdateEndcapsWiggets()));
@@ -75,12 +75,12 @@ void LOMView::SetModel(LOMDataProcessor *model) {
 
 }
 
-LOMView::~LOMView() {
+LOMMainWindow::~LOMMainWindow() {
     delete ui;
 }
 
 
-void LOMView::handleMessage(QString message)
+void LOMMainWindow::handleMessage(QString message)
 {
     if(message.isEmpty())
         return;
@@ -106,11 +106,11 @@ void LOMView::handleMessage(QString message)
 //******************************************************************************
 // SLOTS
 //******************************************************************************
-void LOMView::SetThresholdStatus(bool val) {
+void LOMMainWindow::SetThresholdStatus(bool val) {
     ui->thresholdStatusLabel->setVisible(!val);
 }
 
-void LOMView::InitThresholds() {
+void LOMMainWindow::InitThresholds() {
     ui->sbBufferSize->setValue(model->GetInitParameters().GetBufSize());
     ui->spinBoxAmplFWD->setValue(model->GetInitParameters().GetThresholdFE());
     ui->spinBoxAmplBWD->setValue(model->GetInitParameters().GetThresholdBE());
@@ -118,13 +118,13 @@ void LOMView::InitThresholds() {
     ui->spinBoxBkg->setValue(model->GetInitParameters().GetHitThreshold());
 }
 
-void LOMView::UpdateTiming() {
+void LOMMainWindow::UpdateTiming() {
     ui->sbUpdateAmplsFreq->setValue(model->GetUpdateAmplsFreq());
     ui->sbUpdCountersFreq->setValue(model->GetUpdateCountersFreq());
     ui->sbUpdateHistsFreq->setValue(model->GetUpdateHistsFreq());
 }
 
-void LOMView::ChangePlottersSettings() {
+void LOMMainWindow::ChangePlottersSettings() {
     this->x0 = ui->xMinSpinBox->value();
     this->x1 = ui->xMaxSpinBox->value();
     this->ymaxFWD = ui->yFWDMaxSpinBox->value();
@@ -140,7 +140,7 @@ void LOMView::ChangePlottersSettings() {
     ui->coinWidget->replot();
 }
 
-void LOMView::UpdateCounters() {
+void LOMMainWindow::UpdateCounters() {
 
     if(time.restart() < 900)
         return;
@@ -152,7 +152,7 @@ void LOMView::UpdateCounters() {
     ui->leVetoTime->setText(QString::number(model->GetCounters().GetVetoTimeMSec()) + " us");
 }
 
-void LOMView::UpdateThresholds() {
+void LOMMainWindow::UpdateThresholds() {
     double newValFE = ui->spinBoxAmplFWD->value();
     double newValBE = ui->spinBoxAmplBWD->value();
     int newValCoin = ui->spinBoxCoinDur->value();
@@ -161,13 +161,13 @@ void LOMView::UpdateThresholds() {
     model->SetInitParameters(newValFE, newValBE, newValCoin, newValBkg, newBufSize);
 }
 
-void LOMView::UpdateSettings() {
+void LOMMainWindow::UpdateSettings() {
     model->SetFrequencies(ui->sbUpdCountersFreq->value(),
                           ui->sbUpdateAmplsFreq->value(),
                           ui->sbUpdateHistsFreq->value());
 }
 
-void LOMView::StartUpdates() {
+void LOMMainWindow::StartUpdates() {
     UpdateSettings();
     model->Start();
     time.start();
@@ -180,7 +180,7 @@ void LOMView::StartUpdates() {
     ui->pushButtonGetThresholds->setEnabled(false);
 }
 
-void LOMView::StopUpdates() {
+void LOMMainWindow::StopUpdates() {
     model->Stop();
     ui->pushButtonSetThresholds->setEnabled(true);
     ui->pushButtonGetThresholds->setEnabled(true);
@@ -190,7 +190,7 @@ void LOMView::StopUpdates() {
     ui->pushButtonGetThresholds->setEnabled(true);
 }
 
-void LOMView::ChangePlottersMode() {
+void LOMMainWindow::ChangePlottersMode() {
     if(ui->checkBoxHitSector->isChecked()) {
         ui->fwdSectorCB->setEnabled(false);
         ui->bwdSectorCB->setEnabled(false);
@@ -201,23 +201,23 @@ void LOMView::ChangePlottersMode() {
     }
 }
 
-void LOMView::SetLogType(QString str)
+void LOMMainWindow::SetLogType(QString str)
 {
     logtype = Logger::stringToEnum(str);
     Logger::SetLogLevel(logtype);
 
 }
 
-void LOMView::SetLogDepth(int depth)
+void LOMMainWindow::SetLogDepth(int depth)
 {
     logDepth = depth;
 }
 
-void LOMView::SetLogToFile(bool val){
+void LOMMainWindow::SetLogToFile(bool val){
     Logger::SetWriteToFile(val);
 }
 
-void LOMView::UpdatePlots()
+void LOMMainWindow::UpdatePlots()
 {
     unsigned int fwdSector;
     unsigned int bwdSector;
@@ -346,7 +346,7 @@ void LOMView::UpdatePlots()
 
 }
 
-void LOMView::UpdateEndcapsWiggets()
+void LOMMainWindow::UpdateEndcapsWiggets()
 {
     ui->fwdEndcap->SetAmplitudes(model->GetAmplitudes()
                                  .GetAmplsFWD().GetMaxAmplitudes());
@@ -358,7 +358,7 @@ void LOMView::UpdateEndcapsWiggets()
 }
 
 
-void LOMView::Connected()
+void LOMMainWindow::Connected()
 {
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::black);
@@ -370,7 +370,7 @@ void LOMView::Connected()
     ui->pushButtonStop->setEnabled(false);
 }
 
-void LOMView::Disconnected()
+void LOMMainWindow::Disconnected()
 {
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::red);
@@ -383,7 +383,7 @@ void LOMView::Disconnected()
     ui->pushButtonStart->setEnabled(false);
     ui->pushButtonStop->setEnabled(false);
 }
-/*void LOMView::LoadConfigurations()
+/*void LOMMainWindow::LoadConfigurations()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Save File"),
                                DEFAULT_CONF,
@@ -392,7 +392,7 @@ void LOMView::Disconnected()
         Load(filename);
 }*/
 
-void LOMView::EditConfigurations()
+void LOMMainWindow::EditConfigurations()
 {
     QMenuConfig* configWidget = new QMenuConfig(this);
     configWidget->SetDataDir(model->GetDataDir());
@@ -409,11 +409,11 @@ void LOMView::EditConfigurations()
     configWidget->show();
 }
 
-void LOMView::Reconnect() {
+void LOMMainWindow::Reconnect() {
     model->GetDataUpdater()->Connect();
 }
 
-void LOMView::OpenNetworkSettings()
+void LOMMainWindow::OpenNetworkSettings()
 {
     if(!advancedMode)
     {
@@ -439,7 +439,7 @@ void LOMView::OpenNetworkSettings()
 
 }
 
-void LOMView::OnApplyCongiguration(QMenuConfig *config)
+void LOMMainWindow::OnApplyCongiguration(QMenuConfig *config)
 {
     Logger::SetPath(config->GetLogDir());
     model->SetDataDir(config->GetDataDir());
@@ -452,7 +452,7 @@ void LOMView::OnApplyCongiguration(QMenuConfig *config)
     ui->sbBufferSize->setEnabled(advancedMode);
 }
 
-/*void LOMView::OnSaveConfiguration() {
+/*void LOMMainWindow::OnSaveConfiguration() {
    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"),
                                DEFAULT_CONF,
                                tr("Config (*.ini)"));
@@ -460,7 +460,7 @@ void LOMView::OnApplyCongiguration(QMenuConfig *config)
         Save(filename);
 }*/
 
-void LOMView::Save(QString filename) {
+void LOMMainWindow::Save(QString filename) {
     QSettings settings(filename, QSettings::IniFormat );
 
     settings.beginGroup( "GLOBAL" );
@@ -484,7 +484,7 @@ void LOMView::Save(QString filename) {
     settings.sync();
 }
 
-void LOMView::Load(QString filename) {
+void LOMMainWindow::Load(QString filename) {
     QSettings settings(filename, QSettings::IniFormat );
     settings.beginGroup( "GLOBAL" );
     ui->checkBoxSaveLog->setChecked(settings.value("write_log",
@@ -525,11 +525,11 @@ void LOMView::Load(QString filename) {
 
 
 
-void LOMView::GetLOMInitParams() {
+void LOMMainWindow::GetLOMInitParams() {
     model->LoadInitParameters();
 }
 
-void LOMView::LoadLOMInitParams()
+void LOMMainWindow::LoadLOMInitParams()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Save File"),
                                DEFAULT_PARAM,
@@ -539,7 +539,7 @@ void LOMView::LoadLOMInitParams()
 
 }
 
-void LOMView::SaveLOMInitParams()
+void LOMMainWindow::SaveLOMInitParams()
 {
     QString filename = QFileDialog::getSaveFileName(this, tr("Save File"),
                                DEFAULT_PARAM,
@@ -549,11 +549,11 @@ void LOMView::SaveLOMInitParams()
     }
 }
 
-void LOMView::OnExit() {
+void LOMMainWindow::OnExit() {
     this->close();
 }
 
-void LOMView::closeEvent(QCloseEvent *event) {
+void LOMMainWindow::closeEvent(QCloseEvent *event) {
     QWidget::closeEvent(event);
 
     this->Save(DEFAULT_CONF);
@@ -561,7 +561,7 @@ void LOMView::closeEvent(QCloseEvent *event) {
     Logger::SetWriteToFile(false);
 }
 
-void LOMView::resizeEvent(QResizeEvent *event) {
+void LOMMainWindow::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
 
     double scaleY = 0.16;

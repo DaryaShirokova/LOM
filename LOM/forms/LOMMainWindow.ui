@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LOMView</class>
- <widget class="QMainWindow" name="LOMView">
+ <class>LOMMainWindow</class>
+ <widget class="QMainWindow" name="LOMMainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -1529,7 +1529,7 @@
   <connection>
    <sender>pushButtonSetThresholds</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>UpdateThresholds()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1545,7 +1545,7 @@
   <connection>
    <sender>pushButtonSetSettings</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>UpdateSettings()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1561,7 +1561,7 @@
   <connection>
    <sender>pushButtonSaveSettings</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>SaveLOMInitParams()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1577,7 +1577,7 @@
   <connection>
    <sender>pushButtonLoadSettings</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>LoadLOMInitParams()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1593,7 +1593,7 @@
   <connection>
    <sender>pushButtonStop</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>StopUpdates()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1609,7 +1609,7 @@
   <connection>
    <sender>pushButtonStart</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>StartUpdates()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1625,7 +1625,7 @@
   <connection>
    <sender>checkBoxHitSector</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>ChangePlottersMode()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1641,7 +1641,7 @@
   <connection>
    <sender>logTypeCheckBox</sender>
    <signal>activated(QString)</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>SetLogType(QString)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1657,7 +1657,7 @@
   <connection>
    <sender>logDepthspinBox</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>SetLogDepth(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1673,7 +1673,7 @@
   <connection>
    <sender>checkBoxSaveLog</sender>
    <signal>clicked(bool)</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>SetLogToFile(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1689,7 +1689,7 @@
   <connection>
    <sender>pushButtonGetThresholds</sender>
    <signal>clicked()</signal>
-   <receiver>LOMView</receiver>
+   <receiver>LOMMainWindow</receiver>
    <slot>GetLOMInitParams()</slot>
    <hints>
     <hint type="sourcelabel">

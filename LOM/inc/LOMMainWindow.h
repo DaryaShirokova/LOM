@@ -1,5 +1,5 @@
-#ifndef LOMVIEW_H
-#define LOMVIEW_H
+#ifndef LOMMainWindow_H
+#define LOMMainWindow_H
 
 #include <QMainWindow>
 #include <QTime>
@@ -11,7 +11,7 @@
 #include "inc/QHistPoolWidget.h"
 
 namespace Ui {
-class LOMView;
+class LOMMainWindow;
 }
 
 class LOMDataProcessor;
@@ -22,14 +22,14 @@ class LOMDataProcessor;
   This class represents the graphical interface of the program for communication
   with users.
 */
-class LOMView : public QMainWindow, public LogListener {
+class LOMMainWindow : public QMainWindow, public LogListener {
     Q_OBJECT
 public:
     //! Constructor.
-    explicit LOMView(QWidget *parent = 0);
+    explicit LOMMainWindow(QWidget *parent = 0);
 
     //! Destructor.
-    ~LOMView();
+    ~LOMMainWindow();
 
     /*!
      * \brief SetModel  set model and update threshold.
@@ -56,7 +56,7 @@ public:
     void Save(QString filename);
 
 private:
-    Ui::LOMView *ui; /*!<  User interface.*/
+    Ui::LOMMainWindow *ui; /*!<  User interface.*/
     LOMDataProcessor* model; /*!<  Model.*/
 
     bool advancedMode; /*!< Advanced mode for opening network configuration. */
@@ -213,4 +213,4 @@ public slots:
     void OnExit();
 };
 
-#endif // LOMVIEW_H
+#endif // LOMMainWindow_H
