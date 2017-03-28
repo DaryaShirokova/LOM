@@ -1,4 +1,4 @@
-#include "inc/LOMView.h"
+#include "inc/LOMMainWindow.h"
 #include "inc/LOMDataProcessor.h"
 #include "inc/LOMDataUpdater.h"
 #include "inc/TCPTransporter.h"
@@ -12,7 +12,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    LOMView w;
+    LOMMainWindow w;
 
     Logger::AddListener(&w);
     Logger::SetWriteToFile(false);

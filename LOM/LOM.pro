@@ -30,7 +30,6 @@ LIBS += -pthread -lm -ldl -rdynamic
 # Project files.
 
 SOURCES += main.cpp\
-    src/LOMView.cpp \
     src/LOMInitParameters.cpp \
     src/LOMDataProcessor.cpp \
     src/LOMDataUpdater.cpp \
@@ -45,9 +44,10 @@ SOURCES += main.cpp\
     src/LOMHistograms.cpp \
     src/QHistPlot.cpp \
     src/QHistPoolWidget.cpp \
-    src/QMenuConfig.cpp
+    src/QMenuConfig.cpp \
+    src/LOMMainWindow.cpp
 
-HEADERS  += inc/LOMView.h \
+HEADERS  += \
     inc/LOMInitParameters.h \
     inc/LOMDataProcessor.h \
     inc/LOMDataUpdater.h \
@@ -65,10 +65,12 @@ HEADERS  += inc/LOMView.h \
     inc/LOMHistograms.h \
     inc/QHistPlot.h \
     inc/QHistPoolWidget.h \
-    inc/QMenuConfig.h
+    inc/QMenuConfig.h \
+    inc/LOMMainWindow.h
 
-FORMS    += forms/LOMView.ui \
+FORMS    += \
     forms/QNetworkSettings.ui \
     forms/QHistPlot.ui \
     forms/QHistPoolWidget.ui \
-    forms/QMenuConfig.ui
+    forms/QMenuConfig.ui \
+    forms/LOMMainWindow.ui
