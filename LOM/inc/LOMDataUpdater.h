@@ -14,8 +14,7 @@
 /*!
   A class which knows register map and memory map of the FPGA and the data structure.
 */
-class LOMDataUpdater : public QObject
-{
+class LOMDataUpdater : public QObject {
     Q_OBJECT
 private:
     //! The LogLevel enum
@@ -41,6 +40,14 @@ private:
      */
     QByteArray GetAnswer();
 
+    /*!
+     * \brief ReadMemory    read memory block from LOM.
+     * \param address       address of the block.
+     * \param bitsNum       size of the block.
+     * \return  memory block.
+     */
+    QByteArray ReadMemory(int address, int bitsNum);
+
 public:
     //**************************************************************************
     // Constructor/destructor.
@@ -56,7 +63,7 @@ public:
     /*!
      * \brief Destructor.
      */
-    ~LOMDataUpdater() {}
+    ~LOMDataUpdater();
 
     //**************************************************************************
     // Connection and data transmission functions.

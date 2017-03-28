@@ -10,8 +10,8 @@ namespace Ui {
 class QHistPoolWidget;
 }
 
-class QHistPoolWidget : public QWidget
-{
+//! Widget to plot set of histograms.
+class QHistPoolWidget : public QWidget {
     Q_OBJECT
 
 public:

@@ -12,8 +12,8 @@ namespace Ui {
 class QNetworkSettings;
 }
 
-class QNetworkSettings : public QDialog
-{
+//! Widget to configure network settings.
+class QNetworkSettings : public QDialog {
     Q_OBJECT
 public:
     using Row = QPair<QLabel*, QLineEdit*>;

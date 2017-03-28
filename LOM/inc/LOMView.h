@@ -22,8 +22,7 @@ class LOMDataProcessor;
   This class represents the graphical interface of the program for communication
   with users.
 */
-class LOMView : public QMainWindow, public LogListener
-{
+class LOMView : public QMainWindow, public LogListener {
     Q_OBJECT
 public:
     //! Constructor.

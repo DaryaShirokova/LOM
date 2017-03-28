@@ -8,8 +8,8 @@ namespace Ui {
 class QHistPlot;
 }
 
-class QHistPlot : public QWidget
-{
+//! Histogram plotter.
+class QHistPlot : public QWidget {
     Q_OBJECT
 
 public:

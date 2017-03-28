@@ -1,38 +1,30 @@
 #include "inc/LOMAmplitudes.h"
 #include "inc/Constants.h"
 
-LOMAmplitudes::LOMAmplitudes()
-{
-
-}
-
-Amplitudes::VectorDouble Amplitudes::GetAmplitudesInSector(unsigned int sector)
-{
+//******************************************************************************
+//  Amplitudes
+//******************************************************************************
+Amplitudes::VectorDouble Amplitudes::GetAmplitudesInSector(unsigned int sector) {
     return amplitudes[sector];
 }
 
-double Amplitudes::GetMaxAmplitudeInSector(unsigned int sector)
-{
+double Amplitudes::GetMaxAmplitudeInSector(unsigned int sector) {
     return *(std::max_element(amplitudes[sector].begin(), amplitudes[sector].end()));
 }
 
-Amplitudes::VectorDouble Amplitudes::GetMaxAmplitudes()
-{
+Amplitudes::VectorDouble Amplitudes::GetMaxAmplitudes() {
     QVector<double> vec;
     for (int i = 0; i < SECTOR_NUM; i++)
         vec.push_back(GetMaxAmplitudeInSector(i));
     return vec;
 }
 
-unsigned int Amplitudes::GetHitSector()
-{
+unsigned int Amplitudes::GetHitSector() {
     unsigned int hitSector = 0;
     double maxVal = 0;
-    for(unsigned int i = 0; i < SECTOR_NUM; i++)
-    {
+    for(unsigned int i = 0; i < SECTOR_NUM; i++) {
         double temp = this->GetMaxAmplitudeInSector(i);
-        if(temp > maxVal)
-        {
+        if(temp > maxVal) {
             maxVal = temp;
             hitSector = i;
         }
@@ -40,11 +32,14 @@ unsigned int Amplitudes::GetHitSector()
     return hitSector;
 }
 
+//******************************************************************************
+//  LOMAmplitudes
+//******************************************************************************
+
 LOMAmplitudes::VectorInt LOMAmplitudes::GetCoincidenceRegion(unsigned int sectorFWD,
                                                           unsigned int sectorBWD,
                                                           double thresholdFE,
-                                                          double thresholdBE)
-{
+                                                          double thresholdBE) {
     VectorInt coinRegion;
     Amplitudes::VectorDouble fwd = amplsFWD.GetAmplitudesInSector(sectorFWD);
     Amplitudes::VectorDouble bwd = amplsBWD.GetAmplitudesInSector(sectorBWD);
@@ -57,10 +52,10 @@ LOMAmplitudes::VectorInt LOMAmplitudes::GetCoincidenceRegion(unsigned int sector
 
     return coinRegion;
 }
+
 bool LOMAmplitudes::haveCoincidenceRegion(unsigned int sectorFWD,
                                          unsigned int sectorBWD,
-                                         double thresholdFE, double thresholdBE)
-{
+                                         double thresholdFE, double thresholdBE) {
     VectorInt vec = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
 
     for(int val: vec)
@@ -71,8 +66,7 @@ bool LOMAmplitudes::haveCoincidenceRegion(unsigned int sectorFWD,
 int LOMAmplitudes::GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
                                                             unsigned int sectorBWD,
                                                             double thresholdFE,
-                                                            double thresholdBE)
-{
+                                                            double thresholdBE) {
 
     VectorInt vec = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
 
@@ -85,8 +79,7 @@ int LOMAmplitudes::GetCoincidenceRegionLeftBoundary(unsigned int sectorFWD,
 int LOMAmplitudes::GetCoincidenceRegionRightBoundary(unsigned int sectorFWD,
                                                             unsigned int sectorBWD,
                                                             double thresholdFE,
-                                                            double thresholdBE)
-{
+                                                            double thresholdBE) {
     VectorInt vec = GetCoincidenceRegion(sectorFWD, sectorBWD, thresholdFE, thresholdBE);
 
     for (int i = vec.size() - 1; i >= 0; i--)

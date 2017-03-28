@@ -1,8 +1,7 @@
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
 
-LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
-{
+LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater) {
     this->updater = updater;
 
     timerAmpls = new QTimer(this);
@@ -24,8 +23,7 @@ LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater)
     connect(histsToFileTimer, SIGNAL(timeout()), SLOT(HistsToFile()));
 }
 
-LOMDataProcessor::~LOMDataProcessor()
-{
+LOMDataProcessor::~LOMDataProcessor() {
     delete timerAmpls;
     delete timerCounters;
     delete timerHists;
@@ -47,8 +45,7 @@ void LOMDataProcessor::Start() {
     }
 }
 
-void LOMDataProcessor::Stop()
-{
+void LOMDataProcessor::Stop() {
     if(isRunning) {
         timerAmpls->stop();
         timerCounters->stop();
@@ -62,10 +59,8 @@ void LOMDataProcessor::Stop()
 }
 
 
-void LOMDataProcessor::UpdateAmplitudes()
-{
-    if(updater->ReadAmplitudes(&amplitudes, initParams.GetBufSize()))
-    {
+void LOMDataProcessor::UpdateAmplitudes() {
+    if(updater->ReadAmplitudes(&amplitudes, initParams.GetBufSize())) {
         Logger::Log(Logger::LogLevel::DEBUG, "Received amplitudes.");
         emit AmplitudesUpdated();
     }

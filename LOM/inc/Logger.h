@@ -18,8 +18,7 @@
   saved in file.
   Use Logger::Log method to log an event.
 */
-class Logger
-{
+class Logger {
 public:
 
     //! The LogLevel enum

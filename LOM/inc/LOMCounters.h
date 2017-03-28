@@ -7,8 +7,7 @@
 #include <TTree.h>
 #include <TFile.h>
 
-class LOMCounters
-{
+class LOMCounters {
 private:
     int deltaT; /*!< Time between two readings. */
     int deadTime; /*!< Dead time in the calorimeter. */

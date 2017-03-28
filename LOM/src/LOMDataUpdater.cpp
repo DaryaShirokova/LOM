@@ -10,14 +10,17 @@
 #include <time.h>
 #include <QDebug>
 #include <QSettings>
+
+//******************************************************************************
+//  Data to bytes / bytes to data
+//******************************************************************************
 /*!
  * \brief getByte   get Nth byte of interer value.
  * \param num       input number.
  * \param byteN     byte number (0-3)
  * \return
  */
-unsigned char getByte(int num, int byteN)
-{
+unsigned char getByte(int num, int byteN) {
     return (num >> (byteN * 8)) & 0xFF;
 }
 
@@ -26,13 +29,18 @@ unsigned char getByte(int num, int byteN)
  * \param arr      byte array.
  * \param num      number to convert.
  */
-void pushNum(QByteArray* arr, int num)
-{
+void pushNum(QByteArray* arr, int num) {
     for(uint i = 0; i < sizeof(int); i ++)
         arr->push_back(getByte(num, i));
 }
-int ReadInt(QByteArray arr, int k)
-{
+
+/*!
+ * \brief ReadInt   Convert 4 bytes from byte array to integer.
+ * \param arr       byte array
+ * \param k         number of integer
+ * \return          converted integer
+ */
+int ReadInt(QByteArray arr, int k) {
     int n = k * 4;
     return (arr.at(n + 0) & 0xFF) |
            (arr.at(n + 1) & 0xFF) << 8 |
@@ -40,24 +48,47 @@ int ReadInt(QByteArray arr, int k)
            (arr.at(n + 3) & 0xFF) << 24;
 }
 
-int ReadInt12(QByteArray arr, int k)
-{
-    int n = k * 3;
-    return (arr.at(n + 0) & 0xFF) |
-           (arr.at(n + 1) & 0xFF) << 8 |
-           (arr.at(n + 2) & 0xFF) << 16 |
-                       (0 & 0xFF) << 24;
+/*!
+ * \brief ReadInt12 Convert 12 bits from byte array to integer (each nubmer takes
+ *        1.5 bytes). Example: 300 50 will be represented in the array as
+ *        00010010 11000000 00110010, whrere 300 = 100101100, 50 = 00110010
+ *        So 300 = arr(0) | first_half(arr(1))
+ *           50  = second_half(arr(1)) | arr(2)
+ * \param arr   array of bytes
+ * \param k     number of integer
+ * \return      converted integer
+ */
+int ReadInt12(QByteArray arr, int k) {
+    int n;
+    if(k%2 == 0)
+        n = k * 3 / 2;
+    else n = (k-1) * 3 / 2 + 1;
+    if(k%2 == 0)
+        return (arr.at(n + 0) & 0xFF) << 4 |
+               (arr.at(n + 1) & 0xF0) >> 4;
+    return (arr.at(n + 0) & 0x0F) << 8 |
+           (arr.at(n + 1) & 0xFF);
 }
 
-LOMDataUpdater::LOMDataUpdater(AbstractTransporter *transporter)
-{
+//******************************************************************************
+//  Constructor/destructor.
+//******************************************************************************
+
+LOMDataUpdater::LOMDataUpdater(AbstractTransporter *transporter) {
     this->transporter = transporter;
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), SLOT(CheckConnection()));
 }
 
-void ParseError(QString value)
-{
+LOMDataUpdater::~LOMDataUpdater() {
+    delete timer;
+}
+
+//******************************************************************************
+//  Connfiguration.
+//******************************************************************************
+
+void ParseError(QString value) {
     Logger::Log(Logger::ERROR, "LOMDataUpdater: Can't convert value " + value +
                               "to address or port.");
 }
@@ -156,8 +187,11 @@ bool LOMDataUpdater::Configure(QString config) {
     return true;
 }
 
-bool LOMDataUpdater::Connect()
-{
+//******************************************************************************
+//  Connnect/disconnect.
+//******************************************************************************
+
+bool LOMDataUpdater::Connect() {
     transporter->SetHostAddress(QHostAddress(ipaddr), port);
     bool connected = transporter->ConnectToHost();
     if(connected)
@@ -166,16 +200,18 @@ bool LOMDataUpdater::Connect()
     return connected;
 }
 
-bool LOMDataUpdater::Disconnect()
-{
+bool LOMDataUpdater::Disconnect() {
     return transporter->CloseConnection();
 }
 
-QByteArray LOMDataUpdater::GetAnswer()
-{
+
+//******************************************************************************
+//  Data transmission.
+//******************************************************************************
+
+QByteArray LOMDataUpdater::GetAnswer() {
     QByteArray arr;
-    if(!transporter->SetReadMode(READ_TIMEOUT))
-    {
+    if(!transporter->SetReadMode(READ_TIMEOUT)) {
         Logger::Log(Logger::LogLevel::ERROR, "LOMDataUpdater: can't receive data."
                                              " Timeout error.");
         return NULL;
@@ -183,8 +219,30 @@ QByteArray LOMDataUpdater::GetAnswer()
     return arr = transporter->ReadData();
 }
 
-bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
-{
+QByteArray LOMDataUpdater::ReadMemory(int address, int bitsNum) {
+    QByteArray arr;
+    arr.push_back("R");
+    arr.push_back("M");
+    pushNum(&arr, address);
+    pushNum(&arr, bitsNum);
+
+    transporter->WriteData(arr, arr.size());
+
+    arr = GetAnswer();
+    if(arr.isNull()) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: failed to receive data.");
+        return NULL;
+    }
+    if(arr.size() != bitsNum / 8) {
+        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is expected to be "
+                                   + QString::number(bitsNum / 8) + " bytes, but it is"
+                    + QString::number(arr.size()));
+        return NULL;
+    }
+    return arr;
+}
+
+bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize) {
     QByteArray arr;
     QVector<QVector<double>> amplitudesFE;
     QVector<QVector<double>> amplitudesBE;
@@ -192,21 +250,10 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     int bitsNum = bufSize * AMPL_BIT_SIZE * CHANNEL_PER_BUF;
 
     // Reading out first 8 channels (0-7 forward).
-    arr.push_back("R");
-    arr.push_back("M");
-    pushNum(&arr, memMap.value(MEM_BLOCK1));
-    pushNum(&arr, bitsNum);
+    arr = ReadMemory(memMap.value(MEM_BLOCK1), bitsNum);
+    if(arr.isNull()) return false;
 
-    transporter->WriteData(arr, arr.size());
-
-    arr = GetAnswer();
-    if(arr.isNull() || arr.size() != bitsNum / 4) {
-        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
-        return false;
-    }
-
-    for(int i = 0; i < SECTOR_NUM / 2; i++)
-    {
+    for(int i = 0; i < SECTOR_NUM / 2; i++) {
         QVector<double> sectorFE;
         for(int j = 0; j < bufSize; j++)
             sectorFE.push_back(ReadInt12(arr, i*bufSize + j)* 1. / SCALE_FACTOR);
@@ -215,44 +262,21 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     }
 
     // Reading out first 8-16 forward.
-    arr.clear();
-    arr.push_back("R");
-    arr.push_back("M");
-    pushNum(&arr, memMap.value(MEM_BLOCK2));
-    pushNum(&arr, bitsNum);
+    arr = ReadMemory(memMap.value(MEM_BLOCK2), bitsNum);
+    if(arr.isNull()) return false;
 
-    transporter->WriteData(arr, arr.size());
-
-    arr = GetAnswer();
-    if(arr.isNull() || arr.size() != bitsNum / 4) {
-        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
-        return false;
-    }
-
-    for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++)
-    {
+    for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++) {
         QVector<double> sectorFE;
         for(int j = 0; j < bufSize; j++)
             sectorFE.push_back(ReadInt12(arr, (i-SECTOR_NUM / 2)*bufSize + j)* 1. / SCALE_FACTOR);
         amplitudesFE.push_back(sectorFE);
     }
+
     // Reading out first 0-8 backward.
-    arr.clear();
-    arr.push_back("R");
-    arr.push_back("M");
-    pushNum(&arr, memMap.value(MEM_BLOCK3));
-    pushNum(&arr, bitsNum);
+    arr = ReadMemory(memMap.value(MEM_BLOCK3), bitsNum);
+    if(arr.isNull()) return false;
 
-    transporter->WriteData(arr, arr.size());
-
-    arr = GetAnswer();
-    if(arr.isNull() || arr.size() != bitsNum / 4) {
-        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
-        return false;
-    }
-
-    for(int i = 0; i < SECTOR_NUM / 2; i++)
-    {
+    for(int i = 0; i < SECTOR_NUM / 2; i++) {
         QVector<double> sectorBE;
         for(int j = 0; j < bufSize; j++)
             sectorBE.push_back(ReadInt12(arr, i*bufSize + j)* 1. / SCALE_FACTOR);
@@ -260,22 +284,10 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
     }
 
     // Reading out first 8-16 backward.
-    arr.clear();
-    arr.push_back("R");
-    arr.push_back("M");
-    pushNum(&arr, memMap.value(MEM_BLOCK4));
-    pushNum(&arr, bitsNum);
+    arr = ReadMemory(memMap.value(MEM_BLOCK4), bitsNum);
+    if(arr.isNull()) return false;
 
-    transporter->WriteData(arr, arr.size());
-
-    arr = GetAnswer();
-    if(arr.isNull() || arr.size() != bitsNum / 4) {
-        Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (amplitudes).");
-        return false;
-    }
-
-    for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++)
-    {
+    for(int i = SECTOR_NUM / 2; i < SECTOR_NUM; i++) {
         QVector<double> sectorBE;
         for(int j = 0; j < bufSize; j++)
             sectorBE.push_back(ReadInt12(arr, (i - SECTOR_NUM / 2)*bufSize + j)* 1. / SCALE_FACTOR);
@@ -289,25 +301,13 @@ bool LOMDataUpdater::ReadAmplitudes(LOMAmplitudes *amplitudes, int bufSize)
 }
 
 bool LOMDataUpdater::ReadHists(LOMHistograms *hists) {
-
-
     // Update amplitude hists.
     QMap<QString, Hist*> map = hists->GetHists();
     QMap<QString, Hist*>::iterator i;
     for(i = map.begin(); i != map.end(); ++i) {
-        QByteArray arr;
-        arr.push_back("R");
-        arr.push_back("M");
-        pushNum(&arr, memMap.value(i.key()));
-        int bitSize = i.value()->GetBinsNumber() * 32;
-        pushNum(&arr, bitSize);
-        if(!transporter->WriteData(arr, arr.size()))
-            return false;
-        QByteArray ans = GetAnswer();
-        if(ans.isNull() || ans.size() * 8 != bitSize) {
-            Logger::Log(Logger::ERROR, "LOMDataUpdater: the size of data is less than expected (hists).");
-            return false;
-        }
+        int bitsNum = i.value()->GetBinsNumber() * 32;
+        QByteArray ans = ReadMemory(memMap.value(i.key()), bitsNum);
+        if(ans.isNull()) return false;
         QVector<int> hist;
         for(int k = 0; k < i.value()->GetBinsNumber(); k++)
             hist.push_back(ReadInt(ans, k));
@@ -341,8 +341,7 @@ bool LOMDataUpdater::ReadCounters(LOMCounters *counters) {
     return true;
 }
 
-bool LOMDataUpdater::ReadInitParameters(LOMInitParameters *initParameters)
-{
+bool LOMDataUpdater::ReadInitParameters(LOMInitParameters *initParameters) {
     QByteArray arr;
     arr.push_back("R");
     arr.push_back("R");
@@ -367,8 +366,7 @@ bool LOMDataUpdater::ReadInitParameters(LOMInitParameters *initParameters)
     return true;
 }
 
-bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
-{
+bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters) {
     QByteArray arr;
     QVector<int> data;
     data.push_back(int(initParameters->GetThresholdFE() * SCALE_FACTOR));
@@ -394,14 +392,9 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
         return false;
 
     QByteArray ans = GetAnswer();
-    if(ans.isNull())
+    if(ans.isNull() || ans.size() < 1 || int(ans.at(0)) != 1)
         return false;
 
-    if(ans.size() < 1 || int(ans.at(0)) != 1)
-    {
-        Logger::Log(Logger::ERROR, "LOMDataUpdater: failed to update registers.");
-        return false;
-    }
 
     arr.clear();
     arr.push_back("R");
@@ -421,14 +414,10 @@ bool LOMDataUpdater::WriteInitParameters(LOMInitParameters *initParameters)
     else ans = transporter->ReadData();
 
     if(uint(ans.size()) != uint(data.size() * sizeof(int)))
-    {
-        Logger::Log(Logger::ERROR, "LOMDataUpdater: can't read registers.");
         return false;
-    }
-    for(int i = 0; i < data.size(); i++)
-    {
-        if(data.at(i) != ReadInt(ans, i))
-        {
+
+    for(int i = 0; i < data.size(); i++) {
+        if(data.at(i) != ReadInt(ans, i)) {
             Logger::Log(Logger::ERROR, "LOMDataUpdater: wrong parameters have been written.");
             return false;
         }
@@ -440,22 +429,20 @@ void LOMDataUpdater::CheckConnection()
 {
     QByteArray arr;
     arr.push_back('S');
-    if(!transporter->WriteData(arr, arr.size()))
-    {
+    if(!transporter->WriteData(arr, arr.size())) {
         transporter->CloseConnection();
         timer->stop();
         return;
     }
 
     QByteArray ans = GetAnswer();
-    if(ans.isNull())
-    {
+    if(ans.isNull()) {
         transporter->CloseConnection();
         timer->stop();
         return;
     }
-    if(int(ans.at(0)) != 1)
-    {
+
+    if(int(ans.at(0)) != 1) {
         transporter->CloseConnection();
         timer->stop();
     }

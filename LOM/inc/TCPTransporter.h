@@ -8,8 +8,8 @@
 
 #include "AbstractTransporter.h"
 
-class TCPTransporter : public AbstractTransporter
-{
+//! TCP transporter implemented with Qt sockets.
+class TCPTransporter : public AbstractTransporter {
     Q_OBJECT
 private:
     QTcpSocket* socket; /*!< Socket. */

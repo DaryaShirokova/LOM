@@ -22,8 +22,7 @@
   emits corresponding signals. The frequency of updates can be configured.
 */
 
-class LOMDataProcessor : public QObject
-{
+class LOMDataProcessor : public QObject {
     Q_OBJECT
 private:
     // LOM data types.

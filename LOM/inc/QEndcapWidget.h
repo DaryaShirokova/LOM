@@ -7,7 +7,6 @@
 #include "inc/Constants.h"
 
 //! Widget for drawing endcap parts of the Belle II calorimeter.
-
 class QEndcapWidget : public QWidget
 {
     Q_OBJECT

@@ -6,8 +6,7 @@
 
 //! Color bar widget.
 
-class QColorBar : public QWidget
-{
+class QColorBar : public QWidget {
     Q_OBJECT
 
 public:

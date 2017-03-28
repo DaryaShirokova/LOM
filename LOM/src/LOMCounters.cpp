@@ -14,15 +14,13 @@ void LOMCounters::InitTree() {
     tree->Branch("dT",&deltaT,"dT/I");
 }
 
-void LOMCounters::FillTree()
-{
+void LOMCounters::FillTree() {
     if(tree != NULL)
         tree->Fill();
     else Logger::Log(Logger::ERROR, "LOMCounters: Ponter to tree is null. Can't fill the tree.");
 }
 
-int LOMCounters::TreeSize()
-{
+int LOMCounters::TreeSize() {
     if(tree!= NULL)
         return tree->GetEntries();
     return 0;
@@ -30,15 +28,13 @@ int LOMCounters::TreeSize()
 
 void LOMCounters::ToFile(QString filename)
 {
-    if(tree == NULL)
-    {
+    if(tree == NULL) {
         Logger::Log(Logger::ERROR, "LOMCounters: Ponter to tree is null. Can't save the tree to file.");
         return;
     }
 
     TFile f(filename.toStdString().c_str(),"recreate");
-    if(!f.IsOpen())
-    {
+    if(!f.IsOpen()) {
         Logger::Log(Logger::ERROR, "LOMCounters: Can't open file to save the tree: " + filename);
         return;
     }
@@ -49,8 +45,7 @@ void LOMCounters::ToFile(QString filename)
     f.Close();
 }
 
-void LOMCounters::ClearTree()
-{
+void LOMCounters::ClearTree() {
     if(tree != NULL)
         delete tree;
 }

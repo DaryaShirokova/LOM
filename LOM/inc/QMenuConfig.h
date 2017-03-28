@@ -7,8 +7,8 @@ namespace Ui {
 class QMenuConfig;
 }
 
-class QMenuConfig : public QDialog
-{
+//! Widget to configure user input.
+class QMenuConfig : public QDialog {
     Q_OBJECT
 private:
     Ui::QMenuConfig *ui; /*!< GUI. */

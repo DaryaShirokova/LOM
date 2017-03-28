@@ -7,8 +7,7 @@
   A class containing information which comes from LOM during the module operating.
 */
 
-class Amplitudes
-{
+class Amplitudes {
 public:
     using VectorDouble = QVector<double>; /* QVector of double.*/
     using VectorDouble2D = QVector<VectorDouble>; /* 2D QVector of double.*/
@@ -75,8 +74,7 @@ public:
 };
 
 
-class LOMAmplitudes
-{
+class LOMAmplitudes {
     using VectorInt = QVector<int>;
 private:
     Amplitudes amplsBWD; /*!< Amplitudes in BWD sector.*/
@@ -84,7 +82,7 @@ private:
 
 
 public:
-    LOMAmplitudes();
+    LOMAmplitudes() {}
 
     //**************************************************************************
     // Data manipulating functions.

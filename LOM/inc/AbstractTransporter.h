@@ -11,8 +11,7 @@
   An abstract class which provides an interface for establishing connection
   and data transporting.
 */
-class AbstractTransporter :  public QObject
-{
+class AbstractTransporter :  public QObject {
     Q_OBJECT
 public:
     /*!

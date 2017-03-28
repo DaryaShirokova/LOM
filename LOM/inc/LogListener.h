@@ -8,8 +8,7 @@
   Each class which extends LogListener can subscribe for notification about
   logger updates and handle the message from logger.
 */
-class LogListener
-{
+class LogListener {
 public:
     /*!
      * \brief handleMessage handle the message from logging system.

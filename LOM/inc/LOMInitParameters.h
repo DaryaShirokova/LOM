@@ -9,8 +9,7 @@
   be configured in LOM.
 */
 
-class LOMInitParameters : public QObject
-{
+class LOMInitParameters : public QObject {
     Q_OBJECT
 private:
     double thresholdFE; /*!< Forward endcap hit threshlold. */
