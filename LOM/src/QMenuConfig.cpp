@@ -6,14 +6,12 @@
 
 QMenuConfig::QMenuConfig(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::QMenuConfig)
-{
+    ui(new Ui::QMenuConfig) {
     ui->setupUi(this);
     setWindowTitle("Configurations");
 }
 
-QMenuConfig::~QMenuConfig()
-{
+QMenuConfig::~QMenuConfig() {
     delete ui;
 }
 
@@ -25,18 +23,15 @@ void QMenuConfig::SetDataDir(QString dataDir) {
     ui->lineDataDir->setText(dataDir);
 }
 
-QString QMenuConfig::GetLogDir()
-{
+QString QMenuConfig::GetLogDir() {
     return ui->lineLogDir->text();
 }
 
-void QMenuConfig::SetLogDir(QString logDir)
-{
+void QMenuConfig::SetLogDir(QString logDir) {
     ui->lineLogDir->setText(logDir);
 }
 
-bool QMenuConfig::IfWriteFile()
-{
+bool QMenuConfig::IfWriteFile() {
     return ui->chbSaveRootFile->isChecked();
 }
 

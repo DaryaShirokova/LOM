@@ -2,13 +2,11 @@
 
 #include <QPainter>
 
-QColorBar::QColorBar(QWidget *parent) : QWidget(parent)
-{
+QColorBar::QColorBar(QWidget *parent) : QWidget(parent) {
 
 }
 
-QColor QColorBar::GetColor(double val)
-{
+QColor QColorBar::GetColor(double val) {
     if(val >= 1.)
         return QColor(255, 255, 255);
     else if(val <= 0)
@@ -20,8 +18,7 @@ QColor QColorBar::GetColor(double val)
     else return QColor(255, 255, int(std::round(255 * (val - 2/3.) * 3.)));
 }
 
-void QColorBar::paintEvent(QPaintEvent *event)
-{
+void QColorBar::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
 
     // Setting up painter.
@@ -33,8 +30,7 @@ void QColorBar::paintEvent(QPaintEvent *event)
     int ywidth = this->height();
 
     // Drawing color bar line by line.
-    for (int i = 0; i < shadesNumber; i++)
-    {
+    for (int i = 0; i < shadesNumber; i++) {
         double y0 = i * ywidth / shadesNumber;
         double y1 = (i + 1) * ywidth / shadesNumber;
         QRect rect(0, y0, xwidth, y1);

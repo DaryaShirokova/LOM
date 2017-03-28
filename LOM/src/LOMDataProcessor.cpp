@@ -1,6 +1,10 @@
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
 
+//******************************************************************************
+// Constructor/ destructor.
+//******************************************************************************
+
 LOMDataProcessor::LOMDataProcessor(LOMDataUpdater *updater) {
     this->updater = updater;
 
@@ -29,6 +33,10 @@ LOMDataProcessor::~LOMDataProcessor() {
     delete timerHists;
     delete histsToFileTimer;
 }
+
+//******************************************************************************
+// Data updates.
+//******************************************************************************
 
 void LOMDataProcessor::Start() {
     if(!isRunning) {
@@ -136,6 +144,10 @@ bool LOMDataProcessor::LoadInitParameters() {
                                              "parameters.");
     return false;
 }
+
+//******************************************************************************
+// Saving data / confidurations to files.
+//******************************************************************************
 
 void LOMDataProcessor::HistsToFile() {
     hists.SaveToFiles(histDir);

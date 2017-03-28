@@ -4,8 +4,7 @@
 
 #include <QDebug>
 
-TCPTransporter::TCPTransporter()
-{
+TCPTransporter::TCPTransporter() {
     socket = new QTcpSocket(this);
     connected = false;
 

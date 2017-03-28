@@ -10,13 +10,11 @@
 
 #include <iostream>
 
-QEndcapWidget::QEndcapWidget(QWidget *parent) : QWidget(parent)
-{
+QEndcapWidget::QEndcapWidget(QWidget *parent) : QWidget(parent) {
 }
 
 
-void QEndcapWidget::paintEvent(QPaintEvent *event)
-{
+void QEndcapWidget::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
 
     // Set up painter.
@@ -46,8 +44,7 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
 
     // Set colors for different sectors.
     painter.setPen (Qt :: NoPen);
-    for(int sector = 0; sector < amplitudes.size(); sector++)
-    {
+    for(int sector = 0; sector < amplitudes.size(); sector++) {
         double alpha1 = alpha0 + (sector + 1) * 360. / SECTOR_NUM;
         QPainterPath path;
 
@@ -69,8 +66,7 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
     painter.drawEllipse(rect0);
 
     // Draw lines between sectors.
-    for (int i = 0; i < SECTOR_NUM; i++)
-    {
+    for (int i = 0; i < SECTOR_NUM; i++) {
         double alpha = alpha0 + (i * 2 * M_PI / SECTOR_NUM);
         QPoint p0 = GetRayCircleIntersection(x0, y0, d/2, alpha);
         QPoint p1 = GetRayCircleIntersection(x0, y0, d2/2, alpha);
@@ -85,8 +81,7 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
 
     // Set Labels with sectors numbers.
     painter.setBrush(Qt::NoBrush);
-    for (int i = 0; i < SECTOR_NUM; i++)
-    {
+    for (int i = 0; i < SECTOR_NUM; i++) {
         painter.setPen(QPen(numColor[i]));
         double alpha = alpha0 + ((i+0.5) * 2 * M_PI / SECTOR_NUM);
         QPoint p = GetRayCircleIntersection(x0, y0, d2/2 + 20, alpha);
@@ -97,8 +92,7 @@ void QEndcapWidget::paintEvent(QPaintEvent *event)
 }
 
 
-QPoint QEndcapWidget::GetRayCircleIntersection(int x0, int y0, int r, double alpha)
-{
+QPoint QEndcapWidget::GetRayCircleIntersection(int x0, int y0, int r, double alpha) {
     int x1 = x0 + round(r*cos(alpha));
     int y1 = y0 + round(r*sin(alpha));
     return QPoint(x1, y1);

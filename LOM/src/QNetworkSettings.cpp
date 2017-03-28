@@ -96,8 +96,7 @@ void QNetworkSettings::Cancel() {
    this->close();
 }
 
-void QNetworkSettings::SaveToFile()
-{
+void QNetworkSettings::SaveToFile() {
     QString filename = QFileDialog::getSaveFileName(this, tr("Save File"),
                                "config/network.conf",
                                tr("Config (*.conf)"));
@@ -123,7 +122,6 @@ void QNetworkSettings::SaveToFile()
     }
 }
 
-QNetworkSettings::~QNetworkSettings()
-{
+QNetworkSettings::~QNetworkSettings() {
     delete ui;
 }
