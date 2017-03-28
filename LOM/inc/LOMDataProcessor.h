@@ -5,12 +5,10 @@
 #include "inc/LOMCounters.h"
 #include "inc/LOMAmplitudes.h"
 #include "inc/LOMHistograms.h"
-
 #include "inc/LOMDataUpdater.h"
 
 #include <QTimer>
 #include <QSettings>
-#include <QTimer>
 
 //! The model class of the program.
 /*!

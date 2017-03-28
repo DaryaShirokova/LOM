@@ -1,7 +1,6 @@
 #include "inc/QNetworkSettings.h"
 #include "ui_QNetworkSettings.h"
 
-#include <QDebug>
 #include <QSettings>
 #include <QScreen>
 #include <QFormLayout>

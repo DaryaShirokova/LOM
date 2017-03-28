@@ -7,7 +7,6 @@
 #include <QApplication>
 
 #include <iostream>
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {

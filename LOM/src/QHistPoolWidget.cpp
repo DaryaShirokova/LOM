@@ -3,7 +3,7 @@
 
 #include <QPainter>
 #include <QKeyEvent>
-#include <QDebug>
+
 QHistPoolWidget::QHistPoolWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QHistPoolWidget) {

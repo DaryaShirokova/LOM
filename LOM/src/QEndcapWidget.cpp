@@ -1,4 +1,6 @@
 #include "../inc/QEndcapWidget.h"
+#include "inc/QColorBar.h"
+
 #include <QPainter>
 #include <QBrush>
 #include <algorithm>
@@ -6,8 +8,6 @@
 #include <QColor>
 
 #include <math.h>
-#include "inc/QColorBar.h"
-
 #include <iostream>
 
 QEndcapWidget::QEndcapWidget(QWidget *parent) : QWidget(parent) {

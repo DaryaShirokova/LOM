@@ -7,7 +7,6 @@
 #include "inc/LogListener.h"
 #include "inc/Logger.h"
 #include "inc/QMenuConfig.h"
-
 #include "inc/QHistPoolWidget.h"
 
 namespace Ui {

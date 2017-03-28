@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPoint>
 #include <QVector>
+
 #include "inc/Constants.h"
 
 //! Widget for drawing endcap parts of the Belle II calorimeter.

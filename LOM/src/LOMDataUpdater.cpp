@@ -8,7 +8,6 @@
 #include <TTree.h>
 #include <TFile.h>
 #include <time.h>
-#include <QDebug>
 #include <QSettings>
 
 //******************************************************************************

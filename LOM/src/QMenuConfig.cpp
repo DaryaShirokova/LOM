@@ -1,8 +1,8 @@
 #include "inc/QMenuConfig.h"
 #include "ui_QMenuConfig.h"
+
 #include <QMessageBox>
 #include <QFileDialog>
-#include <QDebug>
 
 QMenuConfig::QMenuConfig(QWidget *parent) :
     QDialog(parent),

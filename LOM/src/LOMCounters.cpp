@@ -1,8 +1,6 @@
 #include "inc/LOMCounters.h"
 #include "inc/Logger.h"
 
-#include <QDebug>
-
 void LOMCounters::InitTree() {
     Logger::Log(Logger::DEBUG, "Creating new tree.");
     tree = new TTree("tree", "LOM countets.");

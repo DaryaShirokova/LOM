@@ -2,8 +2,6 @@
 #include "inc/Logger.h"
 #include "inc/Constants.h"
 
-#include <QDebug>
-
 TCPTransporter::TCPTransporter() {
     socket = new QTcpSocket(this);
     connected = false;

@@ -2,7 +2,6 @@
 #include "inc/Constants.h"
 #include "inc/Logger.h"
 
-#include <QDebug>
 #include <QSettings>
 
 LOMInitParameters::LOMInitParameters() {

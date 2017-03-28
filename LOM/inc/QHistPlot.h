@@ -2,6 +2,7 @@
 #define QHISTPLOT_H
 
 #include <QWidget>
+
 #include "inc/LOMHistograms.h"
 
 namespace Ui {

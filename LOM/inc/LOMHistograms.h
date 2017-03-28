@@ -3,6 +3,7 @@
 
 #include "inc/Constants.h"
 #include "inc/Logger.h"
+
 #include <QMap>
 #include <QVector>
 #include <QFile>
