@@ -1452,8 +1452,6 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionGetting_started"/>
-    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>

@@ -210,11 +210,22 @@ public slots:
      */
     void SaveLOMInitParams();
 
-
+    // Exit
     /*!
      * \brief OnExit    Proceed exit event.
      */
     void OnExit();
+
+    // Help
+    /*!
+     * \brief About Display brief information about the app.
+     */
+    void About();
+
+    /*!
+     * \brief About Display brief information about Qt.
+     */
+    void AboutQt();
 };
 
 #endif // LOMMainWindow_H

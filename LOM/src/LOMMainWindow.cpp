@@ -56,6 +56,9 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
     ui->menuFile->addSeparator();
     ui->menuFile->addAction("&Exit", this, SLOT(OnExit()));
 
+    //ui->menuHelp->addAction("&Gettig started", this, SLOT(EditConfigurations()));
+    ui->menuHelp->addAction("&About", this, SLOT(About()));
+    ui->menuHelp->addAction("&About Qt", this, SLOT(AboutQt()));
 }
 
 LOMMainWindow::~LOMMainWindow() {
@@ -602,6 +605,19 @@ void LOMMainWindow::closeEvent(QCloseEvent *event) {
     this->Save(DEFAULT_CONF);
     model->Stop();
     Logger::SetWriteToFile(false);
+}
+
+//******************************
+// Help / About.
+//******************************
+void LOMMainWindow::About() {
+   QMessageBox msgBox;
+   msgBox.about(this, "LOM", "<b>Luminosity Online Monitor</b>, Belle II collaboration, 2017");
+}
+
+void LOMMainWindow::AboutQt() {
+    QMessageBox msgBox;
+    msgBox.aboutQt(this, "About Qt");
 }
 
 //******************************************************************************
