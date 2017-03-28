@@ -11,11 +11,16 @@
 #include <algorithm>
 #include <QSettings>
 
+//******************************************************************************
+// Constructor/ destructor. Model configuration.
+//******************************************************************************
+
 LOMMainWindow::LOMMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::LOMMainWindow) {
     ui->setupUi(this);
 
+    // Set histogram widget to the second tab.
     widgetHists = new QHistPoolWidget(ui->tab_2);
     ui->tab_2->layout()->addWidget(widgetHists);
 
@@ -42,9 +47,7 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
     ChangePlottersSettings();
 
     // Set up menu.
-   // ui->menuFile->addAction("&Open configuration file", this, SLOT(LoadConfigurations()));
     ui->menuFile->addAction("&Edit configuration", this, SLOT(EditConfigurations()));
- //   ui->menuFile->addAction("&Save configuration", this, SLOT(OnSaveConfiguration()));
     ui->menuFile->addSeparator();
     ui->menuFile->addAction("&Reconnect", this, SLOT(Reconnect()));
     ui->menuFile->addAction("&Network settings", this, SLOT(OpenNetworkSettings()));
@@ -54,6 +57,9 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
 
 }
 
+LOMMainWindow::~LOMMainWindow() {
+    delete ui;
+}
 
 void LOMMainWindow::SetModel(LOMDataProcessor *model) {
     this->model = model;
@@ -75,19 +81,16 @@ void LOMMainWindow::SetModel(LOMDataProcessor *model) {
 
 }
 
-LOMMainWindow::~LOMMainWindow() {
-    delete ui;
-}
+//******************************************************************************
+// Loglistener functions.
+//******************************************************************************
 
-
-void LOMMainWindow::handleMessage(QString message)
-{
+void LOMMainWindow::handleMessage(QString message) {
     if(message.isEmpty())
         return;
     QString text = ui->logBrowser->toPlainText();
     int index = 0;
-    for(int i = 0; i < logDepth - 1; i++)
-    {
+    for(int i = 0; i < logDepth - 1; i++) {
         index = text.indexOf("\n", index+1);
         if(index == -1)
             break;
@@ -106,6 +109,10 @@ void LOMMainWindow::handleMessage(QString message)
 //******************************************************************************
 // SLOTS
 //******************************************************************************
+
+//******************************
+// Data updating.
+//******************************
 void LOMMainWindow::SetThresholdStatus(bool val) {
     ui->thresholdStatusLabel->setVisible(!val);
 }
@@ -122,22 +129,6 @@ void LOMMainWindow::UpdateTiming() {
     ui->sbUpdateAmplsFreq->setValue(model->GetUpdateAmplsFreq());
     ui->sbUpdCountersFreq->setValue(model->GetUpdateCountersFreq());
     ui->sbUpdateHistsFreq->setValue(model->GetUpdateHistsFreq());
-}
-
-void LOMMainWindow::ChangePlottersSettings() {
-    this->x0 = ui->xMinSpinBox->value();
-    this->x1 = ui->xMaxSpinBox->value();
-    this->ymaxFWD = ui->yFWDMaxSpinBox->value();
-    this->ymaxBWD = ui->yBWDMaxSpinBox->value();
-    ui->amplFWDWidget->xAxis->setRange(x0, x1);
-    ui->amplFWDWidget->yAxis->setRange(-0.1, ymaxFWD);
-    ui->amplBWDWidget->xAxis->setRange(x0, x1);
-    ui->amplBWDWidget->yAxis->setRange(-0.1, ymaxBWD);
-    ui->coinWidget->xAxis->setRange(x0, x1);
-    ui->coinWidget->yAxis->setRange(-0.1, 1.2);
-    ui->amplFWDWidget->replot();
-    ui->amplBWDWidget->replot();
-    ui->coinWidget->replot();
 }
 
 void LOMMainWindow::UpdateCounters() {
@@ -190,6 +181,26 @@ void LOMMainWindow::StopUpdates() {
     ui->pushButtonGetThresholds->setEnabled(true);
 }
 
+//******************************
+// Plotters.
+//******************************
+
+void LOMMainWindow::ChangePlottersSettings() {
+    this->x0 = ui->xMinSpinBox->value();
+    this->x1 = ui->xMaxSpinBox->value();
+    this->ymaxFWD = ui->yFWDMaxSpinBox->value();
+    this->ymaxBWD = ui->yBWDMaxSpinBox->value();
+    ui->amplFWDWidget->xAxis->setRange(x0, x1);
+    ui->amplFWDWidget->yAxis->setRange(-0.1, ymaxFWD);
+    ui->amplBWDWidget->xAxis->setRange(x0, x1);
+    ui->amplBWDWidget->yAxis->setRange(-0.1, ymaxBWD);
+    ui->coinWidget->xAxis->setRange(x0, x1);
+    ui->coinWidget->yAxis->setRange(-0.1, 1.2);
+    ui->amplFWDWidget->replot();
+    ui->amplBWDWidget->replot();
+    ui->coinWidget->replot();
+}
+
 void LOMMainWindow::ChangePlottersMode() {
     if(ui->checkBoxHitSector->isChecked()) {
         ui->fwdSectorCB->setEnabled(false);
@@ -201,21 +212,30 @@ void LOMMainWindow::ChangePlottersMode() {
     }
 }
 
-void LOMMainWindow::SetLogType(QString str)
-{
+
+//******************************
+// Log.
+//******************************
+
+void LOMMainWindow::SetLogType(QString str) {
     logtype = Logger::stringToEnum(str);
     Logger::SetLogLevel(logtype);
 
 }
 
-void LOMMainWindow::SetLogDepth(int depth)
-{
+void LOMMainWindow::SetLogDepth(int depth) {
     logDepth = depth;
 }
 
-void LOMMainWindow::SetLogToFile(bool val){
+void LOMMainWindow::SetLogToFile(bool val) {
     Logger::SetWriteToFile(val);
 }
+
+
+
+//******************************
+// Endcaps and amplitude plotters.
+//******************************
 
 void LOMMainWindow::UpdatePlots()
 {
@@ -358,8 +378,12 @@ void LOMMainWindow::UpdateEndcapsWiggets()
 }
 
 
-void LOMMainWindow::Connected()
-{
+
+//******************************
+// Network connection.
+//******************************
+
+void LOMMainWindow::Connected() {
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::black);
     ui->connectionStatusLabel->setPalette(palette);
@@ -370,8 +394,7 @@ void LOMMainWindow::Connected()
     ui->pushButtonStop->setEnabled(false);
 }
 
-void LOMMainWindow::Disconnected()
-{
+void LOMMainWindow::Disconnected() {
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::red);
     ui->connectionStatusLabel->setPalette(palette);
@@ -383,17 +406,17 @@ void LOMMainWindow::Disconnected()
     ui->pushButtonStart->setEnabled(false);
     ui->pushButtonStop->setEnabled(false);
 }
-/*void LOMMainWindow::LoadConfigurations()
-{
-    QString filename = QFileDialog::getOpenFileName(this, tr("Save File"),
-                               DEFAULT_CONF,
-                               tr("Config (*.ini)"));
-    if(!filename.isNull())
-        Load(filename);
-}*/
 
-void LOMMainWindow::EditConfigurations()
-{
+void LOMMainWindow::Reconnect() {
+    model->GetDataUpdater()->Connect();
+}
+
+
+//******************************
+// Config: change/save/load.
+//******************************
+
+void LOMMainWindow::EditConfigurations() {
     QMenuConfig* configWidget = new QMenuConfig(this);
     configWidget->SetDataDir(model->GetDataDir());
     configWidget->SetLogDir(Logger::GetPath());
@@ -409,14 +432,8 @@ void LOMMainWindow::EditConfigurations()
     configWidget->show();
 }
 
-void LOMMainWindow::Reconnect() {
-    model->GetDataUpdater()->Connect();
-}
-
-void LOMMainWindow::OpenNetworkSettings()
-{
-    if(!advancedMode)
-    {
+void LOMMainWindow::OpenNetworkSettings() {
+    if(!advancedMode) {
         QMessageBox msgBox;
         msgBox.setWindowTitle("Permission denied.");
         msgBox.setIcon(QMessageBox::Critical);
@@ -428,8 +445,6 @@ void LOMMainWindow::OpenNetworkSettings()
          msgBox.exec();
          return;
     }
-    QMap<QString, int> regMap = model->GetDataUpdater()->GetRegMap();
-    QMap<QString, int> memMap = model->GetDataUpdater()->GetMemMap();
     QNetworkSettings* networkSettings = new QNetworkSettings(this);
     networkSettings->GenerateView(model->GetDataUpdater()->GetRegMap(),
                                   model->GetDataUpdater()->GetMemMap(),
@@ -439,8 +454,7 @@ void LOMMainWindow::OpenNetworkSettings()
 
 }
 
-void LOMMainWindow::OnApplyCongiguration(QMenuConfig *config)
-{
+void LOMMainWindow::OnApplyCongiguration(QMenuConfig *config) {
     Logger::SetPath(config->GetLogDir());
     model->SetDataDir(config->GetDataDir());
     model->SetWriteTree(config->IfWriteFile());
@@ -549,6 +563,11 @@ void LOMMainWindow::SaveLOMInitParams()
     }
 }
 
+
+//******************************
+// Exit.
+//******************************
+
 void LOMMainWindow::OnExit() {
     this->close();
 }
@@ -560,6 +579,10 @@ void LOMMainWindow::closeEvent(QCloseEvent *event) {
     model->Stop();
     Logger::SetWriteToFile(false);
 }
+
+//******************************************************************************
+// Resize.
+//******************************************************************************
 
 void LOMMainWindow::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
