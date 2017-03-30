@@ -325,7 +325,7 @@ void LOMMainWindow::UpdateLuminosityAndBkgPlots() {
 
     // Set up labels.
     ui->labelLuminosity->setText("Luminosity: " +
-    QString::number(luminosityValues.last(), 'g', 3) + " * 10<sup>35</sup> / s / cm<sup>2</sup>");
+    QString::number(luminosityValues.last(), 'g', 3) + " · 10<sup>35</sup> / s / cm<sup>2</sup>");
     ui->labelBkg->setText("Background: " +
     QString::number(bkgValues.last(), 'g', 3) + " events per us");
     ui->widgetLuminosity->replot();
