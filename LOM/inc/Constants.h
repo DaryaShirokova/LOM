@@ -57,6 +57,7 @@
 #define WRITE_TIMEOUT   3000        // timeout for writing data via tcp/ip
 
 #define DEFAULT_CONF    "config/appset.ini"     // default application config.
+#define DEFAULT_LUMIMOSITY_INI    "config/luminosity_calculations.ini"     // default parameters for luminosity calculations.
 #define DEFAULT_NETWORK "config/network.conf"   // default network config.
 #define DEFAULT_PARAM   "config/init.param"     // default init params config.
 #define DATA_PATH    "data/"    // default path to store .root files.
@@ -72,6 +73,9 @@
 #define DEFAULT_FWD_TH  3.
 #define DEFAULT_BWD_TH  1.
 #define DEFAULT_BUF     64
+
+#define DEFAULT_REG_EFFICIENCY  0.3
+#define DEFAULT_CROSS_SECTION   0.1
 
 #define VALIDIP "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
 #endif // CONSTANTS_H

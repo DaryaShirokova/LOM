@@ -1,5 +1,6 @@
 #include "inc/LOMDataProcessor.h"
 #include "inc/Logger.h"
+#include "inc/LuminosityCalculator.h"
 
 //******************************************************************************
 // Constructor/ destructor.
@@ -79,6 +80,10 @@ void LOMDataProcessor::UpdateAmplitudes() {
 void LOMDataProcessor::UpdateCounters() {
     if(updater->ReadCounters(&counters))     {
         Logger::Log(Logger::LogLevel::DEBUG, "Received counters.");
+        luminosity.push_back(LuminosityCalculator::GetLuminosity(counters.GetNBhabhaTotal(),
+                                                                 counters.GetDeltaT()));
+        background.push_back(LuminosityCalculator::GetBackground(counters.GetNBkgTotal(),
+                                                                 counters.GetDeltaT()));
         emit CountersUpdated();
         if(writeTree) {
             counters.FillTree();
@@ -144,6 +149,7 @@ bool LOMDataProcessor::LoadInitParameters() {
                                              "parameters.");
     return false;
 }
+
 
 //******************************************************************************
 // Saving data / confidurations to files.

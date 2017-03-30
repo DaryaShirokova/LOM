@@ -9,7 +9,11 @@
 #include <QVector>
 #include <QFile>
 #include <algorithm>
+#include <math.h>
 #include <QSettings>
+
+#include "qcustomplot/qcustomplot.h"
+
 
 //******************************************************************************
 // Constructor/ destructor. Model configuration.
@@ -28,7 +32,7 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
 
     advancedMode = false;
     lastCountersUpdate = 0;
-
+    lastPlotsUpdate = 0;
     // Set luminosity/thresholds/connection palette labels to red.
     QPalette palette;
     palette.setColor(QWidget::foregroundRole(), Qt::red);
@@ -36,17 +40,23 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
     ui->connectionStatusLabel->setPalette(palette);
 
     // Give titles to axis
-    ui->widgetLuminosity->xAxis->setLabel("t, s");
-    ui->widgetLuminosity->yAxis->setLabel("L, 1/s/cm2");
+    ui->widgetLuminosity->xAxis->setLabel("t, min");
+    ui->widgetLuminosity->yAxis->setLabel("L, 10^35/s/cm2");
+    ui->widgetBkg->xAxis->setLabel("t, min");
+    ui->widgetBkg->yAxis->setLabel("N_bkg / s");
     ui->amplFWDWidget->xAxis->setLabel("Time stamps");
     ui->amplFWDWidget->yAxis->setLabel("Amplitude, GeV");
     ui->amplBWDWidget->xAxis->setLabel("Time stamps");
     ui->amplBWDWidget->yAxis->setLabel("Amplitude, GeV");
     ui->coinWidget->xAxis->setLabel("Time stamps");
     ui->coinWidget->yAxis->setLabel("Coincidence");
+    ui->widgetLuminosity->yAxis->setRange(0, 10);
+    ui->widgetBkg->yAxis->setRange(0, 10);
 
     // Set axes ranges.
     ChangePlottersSettings();
+    UpdateLumBkgPlottersSettings();
+    ChangeLuminosityPlottersSettings(0);
 
     // Set up menu.
     ui->menuFile->addAction("&Edit configuration", this, SLOT(EditConfigurations()));
@@ -70,6 +80,7 @@ void LOMMainWindow::SetModel(LOMDataProcessor *model) {
     connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdatePlots()));
     connect(model, SIGNAL(AmplitudesUpdated()), SLOT(UpdateEndcapsWiggets()));
     connect(model, SIGNAL(CountersUpdated()), SLOT(UpdateCounters()));
+    connect(model, SIGNAL(CountersUpdated()), SLOT(UpdateLuminosityAndBkgPlots()));
 
     widgetHists->SetModel(model->GetHistograms());
     connect(widgetHists, SIGNAL(UpdateRequired()), model, SLOT(UpdateHistograms()));
@@ -159,9 +170,10 @@ void LOMMainWindow::UpdateTiming() {
 }
 
 void LOMMainWindow::UpdateCounters() {
-
-    if(time.restart() < 900)
+    lastCountersUpdate += time.restart();
+    if(lastCountersUpdate < 900)
         return;
+    lastCountersUpdate = 0;
     ui->leBhabhaEvents->setText(QString::number(model->GetCounters().GetNBhabhaTotal()));
     ui->leBackgroundEvents->setText(QString::number(model->GetCounters().GetNBkgTotal()));
     ui->leDeadTime->setText(QString::number(model->GetCounters().GetDeadTimeMSec()) + " us");
@@ -189,6 +201,7 @@ void LOMMainWindow::StartUpdates() {
     UpdateSettings();
     model->Start();
     time.start();
+    lastPlotsUpdate = timePlots.restart();
 
     ui->pushButtonSetThresholds->setEnabled(false);
     ui->pushButtonSetSettings->setEnabled(false);
@@ -206,6 +219,115 @@ void LOMMainWindow::StopUpdates() {
     ui->pushButtonStart->setEnabled(true);
     ui->pushButtonStop->setEnabled(false);
     ui->pushButtonGetThresholds->setEnabled(true);
+}
+//******************************
+// Luminosity and bkg plotters.
+//******************************
+
+void LOMMainWindow::UpdateLumBkgPlottersSettings() {
+    this->lumAndBkgUpdateFreq = this->ui->sbUpdateLumBkg->value();
+    this->pointsPerPlot = this->ui->sbNOfPoints->value();
+    ChangeLuminosityPlottersSettings(ui->widgetLuminosity->xAxis->range().lower);
+}
+
+void LOMMainWindow::ChangeLuminosityPlottersSettings(double x0) {
+    ui->widgetLuminosity->xAxis->setRange(x0, x0 + (pointsPerPlot * lumAndBkgUpdateFreq) /60.);
+    ui->widgetBkg->xAxis->setRange(x0, x0 + (pointsPerPlot * lumAndBkgUpdateFreq) /60.);
+
+    ui->widgetLuminosity->replot();
+    ui->widgetBkg->replot();
+}
+
+double average(QVector<double> vec) {
+    if(vec.size() == 0)
+        return 0;
+    double sum = 0;
+    for(double t : vec)
+        sum += t;
+    return sum / vec.size();
+}
+
+double error(QVector<double> vec) {
+    if(vec.size() == 0)
+        return 0;
+    double av = average(vec);
+
+    double sum2 = 0;
+    for(double t : vec)
+        sum2 += (t - av) * (t - av);
+    return sqrt(sum2) / vec.size();
+}
+
+    //luminosityErrorValues.push_back(error(newValues));
+/*  QCPErrorBars *errorBars = new QCPErrorBars(ui->widgetLuminosity->xAxis, ui->widgetLuminosity->yAxis);
+  errorBars->addDara(luminosityErrorValues);
+  errorBars->setDataPlottable(ui->widgetLuminosity->graph(0));
+  errorBars->setPen(QPen(QColor(180,180,180)));*/
+
+void LOMMainWindow::UpdateLuminosityAndBkgPlots() {
+
+    // Check last update.
+    lastPlotsUpdate += timePlots.restart();
+    if(lastPlotsUpdate < lumAndBkgUpdateFreq * 1000)
+        return;
+
+    // Add new time point.
+    if(timeValues.size() == 0)
+        timeValues.push_back(0);
+    else timeValues.push_back(timeValues.last() + lastPlotsUpdate / 60. / 1000.);
+    lastPlotsUpdate = 0;
+
+    // Check xaxis number of points.
+    if(timeValues.size() == pointsPerPlot) {
+        for(int i = 0; i < pointsPerPlot * 0.3; i++) {
+            timeValues.removeFirst();
+            luminosityValues.removeFirst();
+        }
+        ChangeLuminosityPlottersSettings(timeValues.first());
+    }
+
+    // Check plot bounds.
+    if(timeValues.last() > ui->widgetLuminosity->xAxis->range().upper)
+        ChangeLuminosityPlottersSettings(timeValues.last() -
+                                  lumAndBkgUpdateFreq * timeValues.size() /60.);
+
+    // Add luminosity.
+    QVector<double> newValues = model->GetLatestLuminosity();
+    model->ClearLatestLuminosity();
+    luminosityValues.push_back(average(newValues));
+
+    // Add bkg.
+    newValues = model->GetLatestBackground();
+    model->ClearLatestBackground();
+    bkgValues.push_back(average(newValues));
+
+    // Set up luminosity plot.
+    ui->widgetLuminosity->addGraph();
+    ui->widgetLuminosity->graph(0)->setPen(QPen(Qt::red));
+    ui->widgetLuminosity->graph(0)->setLineStyle(QCPGraph::lsLine);
+    ui->widgetLuminosity->graph(0)->setData(timeValues, luminosityValues);
+
+    // Set up bkg plot.
+    ui->widgetBkg->addGraph();
+    ui->widgetBkg->graph(0)->setPen(QPen(Qt::red));
+    ui->widgetBkg->graph(0)->setLineStyle(QCPGraph::lsLine);
+    ui->widgetBkg->graph(0)->setData(timeValues, bkgValues);
+
+    // Set up y range.
+    double y0 = *std::min_element(luminosityValues.begin(), luminosityValues.end()) * 0.9;
+    double y1 = *std::max_element(luminosityValues.begin(), luminosityValues.end()) * 1.1;
+    ui->widgetLuminosity->yAxis->setRange(y0, y1);
+    y0 = *std::min_element(bkgValues.begin(), bkgValues.end()) * 0.9;
+    y1 = *std::max_element(bkgValues.begin(), bkgValues.end()) * 1.1;
+    ui->widgetBkg->yAxis->setRange(y0, y1);
+
+    // Set up labels.
+    ui->labelLuminosity->setText("Luminosity: " +
+    QString::number(luminosityValues.last(), 'g', 3) + " * 10<sup>35</sup> / s / cm<sup>2</sup>");
+    ui->labelBkg->setText("Background: " +
+    QString::number(bkgValues.last(), 'g', 3) + " events per us");
+    ui->widgetLuminosity->replot();
+    ui->widgetBkg->replot();
 }
 
 //******************************
@@ -226,6 +348,8 @@ void LOMMainWindow::ChangePlottersSettings() {
     ui->amplFWDWidget->replot();
     ui->amplBWDWidget->replot();
     ui->coinWidget->replot();
+
+    UpdateLumBkgPlottersSettings();
 }
 
 void LOMMainWindow::ChangePlottersMode() {
@@ -519,6 +643,8 @@ void LOMMainWindow::Save(QString filename) {
     settings.setValue("fwd", ui->fwdSectorCB->currentText().toInt());
     settings.setValue("bwd", ui->bwdSectorCB->currentText().toInt());
     settings.setValue("is_hit", ui->checkBoxHitSector->isChecked());
+    settings.setValue("points_per_plot", ui->sbNOfPoints->value());
+    settings.setValue("lum_bkg_updates", ui->sbUpdateLumBkg->value());
     settings.endGroup();
 
     model->Save(&settings);
@@ -545,6 +671,8 @@ void LOMMainWindow::Load(QString filename) {
     ui->fwdSectorCB->setCurrentText(settings.value("fwd", ui->fwdSectorCB->currentText()).toString());
     ui->bwdSectorCB->setCurrentText(settings.value("bwd", ui->bwdSectorCB->currentText()).toString());
     ui->checkBoxHitSector->setChecked(settings.value("is_hit", ui->checkBoxHitSector->isChecked()).toBool());
+    ui->sbNOfPoints->setValue(settings.value("points_per_plot", ui->sbNOfPoints->value()).toInt());
+    ui->sbUpdateLumBkg->setValue(settings.value("lum_bkg_updates", ui->sbUpdateLumBkg->value()).toDouble());
     settings.endGroup();
     model->Load(&settings);
 

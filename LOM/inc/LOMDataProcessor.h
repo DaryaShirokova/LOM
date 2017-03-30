@@ -33,9 +33,12 @@ private:
     double updateAmplsFreq; /*!< The frequency of the amplitudes updates.*/
     double updateCountersFreq; /*!< The frequency of counters updates.*/
     double updateHistsFreq; /*!< The frequency of the histograms updates.*/
-    QTimer* timerAmpls; /* Timer for amplitudes updates.*/
-    QTimer* timerCounters; /* Timer for counters updates.*/
-    QTimer* timerHists; /* Timer for histograms updates.*/
+    QTimer* timerAmpls; /*!< Timer for amplitudes updates.*/
+    QTimer* timerCounters; /*!< Timer for counters updates.*/
+    QTimer* timerHists; /*!< Timer for histograms updates.*/
+
+    QVector<double> luminosity; /*!< The latest value of the luminosity. */
+    QVector<double> background; /*!< The latest value of background. */
 
     bool isRunning; /*!< The status of data updates.*/
     LOMDataUpdater* updater; /*!< The object which processes updates.*/
@@ -51,15 +54,13 @@ private:
     QString histDir; /*!< Path to save hists.*/
     QTimer* histsToFileTimer; /* Timer for writing hists. */
 
-    //! Registration efficiency determined using the simulation process.
-    double registrationEfficiency; /*! The efficiency of Bhabha events registration. */
-    double luminosity; /*! The value of luminosity.*/
-
     /*!
      * \brief Create unique file name for tree (run + int).
      * \return unique file name.
      */
     QString CreateFileName(); /*!< Path to save trees.*/
+
+
 public:
 
     //**************************************************************************
@@ -91,6 +92,18 @@ public:
      */
     void Stop();
 
+    //**************************************************************************
+    // Luminosity calculations.
+    //**************************************************************************
+    /*!
+     * \brief ClearLatestLuminosity   Clear the luminosity buffer.
+     */
+    void ClearLatestLuminosity() { luminosity.clear(); }
+
+    /*!
+     * \brief ClearLatestBackground   Clear the background buffer.
+     */
+    void ClearLatestBackground() { background.clear(); }
 
     //**************************************************************************
     // Other.
@@ -191,6 +204,8 @@ public:
     void SetWriteHistFreq(int writeHistFreq) {this->writeHistFreq = writeHistFreq;
                                               emit HistSettingsUpdated();}
 
+    QVector<double> GetLatestLuminosity() {return luminosity;}
+    QVector<double> GetLatestBackground() {return background;}
     /*!
      * \brief IsRunning check the status of updates.
      * \return  the status of updates (true if updating).

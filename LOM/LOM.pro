@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     src/QHistPlot.cpp \
     src/QHistPoolWidget.cpp \
     src/QMenuConfig.cpp \
-    src/LOMMainWindow.cpp
+    src/LOMMainWindow.cpp \
+    src/LuminosityCalculator.cpp
 
 HEADERS  += \
     inc/LOMInitParameters.h \
@@ -66,7 +67,8 @@ HEADERS  += \
     inc/QHistPlot.h \
     inc/QHistPoolWidget.h \
     inc/QMenuConfig.h \
-    inc/LOMMainWindow.h
+    inc/LOMMainWindow.h \
+    inc/LuminosityCalculator.h
 
 FORMS    += \
     forms/QNetworkSettings.ui \

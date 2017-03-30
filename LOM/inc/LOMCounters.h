@@ -18,6 +18,7 @@ private:
     int nBkgTotal; /*!< The total number of background events.*/
 
     TTree* tree; /*!< root framework tree.*/
+
 public:
     //**************************************************************************
     // Constructor/destructor.

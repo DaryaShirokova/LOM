@@ -3,6 +3,7 @@
 #include "inc/LOMDataUpdater.h"
 #include "inc/TCPTransporter.h"
 #include "inc/Logger.h"
+#include "inc/LuminosityCalculator.h"
 
 #include <QApplication>
 
@@ -16,7 +17,6 @@ int main(int argc, char *argv[]) {
     Logger::SetWriteToFile(false);
     Logger::SetPath(LOG_PATH);
 
-
     TCPTransporter* transporter = new TCPTransporter();
     QObject::connect(transporter, SIGNAL(SigConnected()), &w, SLOT(Connected()));
     QObject::connect(transporter, SIGNAL(SigDisconnected()), &w, SLOT(Disconnected()));
@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
 
     w.Load(DEFAULT_CONF);
     model->GetInitParameters().Init(DEFAULT_PARAM);
+
+    LuminosityCalculator::Init(DEFAULT_LUMIMOSITY_INI);
 
     updater->Connect();
 

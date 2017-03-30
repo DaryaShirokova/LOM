@@ -74,6 +74,16 @@ private:
     long lastCountersUpdate; /*!< How much time has passed since last update. */
     QTime time; /*!< Timer to update counters. */
 
+    long lastPlotsUpdate; /*!< How much time has passed since last plots update. */
+    QTime timePlots;  /*!< Timer to update plots. */
+
+    QVector<double> luminosityValues; /*!< values of luminosities. */
+    QVector<double> bkgValues; /*!< values of background. */
+    QVector<double> timeValues; /*!< time values. */
+    double lumAndBkgUpdateFreq;
+    int pointsPerPlot;
+    //QVector<double> luminosityErrorValues; /*!<
+
     QHistPoolWidget * widgetHists; /*!< Widget in tab2 to show histograms. */
 
     /*!
@@ -113,6 +123,12 @@ public slots:
      * \brief UpdateCounters    Update counters.
      */
     void UpdateCounters();
+
+    /*!
+     * \brief UpdateLuminosityAndBkgPlots   Update luminosity and bkg plots.
+     */
+    void UpdateLuminosityAndBkgPlots();
+
     /*!
      * \brief UpdateTiming      update timing.
      */
@@ -130,11 +146,23 @@ public slots:
      */
     void UpdateEndcapsWiggets();
     /*!
-     * \brief ChangePlottersSettings    Change plotters settins.
+     * \brief ChangePlottersSettings    Change plotters settings.
      */
     void ChangePlottersSettings();
+
+    /*!
+     * \brief UpdateLumBkgPlottersSettings
+     */
+    void UpdateLumBkgPlottersSettings();
+
+    /*!
+     * \brief ChangeLuminosityPlottersSettings  Change luminosity plotters settins.
+     */
+    void ChangeLuminosityPlottersSettings(double x0);
+
     /*!
      * \brief ChangePlottersMode    Change mode: max ampl sector to fixed sector.
+     * \param x0    starting time.
      */
     void ChangePlottersMode();
 
