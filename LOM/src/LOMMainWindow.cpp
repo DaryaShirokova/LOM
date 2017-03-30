@@ -64,11 +64,11 @@ LOMMainWindow::LOMMainWindow(QWidget *parent) :
     ui->menuFile->addAction("&Reconnect", this, SLOT(Reconnect()));
     ui->menuFile->addAction("&Network settings", this, SLOT(OpenNetworkSettings()));
     ui->menuFile->addSeparator();
-    ui->menuFile->addAction("&Exit", this, SLOT(OnExit()));
+    ui->menuFile->addAction("E&xit", this, SLOT(OnExit()));
 
     //ui->menuHelp->addAction("&Gettig started", this, SLOT(EditConfigurations()));
     ui->menuHelp->addAction("&About", this, SLOT(About()));
-    ui->menuHelp->addAction("&About Qt", this, SLOT(AboutQt()));
+    ui->menuHelp->addAction("About &Qt", this, SLOT(AboutQt()));
 }
 
 LOMMainWindow::~LOMMainWindow() {
@@ -742,7 +742,10 @@ void LOMMainWindow::closeEvent(QCloseEvent *event) {
 //******************************
 void LOMMainWindow::About() {
    QMessageBox msgBox;
-   msgBox.about(this, "LOM", "<b>Luminosity Online Monitor</b>, Belle II collaboration, 2017");
+   msgBox.about(this, "LOM", "<html>"
+                             "<body>"
+                             "<b>Luminosity Online Monitor</b>, Belle II collaboration, 2017"
+                             "</body></html>");
 }
 
 void LOMMainWindow::AboutQt() {

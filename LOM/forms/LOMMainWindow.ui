@@ -1598,12 +1598,12 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
    </widget>
    <addaction name="menuFile"/>
@@ -1700,8 +1700,8 @@
    <slot>UpdateSettings()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>280</x>
-     <y>556</y>
+     <x>367</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
      <x>269</x>
@@ -1748,8 +1748,8 @@
    <slot>StopUpdates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>173</x>
-     <y>563</y>
+     <x>198</x>
+     <y>554</y>
     </hint>
     <hint type="destinationlabel">
      <x>699</x>
@@ -1764,8 +1764,8 @@
    <slot>StartUpdates()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>96</x>
-     <y>561</y>
+     <x>107</x>
+     <y>554</y>
     </hint>
     <hint type="destinationlabel">
      <x>807</x>
@@ -1796,8 +1796,8 @@
    <slot>SetLogType(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1035</x>
-     <y>815</y>
+     <x>1061</x>
+     <y>875</y>
     </hint>
     <hint type="destinationlabel">
      <x>634</x>
@@ -1812,8 +1812,8 @@
    <slot>SetLogDepth(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1152</x>
-     <y>800</y>
+     <x>1185</x>
+     <y>875</y>
     </hint>
     <hint type="destinationlabel">
      <x>413</x>
@@ -1828,8 +1828,8 @@
    <slot>SetLogToFile(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1260</x>
-     <y>810</y>
+     <x>1337</x>
+     <y>875</y>
     </hint>
     <hint type="destinationlabel">
      <x>1191</x>
@@ -1860,8 +1860,8 @@
    <slot>ChangePlottersSettings()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>302</x>
-     <y>796</y>
+     <x>367</x>
+     <y>876</y>
     </hint>
     <hint type="destinationlabel">
      <x>289</x>
