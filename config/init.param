@@ -2,7 +2,7 @@
 buf=64
 
 [Thresholds]
-bwd=1
-coin_dur=0
+bwd=1.5
+coin_dur=3
 fwd=3
 hit=0
