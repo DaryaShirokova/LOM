@@ -265,6 +265,8 @@ double error(QVector<double> vec) {
   errorBars->setPen(QPen(QColor(180,180,180)));*/
 
 void LOMMainWindow::UpdateLuminosityAndBkgPlots() {
+    if(model->GetLatestLuminosity().isEmpty() || model->GetLatestBackground().isEmpty())
+        return;
 
     // Check last update.
     lastPlotsUpdate += timePlots.restart();
